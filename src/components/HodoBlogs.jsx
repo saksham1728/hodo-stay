@@ -82,7 +82,7 @@ const HodoBlogs = () => {
   }
 
   return (
-    <section className="py-10 px-8 sm:px-10 lg:px-20" style={{ backgroundColor: '#2D3A36' }}>
+    <section className="pt-12 px-8 max-md:py-8 max-md:px-4" style={{ backgroundColor: '#2D3A36' }}>
       <div className="max-w-7xl mx-auto">
         {/* Layout: left hero + right carousel */}
         <div className="grid md:grid-cols-12 gap-8 items-start">
@@ -163,7 +163,7 @@ const HodoBlogs = () => {
                 WebkitOverflowScrolling: 'touch'
               }}
             >
-              {blogs.map((blog, idx) => (
+              {blogs.map((blog) => (
                 <div
                   key={blog.id}
                   className="flex-shrink-0 bg-white rounded-3xl overflow-hidden shadow-lg"
