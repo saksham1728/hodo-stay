@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
 import CardStack from '../components/CardStack'
 import HomeHeader from '../components/HomeHeader'
+import OurProperties from '../components/OurProperties'
+import HodoBlogs from '../components/HodoBlogs'
 
 const Home = () => {
   return (
@@ -38,8 +40,9 @@ const Home = () => {
               Beyond hotels
             </h2>
             <p className="text-white/90 text-xl mb-8 leading-relaxed max-md:text-base max-w-2xl mx-auto">
-              Experience the Hodo difference - where comfort meets convenience in every stay. 
-              Discover our curated collection of premium accommodations designed for the modern traveler.
+              Experience isn't a luxury, it's a baseline.
+              <br />
+              Welcome to eco-friendly stays with global hotel standards
             </p>
             
             {/* Action Buttons */}
@@ -73,6 +76,12 @@ const Home = () => {
       
       {/* Card Stack Section */}
       <CardStack />
+      
+      {/* Our Properties Section */}
+      <OurProperties />
+      
+      {/* Hodo Blogs Section */}
+      <HodoBlogs />
     </div>
   )
 }

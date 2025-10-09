@@ -59,7 +59,18 @@ const BookingConfirmed = () => {
             </div>
 
             {/* Property Title */}
-            <h2 className="text-xl font-bold text-gray-900 mb-2">Hodo Heiwa, 2BHK Penthouse</h2>
+            <h2 
+              className="text-gray-900 mb-2"
+              style={{
+                fontFamily: 'Petrona',
+                fontWeight: 400,
+                fontSize: '48px',
+                lineHeight: '150%',
+                letterSpacing: '-2.2%'
+              }}
+            >
+              Hodo Heiwa, 2BHK Penthouse
+            </h2>
             
             {/* Room Details */}
             <p className="text-gray-500 text-sm mb-6">Room details</p>
@@ -113,7 +124,18 @@ const BookingConfirmed = () => {
 
           {/* Payment Summary Card */}
           <div className="bg-white rounded-3xl p-8 flex-1 max-w-lg">
-            <h2 className="text-2xl font-bold text-gray-900 mb-8">Payment Summary</h2>
+            <h2 
+              className="text-gray-900 mb-8"
+              style={{
+                fontFamily: 'Petrona',
+                fontWeight: 400,
+                fontSize: '48px',
+                lineHeight: '150%',
+                letterSpacing: '-2.2%'
+              }}
+            >
+              Payment Summary
+            </h2>
             
             {/* Payment Details */}
             <div className="space-y-4 mb-6">

@@ -65,8 +65,17 @@ const CardStack = () => {
   return (
     <section className="py-20 px-8 min-h-screen flex items-center max-md:py-12 max-md:px-4" style={{ backgroundColor: '#FFF7F0' }}>
       <div className="max-w-7xl mx-auto w-full">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-black mb-4 max-md:text-3xl">
+        <div className="mb-16">
+          <h2 
+            className="text-black mb-4"
+            style={{
+              fontFamily: 'Petrona',
+              fontWeight: 400,
+              fontSize: '48px',
+              lineHeight: '150%',
+              letterSpacing: '-2.2%'
+            }}
+          >
             Experience the Hodo difference
           </h2>
         </div>
