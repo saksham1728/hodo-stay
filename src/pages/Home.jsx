@@ -3,6 +3,7 @@ import CardStack from '../components/CardStack'
 import HomeHeader from '../components/HomeHeader'
 import OurProperties from '../components/OurProperties'
 import HodoBlogs from '../components/HodoBlogs'
+import Footer from '../components/Footer'
 
 const Home = () => {
   return (
@@ -82,6 +83,9 @@ const Home = () => {
       
       {/* Hodo Blogs Section */}
       <HodoBlogs />
+      
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }
