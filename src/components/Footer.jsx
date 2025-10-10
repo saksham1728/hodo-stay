@@ -79,18 +79,20 @@ const Footer = () => {
         className="py-16 px-8 text-gray-800 relative max-md:py-8 max-md:px-4"
         style={{ background: 'linear-gradient(180deg, #FFF7F0 0%, #506C60 100%)' }}
       >
-        <h2 
-          className="text-gray-800 m-0 mb-12 text-center max-md:text-2xl"
-          style={{
-            fontFamily: 'Petrona',
-            fontWeight: 400,
-            fontSize: '48px',
-            lineHeight: '150%',
-            letterSpacing: '-2.2%'
-          }}
-        >
-          What our Guests say
-        </h2>
+        <div className="max-w-7xl mx-auto">
+          <h2 
+            className="text-gray-800 m-0 mb-12 max-md:text-2xl"
+            style={{
+              fontFamily: 'Petrona',
+              fontWeight: 400,
+              fontSize: '48px',
+              lineHeight: '150%',
+              letterSpacing: '-2.2%'
+            }}
+          >
+            What our Guests say
+          </h2>
+        </div>
 
         {/* Centered cards layout (fixed sizes + smooth transitions) */}
         <div className="flex justify-center mb-10 relative">
@@ -243,9 +245,9 @@ const Footer = () => {
         className="py-16 px-8 text-white max-md:py-8 max-md:px-4"
         style={{ background: 'linear-gradient(180deg, #506C60 0%, #2D3A36 50.54%, #000000 100%)' }}
       >
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <h2 
-            className="text-white m-0 mb-12 text-left ml-8 max-md:ml-0"
+            className="text-white m-0 mb-12 max-md:ml-0"
             style={{
               fontFamily: 'Petrona',
               fontWeight: 400,
@@ -256,7 +258,7 @@ const Footer = () => {
           >
             Frequently Asked Questions
           </h2>
-          <div className="grid grid-cols-2 gap-12 ml-8 max-md:grid-cols-1 max-md:gap-6 max-md:ml-0">
+          <div className="grid grid-cols-2 gap-12 max-md:grid-cols-1 max-md:gap-6 max-md:ml-0">
             <div className="flex flex-col gap-6">
               <div className="border-b border-white/20 pb-4">
                 <div className="flex justify-between items-center cursor-pointer py-2">
