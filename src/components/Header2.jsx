@@ -4,13 +4,13 @@ const Header2 = () => {
       className="w-full py-4 px-8"
       style={{ backgroundColor: '#FFF7F0' }}
     >
-      <div className="max-w-6xl mx-auto flex items-center justify-between">
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center">
           <img 
             src="/hodo-header-logo.png" 
             alt="Hodo Stays" 
-            className="h-32 w-auto -mt-16 -mb-16"
+            className="h-32 w-auto -mt-16 -mb-16 -ml-8"
           />
         </div>
 
