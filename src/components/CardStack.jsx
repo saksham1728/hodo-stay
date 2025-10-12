@@ -63,7 +63,7 @@ const CardStack = () => {
   }
 
   return (
-    <section className="py-20 px-8 min-h-screen flex items-center max-md:py-12 max-md:px-4" style={{ backgroundColor: '#FFF7F0' }}>
+    <section className="pt-8 pb-20 px-8 min-h-screen flex items-center max-md:py-12 max-md:px-4" style={{ backgroundColor: '#FFF7F0' }}>
       <div className="max-w-7xl mx-auto w-full">
         <div className="mb-12 md:mb-16">
           <h2 
