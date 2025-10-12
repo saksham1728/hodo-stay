@@ -69,7 +69,7 @@ const Footer = () => {
             What our Guests say
           </h2>
 
-          {/* Desktop Layout - 3 cards side by side */}
+          {/* Desktop Layout - 3 cards side by side (NO ROTATION) */}
           <div className="hidden md:flex justify-center mb-12 relative">
             <div className="relative w-full max-w-6xl px-4">
               {/* Navigation arrows */}
@@ -92,63 +92,63 @@ const Footer = () => {
                 →
               </button>
               
-              {/* Review cards container */}
-              <div className="relative px-20">
-                {/* Background card (left side) - Previous review */}
-                <div className="absolute left-4 top-4 w-72 h-44 bg-white/60 rounded-2xl shadow-md transform -rotate-6 z-10 p-4 overflow-hidden">
-                  <div className="flex items-start gap-3 opacity-70">
-                    <div className="w-8 h-8 rounded-full overflow-hidden border border-gray-200 flex-shrink-0">
+              {/* Review cards container - 3 straight cards */}
+              <div className="flex items-center justify-center gap-6 px-16">
+                {/* Left card - Previous review */}
+                <div className="w-80 bg-white/80 rounded-2xl shadow-md p-6 opacity-75">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-full overflow-hidden border border-gray-200 flex-shrink-0">
                       <img src={reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].avatar} alt="Reviewer" className="w-full h-full object-cover" />
                     </div>
                     <div className="flex-1">
-                      <div className="text-yellow-400 text-xs mb-1">
+                      <div className="text-yellow-400 text-sm mb-2">
                         {'★'.repeat(reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].rating)}
                       </div>
-                      <p className="text-gray-600 text-xs leading-relaxed mb-2 line-clamp-3">
-                        {reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].text.substring(0, 80)}...
+                      <p className="text-gray-600 text-sm leading-relaxed mb-3 line-clamp-4">
+                        {reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].text}
                       </p>
-                      <div className="font-medium text-gray-700 text-xs text-right">
+                      <div className="font-medium text-gray-700 text-sm text-right">
                         {reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].name}
                       </div>
                     </div>
                   </div>
                 </div>
                 
-                {/* Background card (right side) - Next review */}
-                <div className="absolute right-4 top-4 w-72 h-44 bg-white/60 rounded-2xl shadow-md transform rotate-6 z-10 p-4 overflow-hidden">
-                  <div className="flex items-start gap-3 opacity-70">
-                    <div className="w-8 h-8 rounded-full overflow-hidden border border-gray-200 flex-shrink-0">
-                      <img src={reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].avatar} alt="Reviewer" className="w-full h-full object-cover" />
+                {/* Center card - Active review (highlighted) */}
+                <div className="w-96 bg-white rounded-2xl shadow-2xl p-8 transform scale-105 z-10">
+                  <div className="flex items-start gap-4">
+                    <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-gray-200 flex-shrink-0">
+                      <img src={reviews[activeReview].avatar} alt="Reviewer" className="w-full h-full object-cover" />
                     </div>
                     <div className="flex-1">
-                      <div className="text-yellow-400 text-xs mb-1">
-                        {'★'.repeat(reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].rating)}
+                      <div className="text-yellow-400 text-lg mb-3">
+                        {'★'.repeat(reviews[activeReview].rating)}
                       </div>
-                      <p className="text-gray-600 text-xs leading-relaxed mb-2 line-clamp-3">
-                        {reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].text.substring(0, 80)}...
+                      <p className="text-gray-800 text-base leading-relaxed mb-4">
+                        {reviews[activeReview].text}
                       </p>
-                      <div className="font-medium text-gray-700 text-xs text-right">
-                        {reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].name}
+                      <div className="font-medium text-gray-800 text-base text-right">
+                        {reviews[activeReview].name}
                       </div>
                     </div>
                   </div>
                 </div>
                 
-                {/* Active review card (center) - Elevated */}
-                <div className="relative bg-white rounded-2xl p-6 shadow-2xl max-w-md mx-auto z-30 transform scale-105">
+                {/* Right card - Next review */}
+                <div className="w-80 bg-white/80 rounded-2xl shadow-md p-6 opacity-75">
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-gray-200 flex-shrink-0">
-                      <img src={reviews[activeReview || 0].avatar} alt="Reviewer" className="w-full h-full object-cover" />
+                    <div className="w-12 h-12 rounded-full overflow-hidden border border-gray-200 flex-shrink-0">
+                      <img src={reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].avatar} alt="Reviewer" className="w-full h-full object-cover" />
                     </div>
                     <div className="flex-1">
-                      <div className="text-yellow-400 text-base mb-2">
-                        {'★'.repeat(reviews[activeReview || 0].rating)}
+                      <div className="text-yellow-400 text-sm mb-2">
+                        {'★'.repeat(reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].rating)}
                       </div>
-                      <p className="text-gray-700 text-sm leading-relaxed mb-3">
-                        {reviews[activeReview || 0].text}
+                      <p className="text-gray-600 text-sm leading-relaxed mb-3 line-clamp-4">
+                        {reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].text}
                       </p>
-                      <div className="font-medium text-gray-800 text-sm text-right">
-                        {reviews[activeReview || 0].name}
+                      <div className="font-medium text-gray-700 text-sm text-right">
+                        {reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].name}
                       </div>
                     </div>
                   </div>
