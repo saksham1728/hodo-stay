@@ -48,30 +48,6 @@ const Footer = () => {
     }
   }, [])
 
-  // circular indices
-  const n = reviews.length
-  const leftIndex = (activeReview - 1 + n) % n
-  const rightIndex = (activeReview + 1) % n
-
-  // fixed sizes (adjust if you want slightly different)
-  const SIDE_WIDTH = 320
-  const CENTER_WIDTH = 520
-  const CARD_HEIGHT = 320
-  const GAP = 36
-
-  // common transition style
-  const transitionStyle = {
-    transition: 'transform 360ms cubic-bezier(0.2,0.8,0.2,1), opacity 360ms ease'
-  }
-
-  // text clamp style (keeps content from growing card)
-  const clampStyle = {
-    display: '-webkit-box',
-    WebkitLineClamp: 6,
-    WebkitBoxOrient: 'vertical',
-    overflow: 'hidden'
-  }
-
   return (
     <div>
       {/* Reviews Section */}
@@ -81,7 +57,7 @@ const Footer = () => {
       >
         <div className="max-w-7xl mx-auto">
           <h2 
-            className="text-gray-800 m-0 mb-12 max-md:text-2xl"
+            className="text-gray-800 m-0 mb-12 max-md:text-3xl max-md:mb-8"
             style={{
               fontFamily: 'Petrona',
               fontWeight: 400,
@@ -92,151 +68,154 @@ const Footer = () => {
           >
             What our Guests say
           </h2>
-        </div>
 
-        {/* Centered cards layout (fixed sizes + smooth transitions) */}
-        <div className="flex justify-center mb-10 relative">
-          <div className="relative w-full max-w-6xl px-4">
-            {/* Left Arrow */}
-            <button 
-              className="absolute left-0 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white/90 rounded-full flex items-center justify-center shadow-lg z-20 hover:bg-white transition-colors"
-              onClick={() => {
-                const newIndex = activeReview > 0 ? activeReview - 1 : reviews.length - 1
-                setActiveReview(newIndex)
-              }}
-            >
-              ←
-            </button>
-
-            {/* Right Arrow */}
-            <button 
-              className="absolute right-0 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white/90 rounded-full flex items-center justify-center shadow-lg z-20 hover:bg-white transition-colors"
-              onClick={() => {
-                const newIndex = activeReview < reviews.length - 1 ? activeReview + 1 : 0
-                setActiveReview(newIndex)
-              }}
-            >
-              →
-            </button>
-
-            {/* Cards row (three cards: prev / active / next). Fixed widths & heights. */}
-            <div 
-              ref={reviewsRef}
-              className="flex items-center justify-center gap-8 overflow-visible px-6 py-6"
-              style={{ minHeight: CARD_HEIGHT }}
-            >
-              {/* LEFT (previous) */}
-              <div
-                key={reviews[leftIndex].id}
-                className="flex-shrink-0"
-                style={{
-                  width: SIDE_WIDTH,
-                  height: CARD_HEIGHT,
-                  ...transitionStyle,
-                  transform: `translateY(0) scale(${activeReview === leftIndex ? 1.02 : 0.98})`,
-                  opacity: activeReview === leftIndex ? 1 : 0.95
+          {/* Desktop Layout - 3 cards side by side */}
+          <div className="hidden md:flex justify-center mb-12 relative">
+            <div className="relative w-full max-w-6xl px-4">
+              {/* Navigation arrows */}
+              <button 
+                className="absolute left-0 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white/90 rounded-full flex items-center justify-center shadow-lg z-20 hover:bg-white transition-colors"
+                onClick={() => {
+                  const newIndex = activeReview > 0 ? activeReview - 1 : reviews.length - 1
+                  setActiveReview(newIndex)
                 }}
               >
-                <div className="bg-white/75 rounded-2xl p-5 shadow-md h-full flex flex-col justify-between">
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-full overflow-hidden border border-gray-200 flex-shrink-0">
-                      <img src={reviews[leftIndex].avatar} alt="Reviewer" className="w-full h-full object-cover" />
+                ←
+              </button>
+              <button 
+                className="absolute right-0 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white/90 rounded-full flex items-center justify-center shadow-lg z-20 hover:bg-white transition-colors"
+                onClick={() => {
+                  const newIndex = activeReview < reviews.length - 1 ? activeReview + 1 : 0
+                  setActiveReview(newIndex)
+                }}
+              >
+                →
+              </button>
+              
+              {/* Review cards container */}
+              <div className="relative px-20">
+                {/* Background card (left side) - Previous review */}
+                <div className="absolute left-4 top-4 w-72 h-44 bg-white/60 rounded-2xl shadow-md transform -rotate-6 z-10 p-4 overflow-hidden">
+                  <div className="flex items-start gap-3 opacity-70">
+                    <div className="w-8 h-8 rounded-full overflow-hidden border border-gray-200 flex-shrink-0">
+                      <img src={reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].avatar} alt="Reviewer" className="w-full h-full object-cover" />
                     </div>
                     <div className="flex-1">
-                      <div className="text-yellow-400 text-sm mb-2">
-                        {'★'.repeat(reviews[leftIndex].rating)}
+                      <div className="text-yellow-400 text-xs mb-1">
+                        {'★'.repeat(reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].rating)}
                       </div>
-                      <p className="text-gray-700 text-sm leading-relaxed mb-2" style={clampStyle}>
-                        {reviews[leftIndex].text}
+                      <p className="text-gray-600 text-xs leading-relaxed mb-2 line-clamp-3">
+                        {reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].text.substring(0, 80)}...
                       </p>
+                      <div className="font-medium text-gray-700 text-xs text-right">
+                        {reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].name}
+                      </div>
                     </div>
-                  </div>
-                  <div className="text-right text-sm font-medium text-gray-700 pt-2">
-                    {reviews[leftIndex].name}
                   </div>
                 </div>
-              </div>
-
-              {/* CENTER (active) */}
-              <div
-                key={reviews[activeReview].id}
-                className="flex-shrink-0"
-                style={{
-                  width: CENTER_WIDTH,
-                  height: CARD_HEIGHT,
-                  ...transitionStyle,
-                  transform: `translateY(-6px) scale(1.02)`,
-                  opacity: 1
-                }}
-              >
-                <div className="bg-[#FBF6F0] rounded-3xl p-8 shadow-2xl h-full flex flex-col justify-between">
-                  <div className="flex items-start gap-6">
-                    <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-gray-200 flex-shrink-0">
-                      <img src={reviews[activeReview].avatar} alt="Reviewer" className="w-full h-full object-cover" />
+                
+                {/* Background card (right side) - Next review */}
+                <div className="absolute right-4 top-4 w-72 h-44 bg-white/60 rounded-2xl shadow-md transform rotate-6 z-10 p-4 overflow-hidden">
+                  <div className="flex items-start gap-3 opacity-70">
+                    <div className="w-8 h-8 rounded-full overflow-hidden border border-gray-200 flex-shrink-0">
+                      <img src={reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].avatar} alt="Reviewer" className="w-full h-full object-cover" />
                     </div>
                     <div className="flex-1">
-                      <div className="text-yellow-400 text-lg mb-3">
-                        {'★'.repeat(reviews[activeReview].rating)}
+                      <div className="text-yellow-400 text-xs mb-1">
+                        {'★'.repeat(reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].rating)}
                       </div>
-                      <p className="text-gray-800 text-base leading-relaxed mb-4 text-center" style={clampStyle}>
-                        {reviews[activeReview].text}
+                      <p className="text-gray-600 text-xs leading-relaxed mb-2 line-clamp-3">
+                        {reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].text.substring(0, 80)}...
                       </p>
+                      <div className="font-medium text-gray-700 text-xs text-right">
+                        {reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].name}
+                      </div>
                     </div>
-                  </div>
-                  <div className="text-right text-lg font-medium text-gray-800 pt-2">
-                    {reviews[activeReview].name}
                   </div>
                 </div>
-              </div>
-
-              {/* RIGHT (next) */}
-              <div
-                key={reviews[rightIndex].id}
-                className="flex-shrink-0"
-                style={{
-                  width: SIDE_WIDTH,
-                  height: CARD_HEIGHT,
-                  ...transitionStyle,
-                  transform: `translateY(0) scale(${activeReview === rightIndex ? 1.02 : 0.98})`,
-                  opacity: activeReview === rightIndex ? 1 : 0.95
-                }}
-              >
-                <div className="bg-white/75 rounded-2xl p-5 shadow-md h-full flex flex-col justify-between">
+                
+                {/* Active review card (center) - Elevated */}
+                <div className="relative bg-white rounded-2xl p-6 shadow-2xl max-w-md mx-auto z-30 transform scale-105">
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-full overflow-hidden border border-gray-200 flex-shrink-0">
-                      <img src={reviews[rightIndex].avatar} alt="Reviewer" className="w-full h-full object-cover" />
+                    <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-gray-200 flex-shrink-0">
+                      <img src={reviews[activeReview || 0].avatar} alt="Reviewer" className="w-full h-full object-cover" />
                     </div>
                     <div className="flex-1">
-                      <div className="text-yellow-400 text-sm mb-2">
-                        {'★'.repeat(reviews[rightIndex].rating)}
+                      <div className="text-yellow-400 text-base mb-2">
+                        {'★'.repeat(reviews[activeReview || 0].rating)}
                       </div>
-                      <p className="text-gray-700 text-sm leading-relaxed mb-2" style={clampStyle}>
-                        {reviews[rightIndex].text}
+                      <p className="text-gray-700 text-sm leading-relaxed mb-3">
+                        {reviews[activeReview || 0].text}
                       </p>
+                      <div className="font-medium text-gray-800 text-sm text-right">
+                        {reviews[activeReview || 0].name}
+                      </div>
                     </div>
-                  </div>
-                  <div className="text-right text-sm font-medium text-gray-700 pt-2">
-                    {reviews[rightIndex].name}
                   </div>
                 </div>
               </div>
             </div>
-
           </div>
-        </div>
 
-        {/* Dots */}
-        <div className="flex justify-center gap-2">
-          {reviews.map((_, index) => (
-            <button
-              key={index}
-              aria-label={`Go to review ${index + 1}`}
-              className={`w-3 h-3 rounded-full cursor-pointer transition-colors duration-300 focus:outline-none ${
-                index === activeReview ? 'bg-emerald-800' : 'bg-gray-400'
-              }`}
-              onClick={() => setActiveReview(index)}
-            ></button>
-          ))}
+          {/* Mobile Layout - Single card with swipe */}
+          <div className="md:hidden mb-8">
+            <div className="relative">
+              {/* Mobile Navigation Arrows */}
+              <button 
+                className="absolute left-2 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-white/90 rounded-full flex items-center justify-center shadow-lg z-20 hover:bg-white transition-colors"
+                onClick={() => {
+                  const newIndex = activeReview > 0 ? activeReview - 1 : reviews.length - 1
+                  setActiveReview(newIndex)
+                }}
+              >
+                ←
+              </button>
+              <button 
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-white/90 rounded-full flex items-center justify-center shadow-lg z-20 hover:bg-white transition-colors"
+                onClick={() => {
+                  const newIndex = activeReview < reviews.length - 1 ? activeReview + 1 : 0
+                  setActiveReview(newIndex)
+                }}
+              >
+                →
+              </button>
+
+              {/* Single Mobile Card */}
+              <div className="px-16">
+                <div className="bg-white rounded-2xl p-6 shadow-xl mx-auto max-w-sm">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-gray-200 flex-shrink-0">
+                      <img src={reviews[activeReview].avatar} alt="Reviewer" className="w-full h-full object-cover" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-yellow-400 text-base mb-2">
+                        {'★'.repeat(reviews[activeReview].rating)}
+                      </div>
+                      <p className="text-gray-700 text-sm leading-relaxed mb-3">
+                        {reviews[activeReview].text}
+                      </p>
+                      <div className="font-medium text-gray-800 text-sm text-right">
+                        {reviews[activeReview].name}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Dots Navigation */}
+          <div className="flex justify-center gap-2">
+            {reviews.map((_, index) => (
+              <span 
+                key={index}
+                className={`w-3 h-3 rounded-full cursor-pointer transition-colors duration-300 ${
+                  index === activeReview ? 'bg-emerald-800' : 'bg-gray-400'
+                }`}
+                onClick={() => setActiveReview(index)}
+              ></span>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -247,7 +226,7 @@ const Footer = () => {
       >
         <div className="max-w-7xl mx-auto">
           <h2 
-            className="text-white m-0 mb-12 max-md:ml-0"
+            className="text-white m-0 mb-12 max-md:text-3xl max-md:mb-8"
             style={{
               fontFamily: 'Petrona',
               fontWeight: 400,
@@ -258,7 +237,7 @@ const Footer = () => {
           >
             Frequently Asked Questions
           </h2>
-          <div className="grid grid-cols-2 gap-12 max-md:grid-cols-1 max-md:gap-6 max-md:ml-0">
+          <div className="grid grid-cols-2 gap-12 max-md:grid-cols-1 max-md:gap-6">
             <div className="flex flex-col gap-6">
               <div className="border-b border-white/20 pb-4">
                 <div className="flex justify-between items-center cursor-pointer py-2">
