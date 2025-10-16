@@ -44,7 +44,12 @@ const OurProperties = () => {
           </h2>
           <Link 
             to="/properties" 
-            className="text-gray-600 text-sm hover:text-gray-800 transition-colors"
+            className="text-gray-600 hover:text-gray-800 transition-colors"
+            style={{
+              fontFamily: 'Petrona',
+              fontWeight: 400,
+              fontSize: '14px'
+            }}
           >
             View all →
           </Link>
@@ -69,7 +74,16 @@ const OurProperties = () => {
               <div className="flex-1 p-4 md:p-6">
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3 gap-2 sm:gap-0">
                   <div className="flex-1">
-                    <h3 className="text-base md:text-lg font-semibold text-black mb-1">
+                    <h3 
+                      className="text-black mb-1"
+                      style={{
+                        fontFamily: 'Petrona',
+                        fontWeight: 600,
+                        fontSize: '30px',
+                        lineHeight: '100%',
+                        letterSpacing: '-2.2%'
+                      }}
+                    >
                       {property.title}
                     </h3>
                     <div className="flex items-center gap-2 mb-2">
@@ -82,11 +96,28 @@ const OurProperties = () => {
                   </div>
                   <div className="flex items-center gap-1 self-start sm:self-auto">
                     <span className="text-orange-400 text-sm">★</span>
-                    <span className="text-sm font-medium">{property.rating}</span>
+                    <span 
+                      className="font-medium"
+                      style={{
+                        fontFamily: 'Petrona',
+                        fontWeight: 500,
+                        fontSize: '14px'
+                      }}
+                    >
+                      {property.rating}
+                    </span>
                   </div>
                 </div>
                 
-                <p className="text-gray-600 text-sm mb-4">
+                <p 
+                  className="text-gray-600 mb-4"
+                  style={{
+                    fontFamily: 'Petrona',
+                    fontWeight: 400,
+                    fontSize: '14px',
+                    lineHeight: '140%'
+                  }}
+                >
                   {property.location}
                 </p>
                 
@@ -94,7 +125,12 @@ const OurProperties = () => {
                   {property.amenities.map((amenity, index) => (
                     <span 
                       key={index} 
-                      className="flex items-center gap-1 text-gray-600 text-xs px-2 py-1 bg-gray-50 rounded-md"
+                      className="flex items-center gap-1 text-gray-600 px-2 py-1 bg-gray-50 rounded-md"
+                      style={{
+                        fontFamily: 'Petrona',
+                        fontWeight: 400,
+                        fontSize: '12px'
+                      }}
                     >
                       {amenity === "WiFi" && "📶"}
                       {amenity === "Air-conditioning" && "❄️"}
@@ -108,8 +144,8 @@ const OurProperties = () => {
                   className="mb-6"
                   style={{
                     color: '#8B8B8B',
-                    fontFamily: 'Work Sans',
-                    fontWeight: 500,
+                    fontFamily: 'Petrona',
+                    fontWeight: 400,
                     fontSize: '18px',
                     lineHeight: '150%',
                     letterSpacing: '-2.2%'
@@ -120,12 +156,21 @@ const OurProperties = () => {
                 
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-0">
                   <div className="flex flex-col">
-                    <span className="text-gray-500 text-xs mb-1">from</span>
+                    <span 
+                      className="text-gray-500 mb-1"
+                      style={{
+                        fontFamily: 'Petrona',
+                        fontWeight: 400,
+                        fontSize: '12px'
+                      }}
+                    >
+                      from
+                    </span>
                     <div className="flex items-baseline gap-1">
                       <span 
                         style={{
                           color: '#4A4A4A',
-                          fontFamily: 'Work Sans',
+                          fontFamily: 'Petrona',
                           fontWeight: 600,
                           fontSize: '30px',
                           lineHeight: '100%',
@@ -134,12 +179,26 @@ const OurProperties = () => {
                       >
                         Rs. {property.price.toLocaleString()}
                       </span>
-                      <span className="text-gray-500 text-xs ml-1">per night</span>
+                      <span 
+                        className="text-gray-500 ml-1"
+                        style={{
+                          fontFamily: 'Petrona',
+                          fontWeight: 400,
+                          fontSize: '12px'
+                        }}
+                      >
+                        per night
+                      </span>
                     </div>
                   </div>
                   <Link 
                     to={`/property/${property.id}`} 
-                    className="text-gray-600 text-sm hover:text-gray-800 transition-colors self-start sm:self-auto"
+                    className="text-gray-600 hover:text-gray-800 transition-colors self-start sm:self-auto"
+                    style={{
+                      fontFamily: 'Petrona',
+                      fontWeight: 400,
+                      fontSize: '14px'
+                    }}
                   >
                     View rooms →
                   </Link>
