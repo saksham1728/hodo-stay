@@ -83,7 +83,7 @@ const HodoBlogs = () => {
         <div className="flex flex-col md:grid md:grid-cols-12 gap-8 md:items-start">
           
           {/* Left: Hero Text */}
-          <div className="md:col-span-4 lg:col-span-5 text-center md:text-left">
+          <div className="md:col-span-4 lg:col-span-5 text-left">
             <h2
               className="text-white mb-4 md:mb-6"
               style={{
@@ -98,7 +98,7 @@ const HodoBlogs = () => {
             </h2>
 
             <p
-              className="text-white/80 mb-6 max-w-lg mx-auto md:mx-0"
+              className="text-white/80 mb-6 max-w-lg"
               style={{
                 fontFamily: 'Work Sans, sans-serif',
                 fontWeight: 400,
@@ -111,7 +111,7 @@ const HodoBlogs = () => {
             </p>
 
             <button
-              className="text-white underline hover:text-white/80 transition-colors mx-auto md:mx-0 block md:inline-block"
+              className="text-white underline hover:text-white/80 transition-colors inline-block"
               style={{
                 fontFamily: 'Work Sans, sans-serif',
                 fontWeight: 400,
