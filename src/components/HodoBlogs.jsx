@@ -89,12 +89,12 @@ const HodoBlogs = () => {
               style={{
                 fontFamily: 'Petrona, serif',
                 fontWeight: 400,
-                fontSize: window.innerWidth < 768 ? '36px' : '62px',
+                fontSize: window.innerWidth < 768 ? '36px' : '48px',
                 lineHeight: '90%',
                 letterSpacing: '-2.2%'
               }}
             >
-              Hodo <br className="hidden md:block" /> Chronicles
+              Hodo Chronicles
             </h2>
 
             <p

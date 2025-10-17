@@ -35,7 +35,7 @@ const OurProperties = () => {
             style={{
               fontFamily: 'Petrona',
               fontWeight: 400,
-              fontSize: '48px',
+              fontSize: window.innerWidth < 768 ? '36px' : '48px',
               lineHeight: '150%',
               letterSpacing: '-2.2%'
             }}

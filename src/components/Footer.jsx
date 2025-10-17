@@ -64,7 +64,7 @@ const Footer = () => {
             style={{
               fontFamily: "Petrona",
               fontWeight: 400,
-              fontSize: "48px",
+              fontSize: window.innerWidth < 768 ? '36px' : '48px',
               lineHeight: "150%",
               letterSpacing: "-2.2%",
             }}
@@ -100,9 +100,15 @@ const Footer = () => {
               {/* Review cards container - 3 straight cards */}
               <div className="flex items-center justify-center gap-6 px-16">
                 {/* Left card - Previous review */}
-                <div className="w-80 bg-white/80 rounded-2xl shadow-md p-6 opacity-75">
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-full overflow-hidden border border-gray-200 flex-shrink-0">
+                <div 
+                  className="w-80 rounded-2xl p-6 opacity-75"
+                  style={{ 
+                    backgroundColor: '#F6F0E7',
+                    boxShadow: '0px 4px 4px 0px #00000040'
+                  }}
+                >
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
                       <img
                         src={
                           reviews[
@@ -115,66 +121,74 @@ const Footer = () => {
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <div className="flex-1">
-                      <div className="text-yellow-400 text-sm mb-2">
-                        {"★".repeat(
-                          reviews[
-                            activeReview > 0
-                              ? activeReview - 1
-                              : reviews.length - 1
-                          ].rating
-                        )}
-                      </div>
-                      <p className="text-gray-600 text-sm leading-relaxed mb-3 line-clamp-4">
-                        {
-                          reviews[
-                            activeReview > 0
-                              ? activeReview - 1
-                              : reviews.length - 1
-                          ].text
-                        }
-                      </p>
-                      <div className="font-medium text-gray-700 text-sm text-right">
-                        {
-                          reviews[
-                            activeReview > 0
-                              ? activeReview - 1
-                              : reviews.length - 1
-                          ].name
-                        }
-                      </div>
+                    <div className="text-yellow-400 text-lg">
+                      {"★".repeat(
+                        reviews[
+                          activeReview > 0
+                            ? activeReview - 1
+                            : reviews.length - 1
+                        ].rating
+                      )}
                     </div>
+                  </div>
+                  <p className="text-gray-800 text-sm leading-relaxed mb-4 text-center">
+                    {
+                      reviews[
+                        activeReview > 0
+                          ? activeReview - 1
+                          : reviews.length - 1
+                      ].text
+                    }
+                  </p>
+                  <div className="font-medium text-gray-800 text-sm text-right">
+                    {
+                      reviews[
+                        activeReview > 0
+                          ? activeReview - 1
+                          : reviews.length - 1
+                      ].name
+                    }
                   </div>
                 </div>
 
                 {/* Center card - Active review (highlighted) */}
-                <div className="w-96 bg-white rounded-2xl shadow-2xl p-8 transform scale-105 z-10">
-                  <div className="flex items-start gap-4">
-                    <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-gray-200 flex-shrink-0">
+                <div 
+                  className="w-96 rounded-2xl p-8 transform scale-105 z-10"
+                  style={{ 
+                    backgroundColor: '#F6F0E7',
+                    boxShadow: '0px 4px 4px 0px #00000040'
+                  }}
+                >
+                  <div className="flex justify-between items-start mb-6">
+                    <div className="w-16 h-16 rounded-full overflow-hidden flex-shrink-0">
                       <img
                         src={reviews[activeReview].avatar}
                         alt="Reviewer"
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <div className="flex-1">
-                      <div className="text-yellow-400 text-lg mb-3">
-                        {"★".repeat(reviews[activeReview].rating)}
-                      </div>
-                      <p className="text-gray-800 text-base leading-relaxed mb-4">
-                        {reviews[activeReview].text}
-                      </p>
-                      <div className="font-medium text-gray-800 text-base text-right">
-                        {reviews[activeReview].name}
-                      </div>
+                    <div className="text-yellow-400 text-xl">
+                      {"★".repeat(reviews[activeReview].rating)}
                     </div>
+                  </div>
+                  <p className="text-gray-800 text-base leading-relaxed mb-6 text-center">
+                    {reviews[activeReview].text}
+                  </p>
+                  <div className="font-medium text-gray-800 text-lg text-right">
+                    {reviews[activeReview].name}
                   </div>
                 </div>
 
                 {/* Right card - Next review */}
-                <div className="w-80 bg-white/80 rounded-2xl shadow-md p-6 opacity-75">
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-full overflow-hidden border border-gray-200 flex-shrink-0">
+                <div 
+                  className="w-80 rounded-2xl p-6 opacity-75"
+                  style={{ 
+                    backgroundColor: '#F6F0E7',
+                    boxShadow: '0px 4px 4px 0px #00000040'
+                  }}
+                >
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
                       <img
                         src={
                           reviews[
@@ -187,35 +201,33 @@ const Footer = () => {
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <div className="flex-1">
-                      <div className="text-yellow-400 text-sm mb-2">
-                        {"★".repeat(
-                          reviews[
-                            activeReview < reviews.length - 1
-                              ? activeReview + 1
-                              : 0
-                          ].rating
-                        )}
-                      </div>
-                      <p className="text-gray-600 text-sm leading-relaxed mb-3 line-clamp-4">
-                        {
-                          reviews[
-                            activeReview < reviews.length - 1
-                              ? activeReview + 1
-                              : 0
-                          ].text
-                        }
-                      </p>
-                      <div className="font-medium text-gray-700 text-sm text-right">
-                        {
-                          reviews[
-                            activeReview < reviews.length - 1
-                              ? activeReview + 1
-                              : 0
-                          ].name
-                        }
-                      </div>
+                    <div className="text-yellow-400 text-lg">
+                      {"★".repeat(
+                        reviews[
+                          activeReview < reviews.length - 1
+                            ? activeReview + 1
+                            : 0
+                        ].rating
+                      )}
                     </div>
+                  </div>
+                  <p className="text-gray-800 text-sm leading-relaxed mb-4 text-center">
+                    {
+                      reviews[
+                        activeReview < reviews.length - 1
+                          ? activeReview + 1
+                          : 0
+                      ].text
+                    }
+                  </p>
+                  <div className="font-medium text-gray-800 text-sm text-right">
+                    {
+                      reviews[
+                        activeReview < reviews.length - 1
+                          ? activeReview + 1
+                          : 0
+                      ].name
+                    }
                   </div>
                 </div>
               </div>
@@ -233,36 +245,40 @@ const Footer = () => {
                 WebkitOverflowScrolling: 'touch'
               }}
             >
-              {reviews.map((review, index) => (
+              {reviews.map((review) => (
                 <div 
                   key={review.id}
-                  className="bg-white rounded-2xl p-6 shadow-xl flex-shrink-0 w-full snap-start"
-                  style={{ minWidth: 'calc(100vw - 32px)' }}
+                  className="rounded-2xl p-6 flex-shrink-0 w-full snap-start"
+                  style={{ 
+                    minWidth: 'calc(100vw - 32px)',
+                    backgroundColor: '#F6F0E7',
+                    boxShadow: '0px 4px 4px 0px #00000040'
+                  }}
                 >
                   {/* Photo and Rating on top */}
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-gray-200 flex-shrink-0">
+                  <div className="flex justify-between items-start mb-6">
+                    <div className="w-16 h-16 rounded-full overflow-hidden flex-shrink-0">
                       <img
                         src={review.avatar}
                         alt="Reviewer"
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <div>
-                      <div className="font-medium text-gray-800 text-lg mb-1">
-                        {review.name}
-                      </div>
-                      <div className="text-yellow-400 text-lg">
-                        {"★".repeat(review.rating)}
-                      </div>
+                    <div className="text-yellow-400 text-xl">
+                      {"★".repeat(review.rating)}
                     </div>
                   </div>
                   
                   {/* Review text full width */}
-                  <div className="w-full">
-                    <p className="text-gray-700 text-base leading-relaxed">
+                  <div className="w-full mb-6">
+                    <p className="text-gray-800 text-base leading-relaxed text-center">
                       {review.text}
                     </p>
+                  </div>
+                  
+                  {/* Name at bottom right */}
+                  <div className="font-medium text-gray-800 text-lg text-right">
+                    {review.name}
                   </div>
                 </div>
               ))}
@@ -298,7 +314,7 @@ const Footer = () => {
             style={{
               fontFamily: "Petrona",
               fontWeight: 400,
-              fontSize: "48px",
+              fontSize: window.innerWidth < 768 ? '36px' : '48px',
               lineHeight: "150%",
               letterSpacing: "-2.2%",
             }}
