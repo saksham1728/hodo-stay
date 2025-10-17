@@ -11,7 +11,6 @@ const ImageCarousel = ({ images }) => {
   const currentX = useRef(0)
 
   useEffect(() => {
-    // if images changed reset to 0
     setIndex(0)
   }, [images])
 
@@ -100,9 +99,9 @@ const ImageCarousel = ({ images }) => {
 }
 
 const OurProperties = () => {
-  // images for each property as requested
-  const property1Images = ['/card-1.png', '/card-2.png', '/card-3.png']
-  const property2Images = ['/card-4.png', '/card-5.png', '/card-6.png']
+  // using explicit card images as requested
+  const commonImages1 = ['/card-1.png', '/card-2.png', '/card-3.png']
+  const commonImages2 = ['/card-4.png', '/card-5.png', '/card-6.png']
 
   const properties = [
     {
@@ -116,7 +115,8 @@ const OurProperties = () => {
       ],
       rating: 5.0,
       price: 2646,
-      images: property1Images
+      images: commonImages1,
+      amenities: ['WiFi', 'Air-conditioning', 'Free Parking on Premises']
     },
     {
       id: 2,
@@ -129,7 +129,8 @@ const OurProperties = () => {
       ],
       rating: 4.8,
       price: 2199,
-      images: property2Images
+      images: commonImages2,
+      amenities: ['WiFi', 'Air-conditioning', 'Free Parking on Premises']
     }
   ]
 
@@ -161,14 +162,14 @@ const OurProperties = () => {
           </h2>
           <Link
             to="/properties"
-            className="text-gray-600 hover:text-gray-800 transition-colors underline"
+            className="text-gray-600 hover:text-gray-800 transition-colors"
             style={{
               fontFamily: 'Petrona',
               fontWeight: 400,
               fontSize: '14px'
             }}
           >
-            View all
+            View all →
           </Link>
         </div>
 
@@ -179,7 +180,6 @@ const OurProperties = () => {
               key={property.id}
               className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden"
             >
-              {/* 60:40 layout on md+, stacked on mobile */}
               <div className="flex flex-col md:flex-row">
                 {/* Left: Image carousel (60%) */}
                 <div className="w-full md:w-3/5 h-[360px] md:h-[360px] flex-shrink-0" style={{ minHeight: '300px' }}>
@@ -217,31 +217,44 @@ const OurProperties = () => {
                       </div>
 
                       <div className="flex flex-col items-end">
-                        <div className="flex items-center gap-2">
-                          <div className="text-yellow-400 text-lg" aria-hidden>
-                            ★
-                          </div>
-                          <div
-                            style={{
-                              fontFamily: 'Petrona',
-                              fontWeight: 600,
-                              fontSize: '16px'
-                            }}
-                            className="text-gray-800"
-                          >
-                            {property.rating.toFixed(1)}
-                          </div>
+                        <div
+                          style={{
+                            fontFamily: 'Petrona',
+                            fontWeight: 600,
+                            fontSize: '16px'
+                          }}
+                          className="text-gray-800"
+                        >
+                          {property.rating.toFixed(1)}
                         </div>
                       </div>
                     </div>
 
-                    {/* Highlights */}
-                    <ul className="mt-2 mb-4 space-y-2">
+                    {/* Amenities badges (restored) */}
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {property.amenities.map((amenity, idx) => (
+                        <span
+                          key={idx}
+                          className="flex items-center gap-1 text-gray-600 px-2 py-1 bg-gray-50 rounded-md"
+                          style={{
+                            fontFamily: 'Petrona',
+                            fontWeight: 400,
+                            fontSize: '12px'
+                          }}
+                        >
+                          {amenity === 'WiFi' && '📶'}
+                          {amenity === 'Air-conditioning' && '❄️'}
+                          {amenity === 'Free Parking on Premises' && '🅿️'}
+                          {amenity}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* Highlights with small yellow dot bullets */}
+                    {/* <ul className="mt-2 mb-4 space-y-2">
                       {property.highlights.map((h, idx) => (
                         <li key={idx} className="flex items-start gap-3">
-                          <div style={{ color: '#F6C84C' }} className="mt-1">
-                            ★
-                          </div>
+                          <div className="w-2 h-2 rounded-full mt-2" style={{ background: '#F6C84C' }} />
                           <div
                             className="text-gray-700"
                             style={{
@@ -255,10 +268,25 @@ const OurProperties = () => {
                           </div>
                         </li>
                       ))}
-                    </ul>
+                    </ul> */}
+
+                    <p
+                      className="mb-6"
+                      style={{
+                        color: '#8B8B8B',
+                        fontFamily: 'Petrona',
+                        fontWeight: 400,
+                        fontSize: '18px',
+                        lineHeight: '150%',
+                        letterSpacing: '-2.2%'
+                      }}
+                    >
+                      {/* short description placeholder */}
+                      Comfortable, thoughtfully designed spaces for short & long stays.
+                    </p>
                   </div>
 
-                  {/* Price & view rooms (old style price) */}
+                  {/* Price & action */}
                   <div className="flex items-center justify-between mt-4">
                     <div>
                       <div
@@ -298,12 +326,8 @@ const OurProperties = () => {
                       <div className="text-green-600 text-xs mt-1" style={{ fontFamily: 'Petrona' }}>
                         Incl. taxes
                       </div>
-                      <div className="text-green-600 text-xs" style={{ fontFamily: 'Petrona' }}>
-                        Lowest Price, Guaranteed!
-                      </div>
                     </div>
 
-                    {/* View rooms link (underline, no arrow) */}
                     <div className="flex flex-col items-end gap-2">
                       <Link
                         to={`/property/${property.id}`}
