@@ -77,24 +77,36 @@ const Footer = () => {
             <div className="relative w-full max-w-6xl px-4">
               {/* Navigation arrows */}
               <button
-                className="absolute left-0 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white/90 rounded-full flex items-center justify-center shadow-lg z-20 hover:bg-white transition-colors"
+                className="absolute left-0 top-1/2 transform -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center shadow-lg z-20 hover:bg-white/90 transition-colors"
+                style={{ 
+                  backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                  border: '1px solid rgba(0,0,0,0.1)'
+                }}
                 onClick={() => {
                   const newIndex =
                     activeReview > 0 ? activeReview - 1 : reviews.length - 1;
                   setActiveReview(newIndex);
                 }}
               >
-                ←
+                <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+                </svg>
               </button>
               <button
-                className="absolute right-0 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white/90 rounded-full flex items-center justify-center shadow-lg z-20 hover:bg-white transition-colors"
+                className="absolute right-0 top-1/2 transform -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center shadow-lg z-20 hover:bg-white/90 transition-colors"
+                style={{ 
+                  backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                  border: '1px solid rgba(0,0,0,0.1)'
+                }}
                 onClick={() => {
                   const newIndex =
                     activeReview < reviews.length - 1 ? activeReview + 1 : 0;
                   setActiveReview(newIndex);
                 }}
               >
-                →
+                <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                </svg>
               </button>
 
               {/* Review cards container - 3 straight cards */}
