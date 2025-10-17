@@ -72,8 +72,10 @@ const Home = () => {
         </div>
       </div>
       
-      {/* Home Header */}
-      <HomeHeader />
+      {/* Sticky Home Header - appears after video */}
+      <div className="sticky top-0 z-50">
+        <HomeHeader />
+      </div>
       
       {/* Card Stack Section */}
       <CardStack />
