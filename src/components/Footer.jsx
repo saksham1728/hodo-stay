@@ -31,7 +31,8 @@ const Footer = () => {
   const handleScroll = () => {
     if (reviewsRef.current) {
       const container = reviewsRef.current;
-      const cardWidth = 370;
+      const isMobile = window.innerWidth < 768;
+      const cardWidth = isMobile ? window.innerWidth - 32 : 370; // Full width minus padding on mobile
       const scrollLeft = container.scrollLeft;
       const newActiveIndex = Math.round(scrollLeft / cardWidth);
       if (newActiveIndex >= 0 && newActiveIndex < reviews.length) {
@@ -43,10 +44,10 @@ const Footer = () => {
   useEffect(() => {
     const container = reviewsRef.current;
     if (container) {
-      container.addEventListener("scroll", handleScroll);
+      container.addEventListener("scroll", handleScroll, { passive: true });
       return () => container.removeEventListener("scroll", handleScroll);
     }
-  }, [handleScroll]);
+  }, []);
 
   return (
     <div>
@@ -221,56 +222,50 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Mobile Layout - Single card with swipe */}
+          {/* Mobile Layout - Touch scrollable full width cards */}
           <div className="md:hidden mb-8">
-            <div className="relative">
-              {/* Mobile Navigation Arrows */}
-              <button
-                className="absolute left-2 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-white/90 rounded-full flex items-center justify-center shadow-lg z-20 hover:bg-white transition-colors"
-                onClick={() => {
-                  const newIndex =
-                    activeReview > 0 ? activeReview - 1 : reviews.length - 1;
-                  setActiveReview(newIndex);
-                }}
-              >
-                ←
-              </button>
-              <button
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-white/90 rounded-full flex items-center justify-center shadow-lg z-20 hover:bg-white transition-colors"
-                onClick={() => {
-                  const newIndex =
-                    activeReview < reviews.length - 1 ? activeReview + 1 : 0;
-                  setActiveReview(newIndex);
-                }}
-              >
-                →
-              </button>
-
-              {/* Single Mobile Card */}
-              <div className="px-16">
-                <div className="bg-white rounded-2xl p-6 shadow-xl mx-auto max-w-sm">
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-gray-200 flex-shrink-0">
+            <div 
+              ref={reviewsRef}
+              className="flex gap-4 overflow-x-auto pb-4 px-4 scrollbar-hide snap-x snap-mandatory"
+              style={{
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none',
+                WebkitOverflowScrolling: 'touch'
+              }}
+            >
+              {reviews.map((review, index) => (
+                <div 
+                  key={review.id}
+                  className="bg-white rounded-2xl p-6 shadow-xl flex-shrink-0 w-full snap-start"
+                  style={{ minWidth: 'calc(100vw - 32px)' }}
+                >
+                  {/* Photo and Rating on top */}
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-gray-200 flex-shrink-0">
                       <img
-                        src={reviews[activeReview].avatar}
+                        src={review.avatar}
                         alt="Reviewer"
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <div className="flex-1">
-                      <div className="text-yellow-400 text-base mb-2">
-                        {"★".repeat(reviews[activeReview].rating)}
+                    <div>
+                      <div className="font-medium text-gray-800 text-lg mb-1">
+                        {review.name}
                       </div>
-                      <p className="text-gray-700 text-sm leading-relaxed mb-3">
-                        {reviews[activeReview].text}
-                      </p>
-                      <div className="font-medium text-gray-800 text-sm text-right">
-                        {reviews[activeReview].name}
+                      <div className="text-yellow-400 text-lg">
+                        {"★".repeat(review.rating)}
                       </div>
                     </div>
                   </div>
+                  
+                  {/* Review text full width */}
+                  <div className="w-full">
+                    <p className="text-gray-700 text-base leading-relaxed">
+                      {review.text}
+                    </p>
+                  </div>
                 </div>
-              </div>
+              ))}
             </div>
           </div>
 
