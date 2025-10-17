@@ -404,9 +404,9 @@ const Footer = () => {
           <div className="text-right mt-8">
             <a
               href="#"
-              className="text-white/80 text-sm hover:text-white transition-colors"
+              className="text-white/80 text-sm hover:text-white transition-colors underline"
             >
-              View more FAQs →
+              View more FAQs
             </a>
           </div>
         </div>

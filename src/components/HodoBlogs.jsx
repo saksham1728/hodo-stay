@@ -118,7 +118,7 @@ const HodoBlogs = () => {
                 fontSize: '18px'
               }}
             >
-              View more →
+              View more
             </button>
           </div>
 

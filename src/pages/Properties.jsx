@@ -214,14 +214,14 @@ const Properties = () => {
                     </div>
                     <Link
                       to={`/property/${property.id}`}
-                      className="text-gray-600 hover:text-gray-800 transition-colors self-start sm:self-auto"
+                      className="text-gray-600 hover:text-gray-800 transition-colors self-start sm:self-auto underline"
                       style={{
                         fontFamily: "Petrona",
                         fontWeight: 400,
                         fontSize: "14px",
                       }}
                     >
-                      View rooms →
+                      View rooms
                     </Link>
                   </div>
                 </div>
