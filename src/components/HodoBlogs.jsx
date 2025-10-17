@@ -127,13 +127,13 @@ const HodoBlogs = () => {
             {/* Left Arrow - Hidden on mobile, more visible on desktop */}
             <button
               onClick={scrollLeft}
-              className="hidden md:flex absolute -left-6 top-1/2 -translate-y-1/2 w-16 h-16 rounded-full items-center justify-center hover:bg-white/90 transition-all duration-300 z-20 shadow-lg hover:shadow-xl hover:scale-105"
+              className="hidden md:flex absolute top-1/2 -translate-y-1/2 w-12 h-12 rounded-full items-center justify-center hover:bg-white/90 transition-all duration-300 z-20 shadow-lg hover:shadow-xl hover:scale-105"
               style={{ 
                 backgroundColor: 'rgba(255, 255, 255, 0.8)',
                 border: '1px solid rgba(0,0,0,0.1)'
               }}
             >
-              <svg className="w-8 h-8 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
               </svg>
             </button>
@@ -141,13 +141,13 @@ const HodoBlogs = () => {
             {/* Right Arrow - Hidden on mobile, more visible on desktop */}
             <button
               onClick={scrollRight}
-              className="hidden md:flex absolute -right-6 top-1/2 -translate-y-1/2 w-16 h-16 rounded-full items-center justify-center hover:bg-white/90 transition-all duration-300 z-20 shadow-lg hover:shadow-xl hover:scale-105"
+              className="hidden md:flex absolute -right-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full items-center justify-center hover:bg-white/90 transition-all duration-300 z-20 shadow-lg hover:shadow-xl hover:scale-105"
               style={{ 
                 backgroundColor: 'rgba(255, 255, 255, 0.8)',
                 border: '1px solid rgba(0,0,0,0.1)'
               }}
             >
-              <svg className="w-8 h-8 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
               </svg>
             </button>
