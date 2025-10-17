@@ -14,22 +14,47 @@ const HomeHeader = () => {
           </div>
 
           {/* Desktop Right Section */}
-          <div className="hidden md:flex items-center gap-4">
-            {/* Search Button */}
-            <button
-              className="px-8 py-3 rounded-full text-white font-semibold hover:opacity-90 transition-opacity"
-              style={{ backgroundColor: "#DE754B" }}
+          <div className="hidden md:flex items-center gap-8">
+            {/* Book Now Link */}
+            <a
+              href="#"
+              className="text-gray-800 font-semibold relative hover:underline underline-offset-4 decoration-1 hover:-translate-y-0.5 hover:animate-pulse transition-all duration-300 ease-out"
+              style={{ 
+                '--hover-color': '#DE754B'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.color = '#DE754B';
+                e.target.style.textDecorationColor = '#DE754B';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.color = '#374151';
+                e.target.style.textDecorationColor = '#374151';
+              }}
             >
-              Search
-            </button>
-
-            {/* Book Now Button */}
-            <button className="px-8 py-3 border-2 border-gray-800 text-gray-800 rounded-full font-semibold hover:bg-gray-800 hover:text-white transition-colors">
               Book Now
-            </button>
+            </a>
+
+            {/* About Us Link */}
+            <a
+              href="#"
+              className="text-gray-800 font-semibold relative hover:underline underline-offset-4 decoration-1 hover:-translate-y-0.5 hover:animate-pulse transition-all duration-300 ease-out"
+              style={{ 
+                '--hover-color': '#DE754B'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.color = '#DE754B';
+                e.target.style.textDecorationColor = '#DE754B';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.color = '#374151';
+                e.target.style.textDecorationColor = '#374151';
+              }}
+            >
+              About Us
+            </a>
           </div>
 
-          {/* Hamburger Menu */}
+          {/* Search Icon */}
           <button className="p-2 hover:bg-black/10 rounded-lg transition-colors">
             <svg
               className="w-6 h-6 md:w-8 md:h-8 text-gray-800"
@@ -41,7 +66,7 @@ const HomeHeader = () => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
               />
             </svg>
           </button>
