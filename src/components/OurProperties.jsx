@@ -162,14 +162,14 @@ const OurProperties = () => {
           </h2>
           <Link
             to="/properties"
-            className="text-gray-600 hover:text-gray-800 transition-colors"
+            className="text-gray-600 hover:text-gray-800 transition-colors underline mr-2"
             style={{
               fontFamily: 'Petrona',
               fontWeight: 400,
               fontSize: '14px'
             }}
           >
-            View all →
+            View all
           </Link>
         </div>
 
