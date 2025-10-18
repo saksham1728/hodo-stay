@@ -151,7 +151,7 @@ const CardStack = () => {
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
-            className="relative flex-shrink-0 mx-auto"
+            className="relative flex-shrink-0 mx-auto mr-14 lg:mr-25 md:mr-20"
             style={{
               width: isMobile ? '280px' : '400px',
               height: isMobile ? '350px' : '500px'
