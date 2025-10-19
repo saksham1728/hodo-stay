@@ -180,7 +180,7 @@ const Properties = () => {
             >
               Our Properties
             </h2>
-            <a
+            {/* <a
               href="#"
               className="text-gray-600 hover:text-gray-800 transition-colors self-start sm:self-auto"
               style={{
@@ -190,7 +190,7 @@ const Properties = () => {
               }}
             >
               View all →
-            </a>
+            </a> */}
           </div>
 
           <div className="space-y-6">
