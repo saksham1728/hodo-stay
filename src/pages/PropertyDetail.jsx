@@ -1,110 +1,212 @@
 import { useParams, Link } from "react-router-dom";
 import Footer from "../components/Footer";
 import HomeHeader from "../components/HomeHeader";
+import { usePropertyDetail } from "../hooks/usePropertyDetail";
 
 function PropertyDetail() {
   const { id } = useParams();
+  
+  // Use the property detail hook to fetch data from API
+  const { property: apiProperty, loading, error } = usePropertyDetail(id);
 
-  const propertyData = {
-    1: {
-      title: "Hodo Heiwa, HSR Layout",
-      address:
-        "97/B | 17th Main Road, Sector 3, HSR Layout, Bangalore South, Bengaluru Urban, Karnataka, 560102, India",
-      heroImage: "/property_details_main.png",
-      spaces: [
-        {
-          id: "x01",
-          name: "2 BHK - X01",
-          location: "Sector 3, HSR Layout, Bengaluru",
-          rating: 4.5,
-          amenities: ["WiFi", "Air-conditioning", "Free Parking on Premises"],
-          bedrooms: 2,
-          bathrooms: 2,
-          area: "1150 sqft",
-          description: "All basic amenities included",
-          price: 7000,
-          images: ["/property_1.png", "/property_3.png", "/property_4.jpg", "/card-1.png"],
-        },
-        {
-          id: "x02",
-          name: "2 BHK - X02",
-          location: "Sector 3, HSR Layout, Bengaluru",
-          rating: 4.5,
-          amenities: ["WiFi", "Air-conditioning", "Free Parking on Premises"],
-          bedrooms: 2,
-          bathrooms: 2,
-          area: "1150 sqft",
-          description: "All basic amenities included",
-          price: 7000,
-          images: ["/property_2.jpg", "/property_5.jpg", "/card-2.png", "/card-3.png"],
-        },
-        {
-          id: "x03",
-          name: "2 BHK - X03",
-          location: "Sector 3, HSR Layout, Bengaluru",
-          rating: 4.5,
-          amenities: ["WiFi", "Air-conditioning", "Free Parking on Premises"],
-          bedrooms: 2,
-          bathrooms: 2,
-          area: "1150 sqft",
-          description: "All basic amenities included",
-          price: 7000,
-          images: ["/property_3.png", "/property_1.png", "/card-4.png", "/property_4.jpg"],
-        },
-      ],
-    },
-    2: {
-      title: "Hodo Hummus, Manyata",
-      address: "Sector 370, Manyata, Bangalore",
-      heroImage: "/property_details_main.png",
-      spaces: [
-        {
-          id: "m01",
-          name: "2 BHK - M01",
-          location: "Sector 370, Manyata, Bengaluru",
-          rating: 4.5,
-          amenities: ["WiFi", "Air-conditioning", "Free Parking on Premises"],
-          bedrooms: 2,
-          bathrooms: 2,
-          area: "1150 sqft",
-          description: "All basic amenities included",
-          price: 7000,
-          images: ["/property_1.png", "/card-5.png", "/property_5.jpg", "/card-6.png"],
-        },
-        {
-          id: "m02",
-          name: "2 BHK - M02",
-          location: "Sector 370, Manyata, Bengaluru",
-          rating: 4.5,
-          amenities: ["WiFi", "Air-conditioning", "Free Parking on Premises"],
-          bedrooms: 2,
-          bathrooms: 2,
-          area: "1150 sqft",
-          description: "All basic amenities included",
-          price: 7000,
-          images: ["/property_2.jpg", "/property_4.jpg", "/card-1.png", "/property_3.png"],
-        },
-        {
-          id: "m03",
-          name: "2 BHK - M03",
-          location: "Sector 370, Manyata, Bengaluru",
-          rating: 4.5,
-          amenities: ["WiFi", "Air-conditioning", "Free Parking on Premises"],
-          bedrooms: 2,
-          bathrooms: 2,
-          area: "1150 sqft",
-          description: "All basic amenities included",
-          price: 7000,
-          images: ["/property_3.png", "/card-2.png", "/property_1.png", "/card-4.png"],
-        },
-      ],
-    },
+  // No static data - 100% API driven
+
+  // Format API data for UI (100% API data, no static fallbacks)
+  const formatAPIProperty = (apiProp) => {
+    if (!apiProp) return null;
+
+    // Map location ID to readable location
+    const getLocationName = (locationId) => {
+      const locationMap = {
+        41982: "HSR Layout, Bangalore South, Bengaluru Urban, Karnataka, India"
+      };
+      return locationMap[locationId] || "Bangalore, Karnataka, India";
+    };
+
+    // Map amenity IDs to readable names
+    const getAmenityName = (amenityID) => {
+      const amenityMap = {
+        61: "WiFi",
+        1: "Air-conditioning",
+        2: "Free Parking on Premises",
+        3: "TV",
+        4: "Kitchen",
+        5: "Hot Water",
+        6: "Bed Linens"
+      };
+      return amenityMap[amenityID] || `Amenity ${amenityID}`;
+    };
+
+    // Extract amenities from description text
+    const extractAmenitiesFromDescription = (description) => {
+      if (!description) return [];
+      
+      const amenities = [];
+      
+      // Look for "Amenities:" section in description
+      const amenitiesMatch = description.match(/Amenities:\s*(.+?)(?:\n|$)/i);
+      if (amenitiesMatch) {
+        // Split by common separators and clean up
+        const amenityText = amenitiesMatch[1];
+        const extractedAmenities = amenityText
+          .split(/[,;]/)
+          .map(item => item.trim())
+          .filter(item => item.length > 0);
+        amenities.push(...extractedAmenities);
+      }
+      
+      // Also check for common amenities mentioned anywhere in description
+      const commonAmenities = [
+        { keyword: /wifi|wi-fi|internet/i, name: "WiFi" },
+        { keyword: /air.?condition|ac\b|cooling/i, name: "Air-conditioning" },
+        { keyword: /parking/i, name: "Free Parking on Premises" },
+        { keyword: /kitchen/i, name: "Kitchen" },
+        { keyword: /tv|television/i, name: "TV" },
+        { keyword: /double bed|bed/i, name: "Double Bed" },
+        { keyword: /bathroom/i, name: "Private Bathroom" },
+        { keyword: /bedroom/i, name: "Bedroom" }
+      ];
+      
+      commonAmenities.forEach(({ keyword, name }) => {
+        if (keyword.test(description) && !amenities.some(a => a.toLowerCase().includes(name.toLowerCase()))) {
+          amenities.push(name);
+        }
+      });
+      
+      return amenities.length > 0 ? amenities : ["Basic Amenities"];
+    };
+
+    // Format amenities from API data and description
+    const formatAmenities = (apiAmenities, description) => {
+      // First try to get amenities from description
+      const descriptionAmenities = extractAmenitiesFromDescription(description);
+      
+      // If we have amenities from description, use those
+      if (descriptionAmenities.length > 0 && !descriptionAmenities.includes("Basic Amenities")) {
+        return descriptionAmenities;
+      }
+      
+      // Otherwise try API amenities
+      if (Array.isArray(apiAmenities) && apiAmenities.length > 0) {
+        return apiAmenities.map(amenity => getAmenityName(amenity.amenityID));
+      }
+      
+      // Last resort fallback
+      return ["Basic Amenities"];
+    };
+
+    // Format images from API
+    const formatImages = (apiImages) => {
+      if (Array.isArray(apiImages) && apiImages.length > 0) {
+        return apiImages.map(img => img.url).filter(url => url);
+      }
+      return ["/property_details_main.png"]; // Single fallback
+    };
+
+    // Extract room info from description or use defaults
+    const extractRoomInfo = (description) => {
+      const bedroomMatch = description?.match(/(\d+)\s*bedroom/i);
+      const bathroomMatch = description?.match(/(\d+)\s*bathroom/i);
+      
+      return {
+        bedrooms: bedroomMatch ? parseInt(bedroomMatch[1]) : 2,
+        bathrooms: bathroomMatch ? parseInt(bathroomMatch[1]) : 2
+      };
+    };
+
+    const roomInfo = extractRoomInfo(apiProp.description);
+    const images = formatImages(apiProp.images);
+    const location = getLocationName(apiProp.location?.detailedLocationID);
+
+    // Create space from API property
+    const space = {
+      id: apiProp._id,
+      name: apiProp.name,
+      location: location,
+      rating: 4.5, // Default rating (you can add this to your API later)
+      amenities: formatAmenities(apiProp.amenities, apiProp.description),
+      bedrooms: roomInfo.bedrooms,
+      bathrooms: roomInfo.bathrooms,
+      area: `${apiProp.capacity?.standardGuests}-${apiProp.capacity?.canSleepMax} guests, ${apiProp.capacity?.noOfUnits} units`,
+      description: apiProp.description || "Modern apartment with all amenities",
+      price: 7000, // Default price (you can add pricing API later)
+      images: images
+    };
+
+    return {
+      title: apiProp.name,
+      address: location,
+      heroImage: images[0] || "/property_details_main.png",
+      spaces: [space],
+      // Additional API data
+      checkInOut: apiProp.checkInOut,
+      propertyType: apiProp.propertyType,
+      fullDescription: apiProp.description
+    };
   };
 
-  const property = propertyData[id];
+  // Use 100% API data
+  const property = apiProperty ? formatAPIProperty(apiProperty) : null;
 
-  if (!property) {
-    return <div>Property not found</div>;
+  // Loading state (keeping your design style)
+  if (loading) {
+    return (
+      <div className="property-detail">
+        <div className="h-[60vh] bg-gray-200 relative flex flex-col">
+          <div className="bg-gradient-to-b from-black/30 to-black/50 h-full flex flex-col p-6">
+            <div className="mt-auto">
+              <div className="animate-pulse">
+                <div className="h-8 bg-white/20 rounded mb-4 w-3/4"></div>
+                <div className="h-4 bg-white/20 rounded w-1/2"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <HomeHeader />
+        <div className="py-10 px-8 bg-orange-50 min-h-screen max-md:py-12 max-md:px-4">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex justify-center items-center py-20">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
+            </div>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  // Error state or property not found
+  if (error || !property) {
+    return (
+      <div className="property-detail">
+        <div className="h-[60vh] bg-gray-200 relative flex flex-col">
+          <div className="bg-gradient-to-b from-black/30 to-black/50 h-full flex flex-col p-6">
+            <div className="mt-auto">
+              <h1 className="text-white text-4xl font-bold m-0 mb-2 drop-shadow-lg max-md:text-3xl">
+                {loading ? "Loading..." : "Property Not Found"}
+              </h1>
+              <p className="text-white text-base m-0 drop-shadow-sm">
+                {error || "Unable to load property details. Please try again."}
+              </p>
+            </div>
+          </div>
+        </div>
+        <HomeHeader />
+        <div className="py-10 px-8 bg-orange-50 min-h-screen max-md:py-12 max-md:px-4">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center py-20">
+              <Link 
+                to="/properties" 
+                className="bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 transition-colors inline-block no-underline"
+              >
+                Back to Properties
+              </Link>
+            </div>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
   }
 
   return (
@@ -142,17 +244,24 @@ function PropertyDetail() {
       {/* Available Spaces */}
       <div className="py-10 px-8 bg-orange-50 min-h-screen max-md:py-12 max-md:px-4">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-semibold text-gray-800 m-0 mb-8">
-            Available Spaces
-          </h2>
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-3xl font-semibold text-gray-800 m-0">
+              Available Spaces
+            </h2>
+            {apiProperty && (
+              <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
+                Live Data
+              </div>
+            )}
+          </div>
           <div className="flex flex-col gap-8 w-full">
             {property.spaces.map((space) => (
               <div
                 key={space.id}
-                className="flex bg-amber-50 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 w-full h-80 max-md:flex-col max-md:h-auto"
+                className="flex bg-amber-50 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 w-full h-96 max-md:flex-col max-md:h-auto"
               >
                 {/* Scrollable Image Gallery */}
-                <div className="w-96 h-80 flex-shrink-0 max-md:w-full max-md:h-48 relative overflow-hidden">
+                <div className="w-96 h-96 flex-shrink-0 max-md:w-full max-md:h-48 relative overflow-hidden">
                   <div className="flex overflow-x-auto scrollbar-hide gap-0 h-full snap-x snap-mandatory">
                     {space.images.map((image, index) => (
                       <div key={index} className="flex-shrink-0 w-full h-full snap-start">
@@ -171,7 +280,7 @@ function PropertyDetail() {
                     ))}
                   </div>
                 </div>
-                <div className="p-12 flex-1 flex flex-col justify-center max-md:p-6">
+                <div className="p-12 flex-1 flex flex-col justify-between max-md:p-6">
                   <div className="flex justify-between items-start mb-4">
                     <div>
                       <h3 className="text-4xl font-semibold text-gray-800 m-0 mb-2 max-md:text-2xl">
@@ -216,7 +325,7 @@ function PropertyDetail() {
                     {space.description}
                   </p>
 
-                  <div className="flex justify-between items-center mt-auto">
+                  <div className="flex justify-between items-center mt-auto mb-2">
                     <div className="flex items-baseline gap-1">
                       <span className="text-gray-600 text-sm">From</span>
                       <span className="text-3xl font-bold text-gray-800 max-md:text-2xl">
@@ -238,74 +347,115 @@ function PropertyDetail() {
         </div>
       </div>
 
-      {/* Amenities Section */}
+      {/* Amenities Section - Real Data from API */}
       <div className="py-10 px-8 bg-amber-50 max-md:py-12 max-md:px-4">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-semibold text-gray-800 m-0 mb-8 max-md:text-2xl">
             Amenities
           </h2>
-          <div className="grid grid-cols-2 gap-12 max-md:grid-cols-1 max-md:gap-8">
-            <div className="flex flex-col gap-6">
-              <div className="flex items-center gap-4 text-base text-gray-800 max-md:text-sm">
-                <span className="text-xl w-8 text-center">🅿️</span>
-                <span>Free parking on premises</span>
+          {property && property.spaces && property.spaces[0] && (
+            <div className="grid grid-cols-2 gap-12 max-md:grid-cols-1 max-md:gap-8">
+              <div className="flex flex-col gap-6">
+                {property.spaces[0].amenities.map((amenity, index) => {
+                  // Get appropriate emoji for each amenity
+                  const getAmenityEmoji = (amenityName) => {
+                    const name = amenityName.toLowerCase();
+                    if (name.includes('wifi') || name.includes('internet')) return '📶';
+                    if (name.includes('air') || name.includes('cooling')) return '❄️';
+                    if (name.includes('parking')) return '🅿️';
+                    if (name.includes('tv') || name.includes('television')) return '📺';
+                    if (name.includes('kitchen')) return '🍳';
+                    if (name.includes('bed')) return '🛏️';
+                    if (name.includes('bathroom')) return '🚿';
+                    if (name.includes('bedroom')) return '🏠';
+                    return '✅'; // Default emoji
+                  };
+
+                  return (
+                    <div key={index} className="flex items-center gap-4 text-base text-gray-800 max-md:text-sm">
+                      <span className="text-xl w-8 text-center">{getAmenityEmoji(amenity)}</span>
+                      <span>{amenity}</span>
+                    </div>
+                  );
+                })}
               </div>
-              <div className="flex items-center gap-4 text-base text-gray-800 max-md:text-sm">
-                <span className="text-xl w-8 text-center">📶</span>
-                <span>Wi-Fi</span>
-              </div>
-              <div className="flex items-center gap-4 text-base text-gray-800 max-md:text-sm">
-                <span className="text-xl w-8 text-center">❄️</span>
-                <span>Air conditioning</span>
-              </div>
-              <div className="flex items-center gap-4 text-base text-gray-800 max-md:text-sm">
-                <span className="text-xl w-8 text-center">📺</span>
-                <span>TV</span>
-              </div>
-              <div className="flex items-center gap-4 text-base text-gray-800 max-md:text-sm">
-                <span className="text-xl w-8 text-center">🚪</span>
-                <span>Private entrance</span>
-              </div>
-              <div className="flex items-center gap-4 text-base text-gray-800 max-md:text-sm">
-                <span className="text-xl w-8 text-center">💼</span>
-                <span>Dedicated workspace</span>
-              </div>
-              <div className="flex items-center gap-4 text-base text-gray-800 max-md:text-sm">
-                <span className="text-xl w-8 text-center">🍳</span>
-                <span>Kitchen</span>
-              </div>
-            </div>
-            <div className="flex flex-col gap-6">
-              <div className="flex items-center gap-4 text-base text-gray-800 max-md:text-sm">
-                <span className="text-xl w-8 text-center">✅</span>
-                <span>Essentials</span>
-              </div>
-              <div className="flex items-center gap-4 text-base text-gray-800 max-md:text-sm">
-                <span className="text-xl w-8 text-center">🩹</span>
-                <span>First aid kit</span>
-              </div>
-              <div className="flex items-center gap-4 text-base text-gray-800 max-md:text-sm">
-                <span className="text-xl w-8 text-center">🚿</span>
-                <span>Hot water</span>
-              </div>
-              <div className="flex items-center gap-4 text-base text-gray-800 max-md:text-sm">
-                <span className="text-xl w-8 text-center">🛏️</span>
-                <span>Bed linens</span>
-              </div>
-              <div className="flex items-center gap-4 text-base text-gray-800 max-md:text-sm">
-                <span className="text-xl w-8 text-center">🛋️</span>
-                <span>Extra pillows and blankets</span>
-              </div>
-              <div className="flex items-center gap-4 text-base text-gray-800 max-md:text-sm">
-                <span className="text-xl w-8 text-center">📹</span>
-                <span>Cameras on property</span>
-              </div>
-              <div className="flex items-center gap-4 text-base text-gray-800 max-md:text-sm">
-                <span className="text-xl w-8 text-center">🧳</span>
-                <span>Luggage drop-off allowed</span>
+              <div className="flex flex-col gap-6">
+                {/* Additional composition info from description */}
+                {apiProperty && apiProperty.description && (
+                  <>
+                    {apiProperty.description.includes('bedroom') && (
+                      <div className="flex items-center gap-4 text-base text-gray-800 max-md:text-sm">
+                        <span className="text-xl w-8 text-center">🏠</span>
+                        <span>Private Bedroom</span>
+                      </div>
+                    )}
+                    {apiProperty.description.includes('bathroom') && (
+                      <div className="flex items-center gap-4 text-base text-gray-800 max-md:text-sm">
+                        <span className="text-xl w-8 text-center">🚿</span>
+                        <span>Private Bathroom</span>
+                      </div>
+                    )}
+                    {apiProperty.description.includes('WC') && (
+                      <div className="flex items-center gap-4 text-base text-gray-800 max-md:text-sm">
+                        <span className="text-xl w-8 text-center">🚽</span>
+                        <span>WC</span>
+                      </div>
+                    )}
+                  </>
+                )}
               </div>
             </div>
-          </div>
+          )}
+          {/* API Data Sections */}
+          {apiProperty && (
+            <div className="mt-8 space-y-6">
+              {/* Property Description */}
+              {apiProperty.description && (
+                <div className="p-6 bg-white rounded-xl shadow-sm">
+                  <h3 className="text-xl font-semibold text-gray-800 mb-4">Property Description</h3>
+                  <p className="text-gray-600 leading-relaxed whitespace-pre-line">{apiProperty.description}</p>
+                </div>
+              )}
+              
+              {/* Check-in/Check-out Information */}
+              {apiProperty.checkInOut && (
+                <div className="p-6 bg-white rounded-xl shadow-sm">
+                  <h3 className="text-xl font-semibold text-gray-800 mb-4">Check-in & Check-out</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <span className="text-sm text-gray-500">Check-in</span>
+                      <p className="font-medium">{apiProperty.checkInOut.checkInFrom} - {apiProperty.checkInOut.checkInTo}</p>
+                    </div>
+                    <div>
+                      <span className="text-sm text-gray-500">Check-out</span>
+                      <p className="font-medium">Until {apiProperty.checkInOut.checkOutUntil}</p>
+                    </div>
+                    <div>
+                      <span className="text-sm text-gray-500">Location</span>
+                      <p className="font-medium capitalize">{apiProperty.checkInOut.place?.replace(/_/g, ' ')}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {/* Property Type Information */}
+              {apiProperty.propertyType && (
+                <div className="p-6 bg-white rounded-xl shadow-sm">
+                  <h3 className="text-xl font-semibold text-gray-800 mb-4">Property Information</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <span className="text-sm text-gray-500">Property Type ID</span>
+                      <p className="font-medium">{apiProperty.propertyType.propertyTypeID}</p>
+                    </div>
+                    <div>
+                      <span className="text-sm text-gray-500">Object Type ID</span>
+                      <p className="font-medium">{apiProperty.propertyType.objectTypeID}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 

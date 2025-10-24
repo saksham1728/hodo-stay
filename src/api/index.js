@@ -1,5 +1,5 @@
 // API base configuration
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'
 
 // Generic API request function
 export const apiRequest = async (endpoint, options = {}) => {
@@ -49,3 +49,6 @@ export const api = {
   delete: (endpoint, options = {}) =>
     apiRequest(endpoint, { method: 'DELETE', ...options }),
 }
+
+// Export services
+export { propertyService } from './propertyService'

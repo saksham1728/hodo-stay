@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import Footer2 from "../components/Footer2";
 import HomeHeader from "../components/HomeHeader";
+import { useProperties } from "../hooks/useProperties";
 
 /**
  * ImageCarousel used on the listing page.
@@ -101,7 +102,8 @@ const ImageCarousel = ({ images }) => {
 };
 
 const Properties = () => {
-  const properties = [
+  // Fallback static data (same as before)
+  const fallbackProperties = [
     {
       id: 1,
       title: "Hodo Heiwa - HSR Layout",
@@ -151,6 +153,60 @@ const Properties = () => {
     },
   ];
 
+  // Use the properties hook to fetch data from API
+  const { properties: apiProperties, loading, error } = useProperties();
+  
+  // Helper function to format API property data to match UI expectations
+  const formatPropertyForUI = (property) => {
+    // Map location ID to readable location (you can expand this mapping)
+    const getLocationName = (locationId) => {
+      const locationMap = {
+        41982: "HSR Layout, Bangalore",
+        // Add more location mappings as needed
+      };
+      return locationMap[locationId] || "Bangalore, India";
+    };
+
+    // Format amenities from API structure
+    const formatAmenities = (amenities) => {
+      if (Array.isArray(amenities) && amenities.length > 0) {
+        // If amenities have amenityID, you might want to map them to readable names
+        return amenities.map(amenity => amenity.name || `Amenity ${amenity.amenityID}`);
+      }
+      return ["WiFi", "Air-conditioning", "Free Parking on Premises"];
+    };
+
+    // Format images from API structure
+    const formatImages = (images) => {
+      if (Array.isArray(images) && images.length > 0) {
+        return images.map(img => img.url).filter(url => url);
+      }
+      return ["/card-1.png", "/card-2.png", "/card-3.png"];
+    };
+
+    return {
+      id: property._id || property.id,
+      title: property.name || property.title,
+      location: property.location?.detailedLocationID ? 
+        getLocationName(property.location.detailedLocationID) : 
+        "Bangalore, India",
+      size: property.capacity ? 
+        `${property.capacity.standardGuests}-${property.capacity.canSleepMax} guests, ${property.capacity.noOfUnits} units` : 
+        "N/A",
+      rating: property.rating || 4.5,
+      amenities: formatAmenities(property.amenities),
+      description: property.description || "Comfortable, thoughtfully designed spaces for short & long stays.",
+      // Since there's no base price in the API, we'll use a default for now
+      price: property.pricing?.basePrice || property.basePrice || property.price || 7000,
+      images: formatImages(property.images),
+    };
+  };
+
+  // Use API data if available, otherwise fallback to static data
+  const properties = apiProperties.length > 0 
+    ? apiProperties.map(formatPropertyForUI)
+    : fallbackProperties;
+
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -192,6 +248,22 @@ const Properties = () => {
               View all →
             </a> */}
           </div>
+
+          {/* Loading State */}
+          {loading && (
+            <div className="flex justify-center items-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+            </div>
+          )}
+
+          {/* Error State */}
+          {error && !loading && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+              <p className="text-red-800 text-sm">
+                Unable to load properties from server. Showing sample properties instead.
+              </p>
+            </div>
+          )}
 
           <div className="space-y-6">
             {properties.map((property) => (
