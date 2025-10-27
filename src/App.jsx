@@ -13,7 +13,7 @@ function App() {
         <Route path="/" element={<Layout><Home /></Layout>} />
         <Route path="/properties" element={<Layout><Properties /></Layout>} />
         <Route path="/property/:id" element={<PropertyDetail />} />
-        <Route path="/booking-details" element={<BookingDetails />} />
+        <Route path="/booking-details/:unitId" element={<BookingDetails />} />
         <Route path="/booking-confirmed" element={<BookingConfirmed />} />
       </Routes>
     </Router>

@@ -1,152 +1,66 @@
 import { useParams, Link } from "react-router-dom";
 import Footer from "../components/Footer";
 import HomeHeader from "../components/HomeHeader";
-import { usePropertyDetail } from "../hooks/usePropertyDetail";
+import { useBuildingDetail } from "../hooks/useBuildingDetail";
 
 function PropertyDetail() {
   const { id } = useParams();
   
-  // Use the property detail hook to fetch data from API
-  const { property: apiProperty, loading, error } = usePropertyDetail(id);
+  // Use the building detail hook to fetch data from API
+  const { building: apiBuilding, units: apiUnits, loading, error } = useBuildingDetail(id);
 
   // No static data - 100% API driven
 
-  // Format API data for UI (100% API data, no static fallbacks)
-  const formatAPIProperty = (apiProp) => {
-    if (!apiProp) return null;
+  // Simple function to format building data for PropertyDetail page
+  const formatBuildingData = (building, units) => {
+    if (!building || !units || units.length === 0) return null;
 
-    // Map location ID to readable location
-    const getLocationName = (locationId) => {
-      const locationMap = {
-        41982: "HSR Layout, Bangalore South, Bengaluru Urban, Karnataka, India"
+    const location = building.location?.detailedLocationID === 41982 
+      ? "HSR Layout, Bangalore South, Bengaluru Urban, Karnataka, India"
+      : "Bangalore, Karnataka, India";
+
+    // Format each unit as a "space" for the UI
+    const spaces = units.map(unit => {
+      // Extract amenities from description
+      const extractAmenities = (description) => {
+        if (!description) return ["WiFi", "Air-conditioning"];
+        
+        const amenities = [];
+        if (description.includes('bed')) amenities.push('Double Bed');
+        if (description.includes('bathroom')) amenities.push('Private Bathroom');
+        if (description.includes('bedroom')) amenities.push('Bedroom');
+        if (description.includes('WC')) amenities.push('WC');
+        
+        return amenities.length > 0 ? amenities : ["WiFi", "Air-conditioning"];
       };
-      return locationMap[locationId] || "Bangalore, Karnataka, India";
-    };
 
-    // Map amenity IDs to readable names
-    const getAmenityName = (amenityID) => {
-      const amenityMap = {
-        61: "WiFi",
-        1: "Air-conditioning",
-        2: "Free Parking on Premises",
-        3: "TV",
-        4: "Kitchen",
-        5: "Hot Water",
-        6: "Bed Linens"
-      };
-      return amenityMap[amenityID] || `Amenity ${amenityID}`;
-    };
-
-    // Extract amenities from description text
-    const extractAmenitiesFromDescription = (description) => {
-      if (!description) return [];
-      
-      const amenities = [];
-      
-      // Look for "Amenities:" section in description
-      const amenitiesMatch = description.match(/Amenities:\s*(.+?)(?:\n|$)/i);
-      if (amenitiesMatch) {
-        // Split by common separators and clean up
-        const amenityText = amenitiesMatch[1];
-        const extractedAmenities = amenityText
-          .split(/[,;]/)
-          .map(item => item.trim())
-          .filter(item => item.length > 0);
-        amenities.push(...extractedAmenities);
-      }
-      
-      // Also check for common amenities mentioned anywhere in description
-      const commonAmenities = [
-        { keyword: /wifi|wi-fi|internet/i, name: "WiFi" },
-        { keyword: /air.?condition|ac\b|cooling/i, name: "Air-conditioning" },
-        { keyword: /parking/i, name: "Free Parking on Premises" },
-        { keyword: /kitchen/i, name: "Kitchen" },
-        { keyword: /tv|television/i, name: "TV" },
-        { keyword: /double bed|bed/i, name: "Double Bed" },
-        { keyword: /bathroom/i, name: "Private Bathroom" },
-        { keyword: /bedroom/i, name: "Bedroom" }
-      ];
-      
-      commonAmenities.forEach(({ keyword, name }) => {
-        if (keyword.test(description) && !amenities.some(a => a.toLowerCase().includes(name.toLowerCase()))) {
-          amenities.push(name);
-        }
-      });
-      
-      return amenities.length > 0 ? amenities : ["Basic Amenities"];
-    };
-
-    // Format amenities from API data and description
-    const formatAmenities = (apiAmenities, description) => {
-      // First try to get amenities from description
-      const descriptionAmenities = extractAmenitiesFromDescription(description);
-      
-      // If we have amenities from description, use those
-      if (descriptionAmenities.length > 0 && !descriptionAmenities.includes("Basic Amenities")) {
-        return descriptionAmenities;
-      }
-      
-      // Otherwise try API amenities
-      if (Array.isArray(apiAmenities) && apiAmenities.length > 0) {
-        return apiAmenities.map(amenity => getAmenityName(amenity.amenityID));
-      }
-      
-      // Last resort fallback
-      return ["Basic Amenities"];
-    };
-
-    // Format images from API
-    const formatImages = (apiImages) => {
-      if (Array.isArray(apiImages) && apiImages.length > 0) {
-        return apiImages.map(img => img.url).filter(url => url);
-      }
-      return ["/property_details_main.png"]; // Single fallback
-    };
-
-    // Extract room info from description or use defaults
-    const extractRoomInfo = (description) => {
-      const bedroomMatch = description?.match(/(\d+)\s*bedroom/i);
-      const bathroomMatch = description?.match(/(\d+)\s*bathroom/i);
-      
       return {
-        bedrooms: bedroomMatch ? parseInt(bedroomMatch[1]) : 2,
-        bathrooms: bathroomMatch ? parseInt(bathroomMatch[1]) : 2
+        id: unit._id,
+        name: unit.name,
+        location: location,
+        rating: 4.5,
+        amenities: extractAmenities(unit.description),
+        bedrooms: 2, // Default
+        bathrooms: 2, // Default
+        area: `${unit.capacity?.standardGuests || 2} guests`,
+        description: unit.description || "Modern apartment with all amenities",
+        price: 7000, // Default price
+        images: unit.images?.length > 0 
+          ? unit.images.map(img => img.url).filter(url => url)
+          : ["/property_1.png", "/property_3.png", "/property_4.jpg"]
       };
-    };
-
-    const roomInfo = extractRoomInfo(apiProp.description);
-    const images = formatImages(apiProp.images);
-    const location = getLocationName(apiProp.location?.detailedLocationID);
-
-    // Create space from API property
-    const space = {
-      id: apiProp._id,
-      name: apiProp.name,
-      location: location,
-      rating: 4.5, // Default rating (you can add this to your API later)
-      amenities: formatAmenities(apiProp.amenities, apiProp.description),
-      bedrooms: roomInfo.bedrooms,
-      bathrooms: roomInfo.bathrooms,
-      area: `${apiProp.capacity?.standardGuests}-${apiProp.capacity?.canSleepMax} guests, ${apiProp.capacity?.noOfUnits} units`,
-      description: apiProp.description || "Modern apartment with all amenities",
-      price: 7000, // Default price (you can add pricing API later)
-      images: images
-    };
+    });
 
     return {
-      title: apiProp.name,
+      title: building.name || "Property Details",
       address: location,
-      heroImage: images[0] || "/property_details_main.png",
-      spaces: [space],
-      // Additional API data
-      checkInOut: apiProp.checkInOut,
-      propertyType: apiProp.propertyType,
-      fullDescription: apiProp.description
+      heroImage: spaces[0]?.images[0] || "/property_details_main.png",
+      spaces: spaces
     };
   };
 
-  // Use 100% API data
-  const property = apiProperty ? formatAPIProperty(apiProperty) : null;
+  // Use building and units data
+  const property = apiBuilding && apiUnits ? formatBuildingData(apiBuilding, apiUnits) : null;
 
   // Loading state (keeping your design style)
   if (loading) {
@@ -248,9 +162,9 @@ function PropertyDetail() {
             <h2 className="text-3xl font-semibold text-gray-800 m-0">
               Available Spaces
             </h2>
-            {apiProperty && (
+            {apiBuilding && (
               <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
-                Live Data
+                Live Data - {apiUnits?.length || 0} Units
               </div>
             )}
           </div>
@@ -258,10 +172,12 @@ function PropertyDetail() {
             {property.spaces.map((space) => (
               <div
                 key={space.id}
-                className="flex bg-amber-50 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 w-full h-96 max-md:flex-col max-md:h-auto"
+                className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden"
               >
-                {/* Scrollable Image Gallery */}
-                <div className="w-96 h-96 flex-shrink-0 max-md:w-full max-md:h-48 relative overflow-hidden">
+                {/* 60:40 layout on md+, stacked on mobile */}
+                <div className="flex flex-col md:flex-row">
+                  {/* Left: Image carousel (60%) */}
+                  <div className="w-full md:w-3/5 h-[360px] md:h-[360px] flex-shrink-0 relative overflow-hidden" style={{ minHeight: "300px" }}>
                   <div className="flex overflow-x-auto scrollbar-hide gap-0 h-full snap-x snap-mandatory">
                     {space.images.map((image, index) => (
                       <div key={index} className="flex-shrink-0 w-full h-full snap-start">
@@ -279,66 +195,152 @@ function PropertyDetail() {
                       <div key={index} className="w-2 h-2 bg-white/70 rounded-full shadow-sm"></div>
                     ))}
                   </div>
-                </div>
-                <div className="p-12 flex-1 flex flex-col justify-between max-md:p-6">
-                  <div className="flex justify-between items-start mb-4">
-                    <div>
-                      <h3 className="text-4xl font-semibold text-gray-800 m-0 mb-2 max-md:text-2xl">
-                        {space.name}
-                      </h3>
-                      <p className="text-gray-600 text-xl m-0 max-md:text-base">
-                        {space.location}
-                      </p>
-                    </div>
-                    <div className="text-orange-400 font-semibold text-2xl max-md:text-lg">
-                      ★ {space.rating}
-                    </div>
                   </div>
 
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {space.amenities.map((amenity, index) => (
+                  {/* Right: Content (40%) */}
+                  <div className="w-full md:w-2/5 p-4 md:p-6 flex flex-col justify-between">
+                  <div>
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3 gap-2 sm:gap-0">
+                      <div className="flex-1">
+                        <h3
+                          className="text-black mb-1"
+                          style={{
+                            fontFamily: "Petrona",
+                            fontWeight: 600,
+                            fontSize: "30px",
+                            lineHeight: "100%",
+                            letterSpacing: "-2.2%",
+                          }}
+                        >
+                          {space.name}
+                        </h3>
+                      </div>
+
+                      <div className="flex items-center gap-1 self-start sm:self-auto">
+                        <span
+                          className="font-medium"
+                          style={{
+                            fontFamily: "Petrona",
+                            fontWeight: 500,
+                            fontSize: "14px",
+                          }}
+                        >
+                          {space.rating}
+                        </span>
+                      </div>
+                    </div>
+
+                    <p
+                      className="text-gray-600 mb-4"
+                      style={{
+                        fontFamily: "Petrona",
+                        fontWeight: 400,
+                        fontSize: "14px",
+                        lineHeight: "140%",
+                      }}
+                    >
+                      {space.location}
+                    </p>
+
+                    {/* Amenities */}
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {space.amenities.map((amenity, index) => (
+                        <span
+                          key={index}
+                          className="flex items-center gap-1 text-gray-600 px-2 py-1 bg-gray-50 rounded-md"
+                          style={{
+                            fontFamily: "Petrona",
+                            fontWeight: 400,
+                            fontSize: "12px",
+                          }}
+                        >
+                          {amenity === "WiFi" && "📶"}
+                          {amenity === "Air-conditioning" && "❄️"}
+                          {amenity === "Free Parking on Premises" && "🅿️"}
+                          {amenity}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* Room Details */}
+                    <div className="flex flex-wrap gap-4 mb-4">
                       <span
-                        key={index}
-                        className="flex items-center gap-2 text-gray-600 text-base px-4 py-2 bg-gray-100 rounded-lg max-md:text-sm max-md:px-2 max-md:py-1"
+                        className="text-gray-600"
+                        style={{
+                          fontFamily: "Petrona",
+                          fontWeight: 400,
+                          fontSize: "12px",
+                        }}
                       >
-                        {amenity === "WiFi" && "📶"}
-                        {amenity === "Air-conditioning" && "❄️"}
-                        {amenity === "Free Parking on Premises" && "🅿️"}
-                        {amenity}
+                        {space.bedrooms} bedroom • {space.bathrooms} bathroom • {space.area}
                       </span>
-                    ))}
+                    </div>
+
+                    <p
+                      className="mb-6"
+                      style={{
+                        color: "#8B8B8B",
+                        fontFamily: "Petrona",
+                        fontWeight: 400,
+                        fontSize: "18px",
+                        lineHeight: "150%",
+                        letterSpacing: "-2.2%",
+                      }}
+                    >
+                      {space.description}
+                    </p>
                   </div>
 
-                  <div className="flex gap-8 mb-4 max-md:flex-col max-md:gap-2">
-                    <div className="text-gray-800 text-lg">
-                      <strong>{space.bedrooms} bedroom</strong>
-                    </div>
-                    <div className="text-gray-800 text-lg">
-                      <strong>{space.bathrooms} bathroom</strong>
-                    </div>
-                    <div className="text-gray-800 text-lg">
-                      <strong>{space.area}</strong>
-                    </div>
-                  </div>
-
-                  <p className="text-gray-600 text-lg m-0 mb-8 flex-1 leading-relaxed max-md:text-base max-md:mb-4">
-                    {space.description}
-                  </p>
-
-                  <div className="flex justify-between items-center mt-auto mb-2">
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-gray-600 text-sm">From</span>
-                      <span className="text-3xl font-bold text-gray-800 max-md:text-2xl">
-                        Rs. {space.price.toLocaleString()}
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-0 mb-4">
+                    <div className="flex flex-col">
+                      <span
+                        className="text-gray-500 mb-1"
+                        style={{
+                          fontFamily: "Petrona",
+                          fontWeight: 400,
+                          fontSize: "12px",
+                        }}
+                      >
+                        from
                       </span>
-                      <span className="text-gray-600 text-sm">per night</span>
+                      <div className="flex items-baseline gap-1">
+                        <span
+                          style={{
+                            color: "#4A4A4A",
+                            fontFamily: "Petrona",
+                            fontWeight: 600,
+                            fontSize: "30px",
+                            lineHeight: "100%",
+                            letterSpacing: "-2.2%",
+                          }}
+                        >
+                          Rs. {space.price.toLocaleString()}
+                        </span>
+                        <span
+                          className="text-gray-500 ml-1"
+                          style={{
+                            fontFamily: "Petrona",
+                            fontWeight: 400,
+                            fontSize: "12px",
+                          }}
+                        >
+                          per night
+                        </span>
+                      </div>
                     </div>
+
                     <Link
-                      to="/booking-details"
-                      className="bg-orange-500 text-white border-none px-6 py-3 rounded-full font-normal text-sm cursor-pointer hover:bg-orange-600 transition-colors max-md:px-4 max-md:py-2 max-md:text-xs inline-block text-center no-underline"
+                      to={`/booking-details/${space.id}`}
+                      className="bg-orange-500 text-white border-none px-6 py-3 rounded-full font-normal text-sm cursor-pointer hover:bg-orange-600 transition-colors max-md:px-4 max-md:py-2 max-md:text-xs inline-block text-center no-underline self-start sm:self-auto"
+                      style={{
+                        fontFamily: "Petrona",
+                        fontWeight: 500,
+                        fontSize: "14px",
+                      }}
                     >
                       Book Now
                     </Link>
+                  </div>
                   </div>
                 </div>
               </div>
@@ -381,21 +383,21 @@ function PropertyDetail() {
               </div>
               <div className="flex flex-col gap-6">
                 {/* Additional composition info from description */}
-                {apiProperty && apiProperty.description && (
+                {apiUnits && apiUnits[0] && apiUnits[0].description && (
                   <>
-                    {apiProperty.description.includes('bedroom') && (
+                    {apiUnits[0].description.includes('bedroom') && (
                       <div className="flex items-center gap-4 text-base text-gray-800 max-md:text-sm">
                         <span className="text-xl w-8 text-center">🏠</span>
                         <span>Private Bedroom</span>
                       </div>
                     )}
-                    {apiProperty.description.includes('bathroom') && (
+                    {apiUnits[0].description.includes('bathroom') && (
                       <div className="flex items-center gap-4 text-base text-gray-800 max-md:text-sm">
                         <span className="text-xl w-8 text-center">🚿</span>
                         <span>Private Bathroom</span>
                       </div>
                     )}
-                    {apiProperty.description.includes('WC') && (
+                    {apiUnits[0].description.includes('WC') && (
                       <div className="flex items-center gap-4 text-base text-gray-800 max-md:text-sm">
                         <span className="text-xl w-8 text-center">🚽</span>
                         <span>WC</span>
@@ -406,54 +408,52 @@ function PropertyDetail() {
               </div>
             </div>
           )}
-          {/* API Data Sections */}
-          {apiProperty && (
+          {/* Building Information */}
+          {apiBuilding && apiUnits && apiUnits.length > 0 && (
             <div className="mt-8 space-y-6">
-              {/* Property Description */}
-              {apiProperty.description && (
+              {/* Building Description */}
+              {apiUnits[0].description && (
                 <div className="p-6 bg-white rounded-xl shadow-sm">
                   <h3 className="text-xl font-semibold text-gray-800 mb-4">Property Description</h3>
-                  <p className="text-gray-600 leading-relaxed whitespace-pre-line">{apiProperty.description}</p>
+                  <p className="text-gray-600 leading-relaxed whitespace-pre-line">{apiUnits[0].description}</p>
                 </div>
               )}
               
               {/* Check-in/Check-out Information */}
-              {apiProperty.checkInOut && (
+              {apiUnits[0].checkInOut && (
                 <div className="p-6 bg-white rounded-xl shadow-sm">
                   <h3 className="text-xl font-semibold text-gray-800 mb-4">Check-in & Check-out</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                       <span className="text-sm text-gray-500">Check-in</span>
-                      <p className="font-medium">{apiProperty.checkInOut.checkInFrom} - {apiProperty.checkInOut.checkInTo}</p>
+                      <p className="font-medium">{apiUnits[0].checkInOut.checkInFrom} - {apiUnits[0].checkInOut.checkInTo}</p>
                     </div>
                     <div>
                       <span className="text-sm text-gray-500">Check-out</span>
-                      <p className="font-medium">Until {apiProperty.checkInOut.checkOutUntil}</p>
+                      <p className="font-medium">Until {apiUnits[0].checkInOut.checkOutUntil}</p>
                     </div>
                     <div>
                       <span className="text-sm text-gray-500">Location</span>
-                      <p className="font-medium capitalize">{apiProperty.checkInOut.place?.replace(/_/g, ' ')}</p>
+                      <p className="font-medium capitalize">{apiUnits[0].checkInOut.place?.replace(/_/g, ' ')}</p>
                     </div>
                   </div>
                 </div>
               )}
               
-              {/* Property Type Information */}
-              {apiProperty.propertyType && (
-                <div className="p-6 bg-white rounded-xl shadow-sm">
-                  <h3 className="text-xl font-semibold text-gray-800 mb-4">Property Information</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <span className="text-sm text-gray-500">Property Type ID</span>
-                      <p className="font-medium">{apiProperty.propertyType.propertyTypeID}</p>
-                    </div>
-                    <div>
-                      <span className="text-sm text-gray-500">Object Type ID</span>
-                      <p className="font-medium">{apiProperty.propertyType.objectTypeID}</p>
-                    </div>
+              {/* Building Stats */}
+              <div className="p-6 bg-white rounded-xl shadow-sm">
+                <h3 className="text-xl font-semibold text-gray-800 mb-4">Building Information</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <span className="text-sm text-gray-500">Total Units</span>
+                    <p className="font-medium">{apiBuilding.totalUnits}</p>
+                  </div>
+                  <div>
+                    <span className="text-sm text-gray-500">Available Units</span>
+                    <p className="font-medium">{apiBuilding.availableUnits}</p>
                   </div>
                 </div>
-              )}
+              </div>
             </div>
           )}
         </div>

@@ -50,5 +50,9 @@ export const api = {
     apiRequest(endpoint, { method: 'DELETE', ...options }),
 }
 
-// Export services
-export { propertyService } from './propertyService'
+// Export services - Clean Building-Units Architecture
+export { buildingService } from './buildings/buildingService'
+export { unitService } from './units/unitService'
+export { userService } from './users/userService'
+export { bookingService } from './bookings/bookingService'
+export { pricingService } from './pricing/pricingService'

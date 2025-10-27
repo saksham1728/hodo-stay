@@ -1,12 +1,96 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import Header2 from '../components/Header2'
 import Footer2 from '../components/Footer2'
+import BookingDateSelector from '../components/BookingDateSelector'
+import { usePricing } from '../hooks/usePricing'
+import { unitService } from '../api'
+
+// Helper function to format currency
+const formatCurrency = (amount) => {
+  return new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(amount)
+}
 
 const BookingDetails = () => {
+  const { unitId } = useParams()
+  
+  // Unit data state
+  const [unit, setUnit] = useState(null)
+  const [unitLoading, setUnitLoading] = useState(true)
+  const [unitError, setUnitError] = useState(null)
+  
+  // Booking state with default dates
+  const getDefaultDates = () => {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const dayAfter = new Date(tomorrow);
+    dayAfter.setDate(dayAfter.getDate() + 1);
+    
+    return {
+      checkIn: tomorrow.toISOString().split('T')[0],
+      checkOut: dayAfter.toISOString().split('T')[0]
+    };
+  };
+  
+  const [selectedDates, setSelectedDates] = useState(getDefaultDates())
   const [guests, setGuests] = useState({
-    adults: 2,
+    adults: 1, // Start with 1 adult (will be updated when unit loads)
     children: 0
   })
+  
+  // Coupon state
+  const [couponCode, setCouponCode] = useState('')
+  const [appliedCoupon, setAppliedCoupon] = useState(null)
+  const [couponLoading, setCouponLoading] = useState(false)
+  
+  // Guest warning state
+  const [guestWarning, setGuestWarning] = useState('')
+  
+  // Get live pricing based on selected dates and guests
+  const totalGuests = guests.adults + guests.children
+  const { quote, loading: priceLoading, error: priceError } = usePricing(
+    unitId, 
+    selectedDates.checkIn, 
+    selectedDates.checkOut, 
+    totalGuests
+  )
+  
+  // Pricing and booking state management complete
+  
+  // Fetch unit details
+  useEffect(() => {
+    const fetchUnit = async () => {
+      if (!unitId) return
+      
+      try {
+        setUnitLoading(true)
+        const response = await unitService.getUnitById(unitId)
+        const unitData = response.data.unit
+        setUnit(unitData)
+        
+        // Update guest count to respect unit capacity
+        if (unitData.standardGuests) {
+          setGuests(prev => ({
+            adults: Math.min(prev.adults, unitData.standardGuests),
+            children: Math.max(0, Math.min(prev.children, unitData.standardGuests - prev.adults))
+          }))
+        }
+      } catch (error) {
+        console.error('Error fetching unit:', error)
+        setUnitError('Failed to load unit details')
+      } finally {
+        setUnitLoading(false)
+      }
+    }
+    
+    fetchUnit()
+  }, [unitId])
   
   const [additionalAmenities, setAdditionalAmenities] = useState({
     roomOnly: false,
@@ -24,13 +108,34 @@ const BookingDetails = () => {
 
   const [acceptTerms, setAcceptTerms] = useState(false)
 
+  // Handle date changes
+  const handleDatesChange = (checkIn, checkOut) => {
+    setSelectedDates({ checkIn, checkOut })
+  }
+
   const handleGuestChange = (type, operation) => {
-    setGuests(prev => ({
-      ...prev,
-      [type]: operation === 'increment' 
+    setGuests(prev => {
+      const newValue = operation === 'increment' 
         ? prev[type] + 1 
-        : Math.max(0, prev[type] - 1)
-    }))
+        : Math.max(0, prev[type] - 1);
+      
+      const newGuests = { ...prev, [type]: newValue };
+      const totalGuests = newGuests.adults + newGuests.children;
+      const maxGuests = unit?.standardGuests || 1;
+      
+      // Check if total exceeds unit capacity
+      if (totalGuests > maxGuests) {
+        // Show warning message
+        setGuestWarning(`This unit can accommodate maximum ${maxGuests} guest${maxGuests !== 1 ? 's' : ''}. Please select a different unit for more guests.`);
+        setTimeout(() => setGuestWarning(''), 5000); // Clear warning after 5 seconds
+        return prev; // Don't update state
+      }
+      
+      // Clear warning if valid
+      setGuestWarning('');
+      
+      return newGuests;
+    });
   }
 
   const handleInputChange = (field, value) => {
@@ -39,6 +144,105 @@ const BookingDetails = () => {
       [field]: value
     }))
   }
+
+  // Handle coupon application
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) return
+    
+    setCouponLoading(true)
+    try {
+      // Simulate coupon validation (you can implement real coupon API later)
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      // Mock coupon logic
+      const mockCoupons = {
+        'SAVE10': { discount: 0.1, type: 'percentage', description: '10% off' },
+        'FLAT500': { discount: 500, type: 'fixed', description: '₹500 off' },
+        'WELCOME': { discount: 0.15, type: 'percentage', description: '15% off for new users' }
+      }
+      
+      const coupon = mockCoupons[couponCode.toUpperCase()]
+      if (coupon) {
+        setAppliedCoupon({ code: couponCode.toUpperCase(), ...coupon })
+      } else {
+        alert('Invalid coupon code')
+      }
+    } catch (error) {
+      console.error('Error applying coupon:', error)
+      alert('Failed to apply coupon')
+    } finally {
+      setCouponLoading(false)
+    }
+  }
+
+  const removeCoupon = () => {
+    setAppliedCoupon(null)
+    setCouponCode('')
+  }
+
+  // Calculate pricing
+  const calculatePricing = () => {
+    if (!quote || !quote.pricing) {
+      return {
+        basePrice: 0,
+        nights: 0,
+        subtotal: 0,
+        taxes: 0,
+        couponDiscount: 0,
+        total: 0
+      }
+    }
+
+    const basePrice = quote.pricing.pricePerNight || 0
+    const nights = quote.nights || 0
+    const subtotal = basePrice * nights
+    const taxes = 0 // No tax calculation for now
+    
+    let couponDiscount = 0
+    if (appliedCoupon) {
+      if (appliedCoupon.type === 'percentage') {
+        couponDiscount = subtotal * appliedCoupon.discount
+      } else {
+        couponDiscount = appliedCoupon.discount
+      }
+    }
+    
+    const total = Math.max(0, subtotal - couponDiscount) // Removed tax from total calculation
+    
+    return {
+      basePrice,
+      nights,
+      subtotal,
+      taxes,
+      couponDiscount,
+      total
+    }
+  }
+
+  const pricing = calculatePricing()
+
+  // Format date for display
+  const formatDateForDisplay = (dateStr) => {
+    if (!dateStr) return ''
+    const date = new Date(dateStr)
+    const day = date.getDate()
+    const month = date.toLocaleDateString('en-US', { month: 'long' })
+    const weekday = date.toLocaleDateString('en-US', { weekday: 'long' })
+    return { day: `${day}${getOrdinalSuffix(day)} ${month}`, weekday }
+  }
+
+  const getOrdinalSuffix = (day) => {
+    if (day > 3 && day < 21) return 'th'
+    switch (day % 10) {
+      case 1: return 'st'
+      case 2: return 'nd'
+      case 3: return 'rd'
+      default: return 'th'
+    }
+  }
+
+  const checkInFormatted = formatDateForDisplay(selectedDates.checkIn)
+  const checkOutFormatted = formatDateForDisplay(selectedDates.checkOut)
 
   // common card style for the small form cards to match the screenshot
   const smallCardStyle = {
@@ -91,7 +295,7 @@ const BookingDetails = () => {
               letterSpacing: '-1.5%'
             }}
           >
-            Hodo Heiwa - Hsr Layout
+            {unitLoading ? 'Loading...' : unit?.name || 'Hodo Heiwa - HSR Layout'}
           </h2>
           <p 
             className="text-white/80 mb-2"
@@ -102,7 +306,7 @@ const BookingDetails = () => {
               lineHeight: '140%'
             }}
           >
-            97/B | 17th Main Road, Sector 3, HSR Layout, Bangalore South, Bengaluru Urban, Karnataka, 560102, India
+            HSR Layout, Bangalore South, Bengaluru Urban, Karnataka, India
           </p>
           <p 
             className="text-white/70"
@@ -113,7 +317,7 @@ const BookingDetails = () => {
               lineHeight: '140%'
             }}
           >
-            Our apartment offers the comfort of home with the luxury of a hotel. Strategically located in the heart of HSR Layout, Bengaluru. Our thoughtfully designed spaces provide perfect blend for leisure and business travellers.
+            {unit?.description || 'Our apartment offers the comfort of home with the luxury of a hotel. Strategically located in the heart of HSR Layout, Bengaluru.'}
           </p>
         </div>
       </div>
@@ -214,6 +418,36 @@ const BookingDetails = () => {
                   >
                     Above 18 years are considered as adults
                   </p>
+                  
+                  {/* Unit capacity info */}
+                  {unit && (
+                    <p 
+                      className="text-blue-600 text-sm mt-2"
+                      style={{
+                        fontFamily: 'Work Sans',
+                        fontWeight: 400,
+                        fontSize: '12px'
+                      }}
+                    >
+                      This unit can accommodate maximum {unit.standardGuests} guest{unit.standardGuests !== 1 ? 's' : ''}
+                    </p>
+                  )}
+                  
+                  {/* Warning message */}
+                  {guestWarning && (
+                    <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                      <p 
+                        className="text-red-700 text-sm"
+                        style={{
+                          fontFamily: 'Work Sans',
+                          fontWeight: 500,
+                          fontSize: '12px'
+                        }}
+                      >
+                        ⚠️ {guestWarning}
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -453,13 +687,14 @@ const BookingDetails = () => {
               </button>
             </div>
 
-            {/* Right Column - Property Card */}
+            {/* Right Column - Live Pricing Card */}
             <div className="lg:col-span-1">
               <div className="bg-white rounded-2xl p-6 shadow-sm sticky top-8">
+                {/* Unit Image and Info */}
                 <div className="mb-4">
                   <img 
-                    src="/property_1.png" 
-                    alt="Hodo Heiwa, 2BHK Penthouse"
+                    src={unit?.images?.[0]?.url || "/property_1.png"} 
+                    alt={unit?.name || "Property"}
                     className="w-full h-48 object-cover rounded-xl"
                   />
                 </div>
@@ -474,7 +709,7 @@ const BookingDetails = () => {
                     letterSpacing: '-1%'
                   }}
                 >
-                  Hodo Heiwa, 2BHK Penthouse
+                  {unit?.name || 'Loading...'}
                 </h3>
                 
                 <p 
@@ -485,227 +720,185 @@ const BookingDetails = () => {
                     fontSize: '14px'
                   }}
                 >
-                  Room details
+                  {unit ? `Max ${unit.standardGuests} guest${unit.standardGuests !== 1 ? 's' : ''}` : 'Room details'}
                 </p>
 
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <p 
-                      className="text-gray-600 text-sm"
-                      style={{
-                        fontFamily: 'Work Sans',
-                        fontWeight: 400,
-                        fontSize: '12px'
-                      }}
-                    >
-                      Check-in
-                    </p>
-                    <p 
-                      className="text-gray-900 font-semibold"
-                      style={{
-                        fontFamily: 'Work Sans',
-                        fontWeight: 600,
-                        fontSize: '18px'
-                      }}
-                    >
-                      21st July
-                    </p>
-                    <p 
-                      className="text-gray-600 text-sm"
-                      style={{
-                        fontFamily: 'Work Sans',
-                        fontWeight: 400,
-                        fontSize: '12px'
-                      }}
-                    >
-                      Monday, 2pm
-                    </p>
-                  </div>
-                  
-                  <div className="text-center">
-                    <svg className="w-6 h-6 text-gray-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
-                  </div>
-                  
-                  <div className="text-right">
-                    <p 
-                      className="text-gray-600 text-sm"
-                      style={{
-                        fontFamily: 'Work Sans',
-                        fontWeight: 400,
-                        fontSize: '12px'
-                      }}
-                    >
-                      Check-out
-                    </p>
-                    <p 
-                      className="text-gray-900 font-semibold"
-                      style={{
-                        fontFamily: 'Work Sans',
-                        fontWeight: 600,
-                        fontSize: '18px'
-                      }}
-                    >
-                      27th July
-                    </p>
-                    <p 
-                      className="text-gray-600 text-sm"
-                      style={{
-                        fontFamily: 'Work Sans',
-                        fontWeight: 400,
-                        fontSize: '12px'
-                      }}
-                    >
-                      Sunday, 11am
-                    </p>
-                  </div>
+                {/* Date Selector */}
+                <div className="mb-6">
+                  <h4 className="text-sm font-medium text-gray-700 mb-3">Select Dates</h4>
+                  <BookingDateSelector
+                    onDatesChange={handleDatesChange}
+                    initialCheckIn={selectedDates.checkIn}
+                    initialCheckOut={selectedDates.checkOut}
+                  />
                 </div>
 
-                <p 
-                  className="text-gray-900 font-medium mb-6"
-                  style={{
-                    fontFamily: 'Work Sans',
-                    fontWeight: 500,
-                    fontSize: '16px'
-                  }}
-                >
-                  2 Adults, 1 Child
-                </p>
+                {/* Live Pricing Display */}
+                {selectedDates.checkIn && selectedDates.checkOut && (
+                  <>
+                    {/* Date Summary */}
+                    <div className="flex items-center justify-between mb-4 p-3 bg-gray-50 rounded-lg">
+                      <div>
+                        <p className="text-gray-600 text-sm">Check-in</p>
+                        <p className="text-gray-900 font-semibold">
+                          {checkInFormatted.day}
+                        </p>
+                        <p className="text-gray-600 text-sm">
+                          {checkInFormatted.weekday}, {unit?.checkInOut?.checkInFrom || '2pm'}
+                        </p>
+                      </div>
+                      
+                      <div className="text-center">
+                        <svg className="w-6 h-6 text-gray-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                      </div>
+                      
+                      <div className="text-right">
+                        <p className="text-gray-600 text-sm">Check-out</p>
+                        <p className="text-gray-900 font-semibold">
+                          {checkOutFormatted.day}
+                        </p>
+                        <p className="text-gray-600 text-sm">
+                          {checkOutFormatted.weekday}, {unit?.checkInOut?.checkOutUntil || '11am'}
+                        </p>
+                      </div>
+                    </div>
 
-                <div className="border-t pt-4 space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span 
-                      className="text-gray-600"
-                      style={{
-                        fontFamily: 'Work Sans',
-                        fontWeight: 400,
-                        fontSize: '14px'
-                      }}
-                    >
-                      1 2BHK Penthouse x 7 Nights
-                    </span>
-                    <span 
-                      className="text-gray-900 font-medium"
-                      style={{
-                        fontFamily: 'Work Sans',
-                        fontWeight: 500,
-                        fontSize: '14px'
-                      }}
-                    >
-                      ₹ 49,000
-                    </span>
-                  </div>
-                  
-                  <div className="flex justify-between items-center">
-                    <span 
-                      className="text-gray-600"
-                      style={{
-                        fontFamily: 'Work Sans',
-                        fontWeight: 400,
-                        fontSize: '14px'
-                      }}
-                    >
-                      Taxes and other charges
-                    </span>
-                    <span 
-                      className="text-gray-900 font-medium"
-                      style={{
-                        fontFamily: 'Work Sans',
-                        fontWeight: 500,
-                        fontSize: '14px'
-                      }}
-                    >
-                      ₹ 594
-                    </span>
-                  </div>
-                  
-                  <div className="flex justify-between items-center">
-                    <span 
-                      className="text-gray-600"
-                      style={{
-                        fontFamily: 'Work Sans',
-                        fontWeight: 400,
-                        fontSize: '14px'
-                      }}
-                    >
-                      Pay Now Discount
-                    </span>
-                    <span 
-                      className="text-green-600 font-medium"
-                      style={{
-                        fontFamily: 'Work Sans',
-                        fontWeight: 500,
-                        fontSize: '14px'
-                      }}
-                    >
-                      -₹ 550
-                    </span>
-                  </div>
-                  
-                  <hr className="my-3" />
-                  
-                  <div className="flex justify-between items-center">
-                    <span 
-                      className="text-gray-900 font-semibold"
-                      style={{
-                        fontFamily: 'Work Sans',
-                        fontWeight: 600,
-                        fontSize: '16px'
-                      }}
-                    >
-                      Total Payable amount
-                    </span>
-                    <span 
-                      className="text-gray-900 font-bold text-lg"
-                      style={{
-                        fontFamily: 'Work Sans',
-                        fontWeight: 700,
-                        fontSize: '18px'
-                      }}
-                    >
-                      ₹ 49,044
-                    </span>
-                  </div>
-                </div>
+                    <div className="mb-6 p-3 bg-gray-50 rounded-lg">
+                      <p className="text-gray-600 text-xs mb-1">Selected Guests:</p>
+                      <p className="text-gray-900 font-medium">
+                        {guests.adults} Adult{guests.adults !== 1 ? 's' : ''}
+                        {guests.children > 0 && `, ${guests.children} Child${guests.children !== 1 ? 'ren' : ''}`}
+                      </p>
+                      <p className="text-gray-500 text-xs mt-1">
+                        Manage guests in the form on the left
+                      </p>
+                    </div>
 
-                <div className="mt-6 p-3 bg-gray-50 rounded-lg">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span 
-                      className="text-gray-600"
-                      style={{
-                        fontFamily: 'Work Sans',
-                        fontWeight: 400,
-                        fontSize: '12px'
-                      }}
-                    >
-                      Got a coupon?
-                    </span>
+                    {/* Pricing Breakdown */}
+                    <div className="border-t pt-4 space-y-2">
+                      {priceLoading ? (
+                        <div className="text-center py-4">
+                          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-orange-500 mx-auto"></div>
+                          <p className="text-sm text-gray-500 mt-2">Getting live prices...</p>
+                        </div>
+                      ) : priceError ? (
+                        <div className="text-center py-4">
+                          <p className="text-sm text-red-500">Unable to get live pricing</p>
+                          <p className="text-xs text-gray-500">Please try different dates</p>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="flex justify-between items-center">
+                            <span className="text-gray-600 text-sm">
+                              {formatCurrency(pricing.basePrice)} x {pricing.nights} Night{pricing.nights !== 1 ? 's' : ''}
+                            </span>
+                            <span className="text-gray-900 font-medium text-sm">
+                              {formatCurrency(pricing.subtotal)}
+                            </span>
+                          </div>
+                          
+                          {/* Tax line hidden for now */}
+                          {pricing.taxes > 0 && (
+                            <div className="flex justify-between items-center">
+                              <span className="text-gray-600 text-sm">
+                                Taxes and charges
+                              </span>
+                              <span className="text-gray-900 font-medium text-sm">
+                                {formatCurrency(pricing.taxes)}
+                              </span>
+                            </div>
+                          )}
+                          
+                          {appliedCoupon && (
+                            <div className="flex justify-between items-center">
+                              <span className="text-gray-600 text-sm">
+                                Coupon ({appliedCoupon.code})
+                                <button 
+                                  onClick={removeCoupon}
+                                  className="ml-2 text-red-500 hover:text-red-700"
+                                >
+                                  ×
+                                </button>
+                              </span>
+                              <span className="text-green-600 font-medium text-sm">
+                                -{formatCurrency(pricing.couponDiscount)}
+                              </span>
+                            </div>
+                          )}
+                          
+                          <hr className="my-3" />
+                          
+                          <div className="flex justify-between items-center">
+                            <span className="text-gray-900 font-semibold">
+                              Total Payable Amount
+                            </span>
+                            <span className="text-gray-900 font-bold text-lg">
+                              {formatCurrency(pricing.total)}
+                            </span>
+                          </div>
+
+                          {/* Live Data Indicator */}
+                          <div className="flex items-center justify-center mt-2">
+                            <div className="flex items-center gap-2 text-xs text-green-600">
+                              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                              Live Pricing
+                            </div>
+                          </div>
+                        </>
+                      )}
+                    </div>
+
+                    {/* Coupon Section */}
+                    <div className="mt-6 p-3 bg-gray-50 rounded-lg">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-gray-600 text-sm">
+                          Got a coupon?
+                        </span>
+                      </div>
+                      <div className="flex gap-2">
+                        <input 
+                          type="text"
+                          placeholder="Enter coupon code (try SAVE10)"
+                          value={couponCode}
+                          onChange={(e) => setCouponCode(e.target.value)}
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded text-sm"
+                          style={{
+                            fontFamily: 'Work Sans',
+                            fontWeight: 400,
+                            fontSize: '12px'
+                          }}
+                        />
+                        <button 
+                          onClick={handleApplyCoupon}
+                          disabled={couponLoading || !couponCode.trim()}
+                          className="px-4 py-2 text-white rounded text-sm hover:opacity-95 disabled:opacity-50"
+                          style={{
+                            background: '#DE754B',
+                            fontFamily: 'Inter, Work Sans, sans-serif',
+                            fontWeight: 500,
+                            fontSize: '12px'
+                          }}
+                        >
+                          {couponLoading ? '...' : 'Apply'}
+                        </button>
+                      </div>
+                      {appliedCoupon && (
+                        <p className="text-green-600 text-xs mt-2">
+                          ✓ {appliedCoupon.description} applied!
+                        </p>
+                      )}
+                    </div>
+                  </>
+                )}
+
+                {/* No Dates Selected */}
+                {(!selectedDates.checkIn || !selectedDates.checkOut) && (
+                  <div className="text-center py-8 text-gray-500">
+                    <p className="text-sm">Select dates to see live pricing</p>
                   </div>
-                  <div className="flex gap-2">
-                    <input 
-                      type="text"
-                      placeholder="Enter coupon code here"
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded text-sm"
-                      style={{
-                        fontFamily: 'Work Sans',
-                        fontWeight: 400,
-                        fontSize: '12px'
-                      }}
-                    />
-                    <button 
-                      className="px-4 py-2 text-white rounded text-sm hover:opacity-95"
-                      style={{
-                        background: '#DE754B',
-                        fontFamily: 'Inter, Work Sans, sans-serif',
-                        fontWeight: 500,
-                        fontSize: '12px'
-                      }}
-                    >
-                      Apply
-                    </button>
-                  </div>
-                </div>
+                )}
               </div>
             </div>
           </div>

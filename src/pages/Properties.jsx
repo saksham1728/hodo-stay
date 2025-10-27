@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import Footer2 from "../components/Footer2";
 import HomeHeader from "../components/HomeHeader";
-import { useProperties } from "../hooks/useProperties";
+import { useBuildings } from "../hooks/useBuildings";
 
 /**
  * ImageCarousel used on the listing page.
@@ -153,58 +153,39 @@ const Properties = () => {
     },
   ];
 
-  // Use the properties hook to fetch data from API
-  const { properties: apiProperties, loading, error } = useProperties();
+  // Use the buildings hook to fetch data from API
+  const { buildings: apiBuildings, loading, error } = useBuildings();
   
-  // Helper function to format API property data to match UI expectations
-  const formatPropertyForUI = (property) => {
-    // Map location ID to readable location (you can expand this mapping)
-    const getLocationName = (locationId) => {
-      const locationMap = {
-        41982: "HSR Layout, Bangalore",
-        // Add more location mappings as needed
-      };
-      return locationMap[locationId] || "Bangalore, India";
-    };
-
-    // Format amenities from API structure
-    const formatAmenities = (amenities) => {
-      if (Array.isArray(amenities) && amenities.length > 0) {
-        // If amenities have amenityID, you might want to map them to readable names
-        return amenities.map(amenity => amenity.name || `Amenity ${amenity.amenityID}`);
-      }
-      return ["WiFi", "Air-conditioning", "Free Parking on Premises"];
-    };
-
-    // Format images from API structure
-    const formatImages = (images) => {
-      if (Array.isArray(images) && images.length > 0) {
-        return images.map(img => img.url).filter(url => url);
-      }
-      return ["/card-1.png", "/card-2.png", "/card-3.png"];
-    };
-
+  // Clean function to format buildings for Properties page display
+  const formatBuildingForDisplay = (building) => {
+    if (!building.units || building.units.length === 0) return null;
+    
+    // Use first unit for display info
+    const firstUnit = building.units[0];
+    const location = building.location?.detailedLocationID === 41982 
+      ? "HSR Layout, Bangalore" 
+      : "Bangalore, India";
+    
     return {
-      id: property._id || property.id,
-      title: property.name || property.title,
-      location: property.location?.detailedLocationID ? 
-        getLocationName(property.location.detailedLocationID) : 
-        "Bangalore, India",
-      size: property.capacity ? 
-        `${property.capacity.standardGuests}-${property.capacity.canSleepMax} guests, ${property.capacity.noOfUnits} units` : 
-        "N/A",
-      rating: property.rating || 4.5,
-      amenities: formatAmenities(property.amenities),
-      description: property.description || "Comfortable, thoughtfully designed spaces for short & long stays.",
-      // Since there's no base price in the API, we'll use a default for now
-      price: property.pricing?.basePrice || property.basePrice || property.price || 7000,
-      images: formatImages(property.images),
+      id: building.buildingId, // Use building ID for routing to property detail
+      title: firstUnit.name || building.name,
+      location: location,
+      size: `${building.availableUnits} units available`,
+      rating: 4.5,
+      amenities: ["WiFi", "Air-conditioning", "Free Parking on Premises"],
+      description: firstUnit.description || "Modern apartments with all amenities",
+      price: 7000,
+      images: firstUnit.images?.length > 0 
+        ? firstUnit.images.map(img => img.url).filter(url => url)
+        : ["/card-1.png", "/card-2.png", "/card-3.png"]
     };
   };
 
-  // Use API data if available, otherwise fallback to static data
-  const properties = apiProperties.length > 0 
-    ? apiProperties.map(formatPropertyForUI)
+
+
+  // Use buildings data or fallback to static
+  const properties = apiBuildings.length > 0 
+    ? apiBuildings.map(formatBuildingForDisplay).filter(Boolean)
     : fallbackProperties;
 
   const [isMobile, setIsMobile] = useState(false);
