@@ -15,8 +15,8 @@ function PropertyDetail() {
   const formatBuildingData = (building, units) => {
     if (!building || !units || units.length === 0) return null;
 
-    const location = building.location?.detailedLocationID === 41982 
-      ? "HSR Layout, Bangalore South, Bengaluru Urban, Karnataka, India"
+    const location = building.location?.city 
+      ? `${building.location.address || ''}, ${building.location.city}, ${building.location.state || ''}, ${building.location.country || 'India'}`.replace(/,\s*,/g, ',').trim()
       : "Bangalore, Karnataka, India";
 
     // Format each unit as a "space" for the UI
@@ -36,15 +36,17 @@ function PropertyDetail() {
 
       return {
         id: unit._id,
+        ruPropertyId: unit.ruPropertyId, // Important for pricing API
         name: unit.name,
         location: location,
         rating: 4.5,
         amenities: extractAmenities(unit.description),
-        bedrooms: 2, // Default
-        bathrooms: 2, // Default
-        area: `${unit.capacity?.standardGuests || 2} guests`,
+        bedrooms: unit.compositionRooms?.length || 2,
+        bathrooms: 2,
+        area: `${unit.standardGuests || 2} guests`,
+        maxGuests: unit.canSleepMax || unit.standardGuests || 2,
         description: unit.description || "Modern apartment with all amenities",
-        price: 7000, // Default price
+        price: 7000, // Default price - will be fetched from RU API
         images: unit.images?.length > 0 
           ? unit.images.map(img => img.url).filter(url => url)
           : ["/property_1.png", "/property_3.png", "/property_4.jpg"]

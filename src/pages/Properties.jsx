@@ -158,30 +158,28 @@ const Properties = () => {
   
   // Clean function to format buildings for Properties page display
   const formatBuildingForDisplay = (building) => {
-    if (!building.units || building.units.length === 0) return null;
-    
-    // Use first unit for display info
-    const firstUnit = building.units[0];
-    const location = building.location?.detailedLocationID === 41982 
-      ? "HSR Layout, Bangalore" 
+    // Format location
+    const location = building.location?.city 
+      ? `${building.location.address || ''}, ${building.location.city}`.trim().replace(/^,\s*/, '')
       : "Bangalore, India";
     
+    // Get images - use building images or default
+    const images = building.images?.length > 0 
+      ? building.images.map(img => img.url).filter(url => url)
+      : ["/card-1.png", "/card-2.png", "/card-3.png"];
+    
     return {
-      id: building.buildingId, // Use building ID for routing to property detail
-      title: firstUnit.name || building.name,
+      id: building._id, // Use MongoDB _id for routing to property detail
+      title: building.name,
       location: location,
-      size: `${building.availableUnits} units available`,
+      size: `${building.totalUnits || building.availableUnits || 0} units available`,
       rating: 4.5,
-      amenities: ["WiFi", "Air-conditioning", "Free Parking on Premises"],
-      description: firstUnit.description || "Modern apartments with all amenities",
+      amenities: building.amenities?.slice(0, 3) || ["WiFi", "Air-conditioning", "Free Parking on Premises"],
+      description: building.description || "Modern apartments with all amenities",
       price: 7000,
-      images: firstUnit.images?.length > 0 
-        ? firstUnit.images.map(img => img.url).filter(url => url)
-        : ["/card-1.png", "/card-2.png", "/card-3.png"]
+      images: images
     };
   };
-
-
 
   // Use buildings data or fallback to static
   const properties = apiBuildings.length > 0 
