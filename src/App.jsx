@@ -5,6 +5,7 @@ import Properties from './pages/Properties'
 import PropertyDetail from './pages/PropertyDetail'
 import BookingDetails from './pages/BookingDetails'
 import BookingConfirmed from './pages/BookingConfirmed'
+import MyBookings from './pages/MyBookings'
 
 function App() {
   return (
@@ -14,7 +15,8 @@ function App() {
         <Route path="/properties" element={<Layout><Properties /></Layout>} />
         <Route path="/property/:id" element={<PropertyDetail />} />
         <Route path="/booking-details/:unitId" element={<BookingDetails />} />
-        <Route path="/booking-confirmed" element={<BookingConfirmed />} />
+        <Route path="/booking-confirmed/:bookingReference" element={<BookingConfirmed />} />
+        <Route path="/my-bookings" element={<MyBookings />} />
       </Routes>
     </Router>
   )

@@ -1,7 +1,103 @@
+import { useState, useEffect } from 'react'
+import { useParams, Link } from 'react-router-dom'
 import Header2 from '../components/Header2'
 import Footer2 from '../components/Footer2'
+import { bookingService } from '../api/bookings/bookingService'
 
 const BookingConfirmed = () => {
+  const { bookingReference } = useParams()
+  const [booking, setBooking] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  // Fetch booking details
+  useEffect(() => {
+    const fetchBooking = async () => {
+      if (!bookingReference) {
+        setError('No booking reference provided')
+        setLoading(false)
+        return
+      }
+
+      try {
+        setLoading(true)
+        const response = await bookingService.getBookingByReference(bookingReference)
+        
+        if (response.success) {
+          setBooking(response.data.booking)
+        } else {
+          setError('Booking not found')
+        }
+      } catch (err) {
+        setError(err.message || 'Failed to load booking details')
+        console.error('Error fetching booking:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchBooking()
+  }, [bookingReference])
+
+  // Format date for display
+  const formatDateForDisplay = (dateStr) => {
+    if (!dateStr) return { day: '', month: '', weekday: '' }
+    const date = new Date(dateStr)
+    const day = date.getDate()
+    const month = date.toLocaleDateString('en-US', { month: 'long' })
+    const weekday = date.toLocaleDateString('en-US', { weekday: 'long' })
+    const ordinal = getOrdinalSuffix(day)
+    return { day: `${day}${ordinal}`, month, weekday }
+  }
+
+  const getOrdinalSuffix = (day) => {
+    if (day > 3 && day < 21) return 'th'
+    switch (day % 10) {
+      case 1: return 'st'
+      case 2: return 'nd'
+      case 3: return 'rd'
+      default: return 'th'
+    }
+  }
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen" style={{ backgroundColor: '#FFF7F0' }}>
+        <Header2 />
+        <div className="flex justify-center items-center py-20">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading booking details...</p>
+          </div>
+        </div>
+        <Footer2 />
+      </div>
+    )
+  }
+
+  // Error state
+  if (error || !booking) {
+    return (
+      <div className="min-h-screen" style={{ backgroundColor: '#FFF7F0' }}>
+        <Header2 />
+        <div className="max-w-2xl mx-auto px-4 py-20 text-center">
+          <div className="bg-white rounded-lg shadow-sm p-8">
+            <h1 className="text-2xl font-bold mb-4">Booking Not Found</h1>
+            <p className="text-gray-600 mb-6">{error || 'The booking you are looking for does not exist.'}</p>
+            <Link to="/properties" className="text-blue-600 hover:underline">
+              Back to Properties
+            </Link>
+          </div>
+        </div>
+        <Footer2 />
+      </div>
+    )
+  }
+
+  // Format dates
+  const checkInFormatted = formatDateForDisplay(booking.checkIn)
+  const checkOutFormatted = formatDateForDisplay(booking.checkOut)
   // Typography styles you requested
   const excitedStyle = {
     fontFamily: 'Petrona, serif',
@@ -54,10 +150,15 @@ const BookingConfirmed = () => {
 
       {/* Top banner */}
       <div className="w-full" style={{ backgroundColor: '#2D3A36', minHeight: 80 }}>
-        <div className="max-w-7xl mx-auto flex items-center" style={{ minHeight: 80 }}>
-          <h1 className="text-white" style={excitedStyle}>
-            We are excited to have you stay with us!
-          </h1>
+        <div className="max-w-7xl mx-auto flex items-center px-6" style={{ minHeight: 80 }}>
+          <div>
+            <h1 className="text-white" style={excitedStyle}>
+              We are excited to have you stay with us!
+            </h1>
+            <p className="text-white/70 mt-2" style={{ fontFamily: 'Work Sans', fontSize: '14px' }}>
+              Booking Reference: <span className="font-mono font-bold">{booking.bookingReference}</span>
+            </p>
+          </div>
         </div>
       </div>
 
@@ -88,10 +189,9 @@ const BookingConfirmed = () => {
                 {/* Square image on left */}
                 <div className="flex-shrink-0">
                   <img
-                    src="/property_1.png"
-                    alt="Property"
+                    src={booking.unitId?.images?.[0]?.url || "/property_1.png"}
+                    alt={booking.unitId?.name || "Property"}
                     className="block w-44 h-44 rounded-2xl object-cover"
-                    // w-44/h-44 gives a clean square 176px x 176px
                   />
                 </div>
 
@@ -99,14 +199,19 @@ const BookingConfirmed = () => {
                 <div className="flex-1">
                   {/* Title */}
                   <h3 style={propertyTitleStyle} className="text-gray-900 mb-3">
-                    Hodo Heiwa, 2BHK Penthouse
+                    {booking.unitId?.name || 'Property'}
                   </h3>
+
+                  {/* Building name */}
+                  <p className="mb-2 text-gray-600" style={{ fontFamily: "'Work Sans', sans-serif", fontSize: '14px' }}>
+                    {booking.buildingId?.name || 'Building'}
+                  </p>
 
                   {/* Room details link */}
                   <p className="mb-6">
-                    <a className="text-gray-600 underline" href="#" style={{ fontFamily: "'Work Sans', sans-serif", fontSize: '16px' }}>
+                    <Link to={`/property/${booking.unitId?._id}`} className="text-gray-600 underline" style={{ fontFamily: "'Work Sans', sans-serif", fontSize: '16px' }}>
                       Room details
-                    </a>
+                    </Link>
                   </p>
 
                   {/* Check-in / arrow / Check-out row */}
@@ -115,10 +220,10 @@ const BookingConfirmed = () => {
                     <div className="flex-1">
                       <p style={smallMetaStyle} className="mb-1">check-in</p>
                       <div className="flex items-baseline gap-3">
-                        <p style={dateBigStyle}>21<sup style={{ fontSize: '18px', marginLeft: 2 }}>st</sup></p>
-                        <p style={{ ...dateBigStyle, fontSize: '40px' }}>July</p>
+                        <p style={dateBigStyle}>{checkInFormatted.day.split(' ')[0]}<sup style={{ fontSize: '18px', marginLeft: 2 }}>{checkInFormatted.day.split(' ')[0].slice(-2)}</sup></p>
+                        <p style={{ ...dateBigStyle, fontSize: '40px' }}>{checkInFormatted.month}</p>
                       </div>
-                      <p style={smallMetaStyle} className="mt-1">Monday, 2pm</p>
+                      <p style={smallMetaStyle} className="mt-1">{checkInFormatted.weekday}, {booking.unitId?.checkInOut?.checkInFrom || '2pm'}</p>
                     </div>
 
                     {/* Arrow */}
@@ -132,17 +237,28 @@ const BookingConfirmed = () => {
                     <div className="flex-1 text-right">
                       <p style={smallMetaStyle} className="mb-1">check-out</p>
                       <div className="flex items-baseline justify-end gap-3">
-                        <p style={dateBigStyle}>27<sup style={{ fontSize: '18px', marginLeft: 2 }}>th</sup></p>
-                        <p style={{ ...dateBigStyle, fontSize: '40px' }}>July</p>
+                        <p style={dateBigStyle}>{checkOutFormatted.day.split(' ')[0]}<sup style={{ fontSize: '18px', marginLeft: 2 }}>{checkOutFormatted.day.split(' ')[0].slice(-2)}</sup></p>
+                        <p style={{ ...dateBigStyle, fontSize: '40px' }}>{checkOutFormatted.month}</p>
                       </div>
-                      <p style={smallMetaStyle} className="mt-1">Sunday, 11am</p>
+                      <p style={smallMetaStyle} className="mt-1">{checkOutFormatted.weekday}, {booking.unitId?.checkInOut?.checkOutUntil || '11am'}</p>
                     </div>
                   </div>
 
                   {/* Guests */}
                   <p style={{ fontFamily: "'Work Sans', sans-serif", fontSize: '20px', fontWeight: 600 }} className="text-gray-900">
-                    2 Adults, 1 Child
+                    {booking.numberOfAdults} Adult{booking.numberOfAdults !== 1 ? 's' : ''}
+                    {booking.numberOfChildren > 0 && `, ${booking.numberOfChildren} Child${booking.numberOfChildren !== 1 ? 'ren' : ''}`}
                   </p>
+                  
+                  {/* Guest Info */}
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                    <p style={smallMetaStyle} className="mb-1">Guest Name</p>
+                    <p style={{ fontFamily: "'Work Sans', sans-serif", fontSize: '16px', fontWeight: 500 }} className="text-gray-900">
+                      {booking.guestInfo.name} {booking.guestInfo.surname}
+                    </p>
+                    <p style={smallMetaStyle} className="mt-2">{booking.guestInfo.email}</p>
+                    <p style={smallMetaStyle}>{booking.guestInfo.phone}</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -168,40 +284,70 @@ const BookingConfirmed = () => {
 
               <div className="space-y-4 mb-6">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-700 text-sm">1 2BHK Penthouse x 7 Nights</span>
-                  <span className="font-semibold text-gray-900">₹ 49,000</span>
+                  <span className="text-gray-700 text-sm">
+                    {booking.unitId?.name || 'Room'} x {booking.nights} Night{booking.nights !== 1 ? 's' : ''}
+                  </span>
+                  <span className="font-semibold text-gray-900">
+                    ₹ {booking.pricing.clientPrice.toLocaleString()}
+                  </span>
                 </div>
 
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-700 text-sm">Taxes and other charges</span>
-                  <span className="font-semibold text-gray-900">₹ 594</span>
-                </div>
+                {booking.pricing.taxes > 0 && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700 text-sm">Taxes and other charges</span>
+                    <span className="font-semibold text-gray-900">₹ {booking.pricing.taxes.toLocaleString()}</span>
+                  </div>
+                )}
 
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-700 text-sm">Pay Now Discount</span>
-                  <span className="font-semibold text-green-600">-₹ 550</span>
-                </div>
+                {booking.appliedCoupon && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-700 text-sm">Coupon ({booking.appliedCoupon})</span>
+                    <span className="font-semibold text-green-600">Applied</span>
+                  </div>
+                )}
 
                 <hr className="border-gray-200" />
 
                 <div className="flex justify-between items-center">
                   <span className="text-lg font-bold text-gray-900">Amount Paid</span>
-                  <span className="text-lg font-bold text-gray-900">₹ 49,044</span>
+                  <span className="text-lg font-bold text-gray-900">
+                    ₹ {booking.pricing.alreadyPaid.toLocaleString()}
+                  </span>
                 </div>
               </div>
 
               <div className="bg-gray-50 rounded-2xl p-4 mb-6">
                 <div className="flex items-center gap-3">
-                  <span className="text-gray-700 text-sm">Amount paid via</span>
-                  <img src="/upi.png" alt="UPI" className="h-8 w-auto" />
-                  <span className="text-gray-600 text-sm">ju*****n@oksbi</span>
+                  <span className="text-gray-700 text-sm">Payment Method:</span>
+                  <span className="text-gray-900 font-medium text-sm capitalize">
+                    {booking.paymentMethod || 'Card'}
+                  </span>
+                </div>
+                <div className="mt-2">
+                  <span className="text-gray-700 text-sm">Status: </span>
+                  <span className={`font-medium text-sm ${
+                    booking.status === 'confirmed' ? 'text-green-600' : 
+                    booking.status === 'cancelled' ? 'text-red-600' : 
+                    'text-yellow-600'
+                  }`}>
+                    {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                  </span>
                 </div>
               </div>
 
-              <div className="text-center">
+              <div className="text-center space-y-3">
                 <button className="text-gray-500 text-sm underline hover:text-gray-700">
                   Click here to download an e-receipt
                 </button>
+                
+                <div className="pt-4 border-t">
+                  <Link 
+                    to={`/my-bookings?email=${encodeURIComponent(booking.guestInfo.email)}`}
+                    className="text-blue-600 text-sm hover:underline block"
+                  >
+                    View all my bookings
+                  </Link>
+                </div>
               </div>
             </div>
           </div> {/* end cards container */}

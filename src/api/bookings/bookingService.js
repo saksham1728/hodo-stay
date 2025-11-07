@@ -6,86 +6,65 @@ import { api } from '../index.js'
  */
 export const bookingService = {
   /**
-   * Create a new booking
-   * @param {Object} bookingData - Booking information
-   * @returns {Promise<Object>} Created booking data
+   * Create payment order (mock for now)
+   * @param {Object} orderData - Order details
+   * @returns {Promise<Object>} Order data
+   */
+  createOrder: async (orderData) => {
+    return await api.post('/payments/create-order', orderData)
+  },
+
+  /**
+   * Verify payment and create booking (mock for now)
+   * @param {Object} paymentData - Payment verification data
+   * @returns {Promise<Object>} Booking confirmation
+   */
+  verifyPayment: async (paymentData) => {
+    return await api.post('/payments/verify', paymentData)
+  },
+
+  /**
+   * Create booking directly (for testing without payment)
+   * @param {Object} bookingData - Booking details
+   * @returns {Promise<Object>} Booking confirmation
    */
   createBooking: async (bookingData) => {
-    return await api.post('/bookings', bookingData)
+    // For now, we'll mock the payment and create booking directly
+    const mockPaymentData = {
+      razorpay_order_id: `order_mock_${Date.now()}`,
+      razorpay_payment_id: `pay_mock_${Date.now()}`,
+      razorpay_signature: 'mock_signature',
+      bookingData: bookingData
+    }
+    return await api.post('/payments/verify', mockPaymentData)
   },
 
   /**
-   * Get booking by ID
-   * @param {string} bookingId - The booking ID
+   * Get booking by reference
+   * @param {string} bookingReference - Booking reference number
    * @returns {Promise<Object>} Booking details
    */
-  getBookingById: async (bookingId) => {
-    return await api.get(`/bookings/${bookingId}`)
+  getBookingByReference: async (bookingReference) => {
+    return await api.get(`/bookings/reference/${bookingReference}`)
   },
 
   /**
-   * Get booking by reference number
-   * @param {string} reference - The booking reference
-   * @returns {Promise<Object>} Booking details
+   * Get bookings by email
+   * @param {string} email - Guest email
+   * @returns {Promise<Object>} List of bookings
    */
-  getBookingByReference: async (reference) => {
-    return await api.get(`/bookings/reference/${reference}`)
-  },
-
-  /**
-   * Get user's booking history
-   * @param {string} userId - The user ID
-   * @param {Object} params - Query parameters (page, limit, status)
-   * @returns {Promise<Object>} User's bookings with pagination
-   */
-  getUserBookings: async (userId, params = {}) => {
-    const queryString = new URLSearchParams(params).toString()
-    const endpoint = queryString 
-      ? `/bookings/user/${userId}?${queryString}` 
-      : `/bookings/user/${userId}`
-    return await api.get(endpoint)
-  },
-
-  /**
-   * Update booking status
-   * @param {string} bookingId - The booking ID
-   * @param {Object} statusData - Status update data
-   * @returns {Promise<Object>} Updated booking data
-   */
-  updateBookingStatus: async (bookingId, statusData) => {
-    return await api.put(`/bookings/${bookingId}/status`, statusData)
-  },
-
-  /**
-   * Confirm booking (push to Rentals United)
-   * @param {string} bookingId - The booking ID
-   * @returns {Promise<Object>} Confirmed booking data
-   */
-  confirmBooking: async (bookingId) => {
-    return await api.put(`/bookings/${bookingId}/confirm`)
+  getBookingsByEmail: async (email) => {
+    return await api.get(`/bookings/email?email=${encodeURIComponent(email)}`)
   },
 
   /**
    * Cancel booking
-   * @param {string} bookingId - The booking ID
+   * @param {string} bookingReference - Booking reference number
    * @param {Object} cancellationData - Cancellation details
-   * @returns {Promise<Object>} Cancelled booking data
+   * @returns {Promise<Object>} Cancellation confirmation
    */
-  cancelBooking: async (bookingId, cancellationData) => {
-    return await api.put(`/bookings/${bookingId}/cancel`, cancellationData)
-  },
-
-  /**
-   * Get reservations from Rentals United
-   * @param {Object} params - Date range and location parameters
-   * @returns {Promise<Object>} RU reservations data
-   */
-  getRUReservations: async (params = {}) => {
-    const queryString = new URLSearchParams(params).toString()
-    const endpoint = queryString 
-      ? `/bookings/ru/reservations?${queryString}` 
-      : `/bookings/ru/reservations`
-    return await api.get(endpoint)
+  cancelBooking: async (bookingReference, cancellationData) => {
+    return await api.post(`/bookings/${bookingReference}/cancel`, cancellationData)
   }
 }
 

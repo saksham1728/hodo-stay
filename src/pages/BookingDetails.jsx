@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import Header2 from '../components/Header2'
 import Footer2 from '../components/Footer2'
 import BookingDateSelector from '../components/BookingDateSelector'
 import { usePricing } from '../hooks/usePricing'
 import { unitService } from '../api'
+import { bookingService } from '../api/bookings/bookingService'
 
 // Helper function to format currency
 const formatCurrency = (amount) => {
@@ -18,11 +19,16 @@ const formatCurrency = (amount) => {
 
 const BookingDetails = () => {
   const { unitId } = useParams()
+  const navigate = useNavigate()
   
   // Unit data state
   const [unit, setUnit] = useState(null)
   const [unitLoading, setUnitLoading] = useState(true)
   const [unitError, setUnitError] = useState(null)
+  
+  // Booking submission state
+  const [submitting, setSubmitting] = useState(false)
+  const [bookingError, setBookingError] = useState(null)
   
   // Booking state with default dates
   const getDefaultDates = () => {
@@ -220,6 +226,80 @@ const BookingDetails = () => {
   }
 
   const pricing = calculatePricing()
+
+  // Handle booking submission
+  const handleProceedToCheckout = async () => {
+    // Validate form
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.mobile) {
+      setBookingError('Please fill in all guest information fields')
+      return
+    }
+
+    if (!acceptTerms) {
+      setBookingError('Please accept the terms and conditions')
+      return
+    }
+
+    if (!selectedDates.checkIn || !selectedDates.checkOut) {
+      setBookingError('Please select check-in and check-out dates')
+      return
+    }
+
+    if (totalGuests === 0) {
+      setBookingError('Please select at least one guest')
+      return
+    }
+
+    setSubmitting(true)
+    setBookingError(null)
+
+    try {
+      // Calculate nights
+      const checkIn = new Date(selectedDates.checkIn)
+      const checkOut = new Date(selectedDates.checkOut)
+      const nights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24))
+
+      // Prepare booking data
+      const bookingData = {
+        unitId: unitId,
+        checkIn: selectedDates.checkIn,
+        checkOut: selectedDates.checkOut,
+        nights: nights,
+        numberOfGuests: totalGuests,
+        numberOfAdults: guests.adults,
+        numberOfChildren: guests.children,
+        guestInfo: {
+          name: formData.firstName,
+          surname: formData.lastName,
+          email: formData.email,
+          phone: formData.mobile
+        },
+        pricing: {
+          ruPrice: pricing.total,
+          clientPrice: pricing.total,
+          currency: 'INR'
+        },
+        paymentMethod: paymentMethod,
+        additionalAmenities: additionalAmenities,
+        appliedCoupon: appliedCoupon ? appliedCoupon.code : null
+      }
+
+      // Create booking
+      const response = await bookingService.createBooking(bookingData)
+
+      if (response.success) {
+        // Navigate to confirmation page with booking reference
+        navigate(`/booking-confirmed/${response.data.booking.bookingReference}`)
+      } else {
+        throw new Error(response.message || 'Booking failed')
+      }
+    } catch (err) {
+      setBookingError(err.message || 'Failed to create booking. Please try again.')
+      console.error('Booking error:', err)
+    } finally {
+      setSubmitting(false)
+    }
+  }
 
   // Format date for display
   const formatDateForDisplay = (dateStr) => {
@@ -675,15 +755,26 @@ const BookingDetails = () => {
                 </label>
               </div>
 
+              {/* Error Message */}
+              {bookingError && (
+                <div className="rounded-2xl p-4 bg-red-50 border border-red-200">
+                  <p className="text-red-700 text-sm" style={{ fontFamily: 'Work Sans' }}>
+                    {bookingError}
+                  </p>
+                </div>
+              )}
+
               {/* Proceed Button */}
               <button 
-                className="w-full text-white py-4 rounded-lg hover:opacity-95 transition-all"
+                onClick={handleProceedToCheckout}
+                disabled={submitting || !acceptTerms || priceLoading || !formData.firstName || !formData.lastName || !formData.email || !formData.mobile}
+                className="w-full text-white py-4 rounded-lg hover:opacity-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{
                   background: '#DE754B',
                   ...proceedBtnTextStyle
                 }}
               >
-                Proceed to Check Out
+                {submitting ? 'Processing...' : 'Proceed to Check Out'}
               </button>
             </div>
 
