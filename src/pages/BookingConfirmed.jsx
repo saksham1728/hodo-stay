@@ -150,12 +150,12 @@ const BookingConfirmed = () => {
 
       {/* Top banner */}
       <div className="w-full" style={{ backgroundColor: '#2D3A36', minHeight: 80 }}>
-        <div className="max-w-7xl mx-auto flex items-center px-6" style={{ minHeight: 80 }}>
-          <div>
-            <h1 className="text-white" style={excitedStyle}>
+        <div className="max-w-7xl mx-auto flex items-center px-4 sm:px-6 py-4" style={{ minHeight: 80 }}>
+          <div className="w-full">
+            <h1 className="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl" style={{ ...excitedStyle, fontSize: 'inherit' }}>
               We are excited to have you stay with us!
             </h1>
-            <p className="text-white/70 mt-2" style={{ fontFamily: 'Work Sans', fontSize: '14px' }}>
+            <p className="text-white/70 mt-2 text-xs sm:text-sm break-all" style={{ fontFamily: 'Work Sans' }}>
               Booking Reference: <span className="font-mono font-bold">{booking.bookingReference}</span>
             </p>
           </div>
@@ -163,101 +163,104 @@ const BookingConfirmed = () => {
       </div>
 
       {/* Content area */}
-      <div className="flex justify-center px-6 py-10">
+      <div className="flex justify-center px-4 sm:px-6 py-6 sm:py-10">
         <div className="w-full max-w-7xl">
-          <div className="flex gap-8 items-start flex-col lg:flex-row">
+          <div className="flex gap-4 sm:gap-6 lg:gap-8 items-start flex-col lg:flex-row">
             {/* LEFT: Booking Confirmed card */}
             <div
-              className="bg-white rounded-[28px] p-8 shadow-md"
-              style={{ flex: '0 0 60%', maxWidth: '60%' }}
+              className="bg-white rounded-2xl sm:rounded-[28px] p-4 sm:p-6 lg:p-8 shadow-md w-full lg:flex-1"
             >
               {/* Header */}
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0">
+                  <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
 
-                <h2 className="text-green-600" style={bookingHeadingStyle}>
+                <h2 className="text-green-600 text-xl sm:text-2xl lg:text-3xl" style={{ ...bookingHeadingStyle, fontSize: 'inherit' }}>
                   Booking Confirmed
                 </h2>
               </div>
 
               {/* Two-column content: image left, details right */}
-              <div className="flex gap-6 items-start">
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-start">
                 {/* Square image on left */}
-                <div className="flex-shrink-0">
+                <div className="flex-shrink-0 w-full sm:w-auto">
                   <img
                     src={booking.unitId?.images?.[0]?.url || "/property_1.png"}
                     alt={booking.unitId?.name || "Property"}
-                    className="block w-44 h-44 rounded-2xl object-cover"
+                    className="block w-full sm:w-32 md:w-40 lg:w-44 h-48 sm:h-32 md:h-40 lg:h-44 rounded-2xl object-cover"
                   />
                 </div>
 
                 {/* Right side details */}
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                   {/* Title */}
-                  <h3 style={propertyTitleStyle} className="text-gray-900 mb-3">
+                  <h3 className="text-gray-900 mb-2 sm:mb-3 text-lg sm:text-xl lg:text-2xl break-words" style={{ ...propertyTitleStyle, fontSize: 'inherit' }}>
                     {booking.unitId?.name || 'Property'}
                   </h3>
 
                   {/* Building name */}
-                  <p className="mb-2 text-gray-600" style={{ fontFamily: "'Work Sans', sans-serif", fontSize: '14px' }}>
+                  <p className="mb-2 text-gray-600 text-xs sm:text-sm break-words" style={{ fontFamily: "'Work Sans', sans-serif" }}>
                     {booking.buildingId?.name || 'Building'}
                   </p>
 
                   {/* Room details link */}
-                  <p className="mb-6">
-                    <Link to={`/property/${booking.unitId?._id}`} className="text-gray-600 underline" style={{ fontFamily: "'Work Sans', sans-serif", fontSize: '16px' }}>
+                  <p className="mb-4 sm:mb-6">
+                    <Link to={`/property/${booking.unitId?._id}`} className="text-gray-600 underline text-sm sm:text-base" style={{ fontFamily: "'Work Sans', sans-serif" }}>
                       Room details
                     </Link>
                   </p>
 
                   {/* Check-in / arrow / Check-out row */}
-                  <div className="flex items-center justify-between mb-6">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 gap-4">
                     {/* Check-in block */}
                     <div className="flex-1">
-                      <p style={smallMetaStyle} className="mb-1">check-in</p>
-                      <div className="flex items-baseline gap-3">
-                        <p style={dateBigStyle}>{checkInFormatted.day.split(' ')[0]}<sup style={{ fontSize: '18px', marginLeft: 2 }}>{checkInFormatted.day.split(' ')[0].slice(-2)}</sup></p>
-                        <p style={{ ...dateBigStyle, fontSize: '40px' }}>{checkInFormatted.month}</p>
+                      <p style={smallMetaStyle} className="mb-1 text-xs">check-in</p>
+                      <div className="flex items-baseline gap-2 sm:gap-3">
+                        <p className="text-2xl sm:text-3xl lg:text-4xl" style={{ ...dateBigStyle, fontSize: 'inherit' }}>
+                          {checkInFormatted.day.split(' ')[0]}<sup className="text-sm sm:text-base">{checkInFormatted.day.split(' ')[0].slice(-2)}</sup>
+                        </p>
+                        <p className="text-2xl sm:text-3xl lg:text-4xl" style={{ ...dateBigStyle, fontSize: 'inherit' }}>{checkInFormatted.month}</p>
                       </div>
-                      <p style={smallMetaStyle} className="mt-1">{checkInFormatted.weekday}, {booking.unitId?.checkInOut?.checkInFrom || '2pm'}</p>
+                      <p style={smallMetaStyle} className="mt-1 text-xs break-words">{checkInFormatted.weekday}, {booking.unitId?.checkInOut?.checkInFrom || '2pm'}</p>
                     </div>
 
                     {/* Arrow */}
-                    <div className="px-4">
-                      <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="px-2 sm:px-4 flex items-center">
+                      <svg className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400 rotate-90 sm:rotate-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                       </svg>
                     </div>
 
                     {/* Check-out block */}
-                    <div className="flex-1 text-right">
-                      <p style={smallMetaStyle} className="mb-1">check-out</p>
-                      <div className="flex items-baseline justify-end gap-3">
-                        <p style={dateBigStyle}>{checkOutFormatted.day.split(' ')[0]}<sup style={{ fontSize: '18px', marginLeft: 2 }}>{checkOutFormatted.day.split(' ')[0].slice(-2)}</sup></p>
-                        <p style={{ ...dateBigStyle, fontSize: '40px' }}>{checkOutFormatted.month}</p>
+                    <div className="flex-1 sm:text-right">
+                      <p style={smallMetaStyle} className="mb-1 text-xs">check-out</p>
+                      <div className="flex items-baseline sm:justify-end gap-2 sm:gap-3">
+                        <p className="text-2xl sm:text-3xl lg:text-4xl" style={{ ...dateBigStyle, fontSize: 'inherit' }}>
+                          {checkOutFormatted.day.split(' ')[0]}<sup className="text-sm sm:text-base">{checkOutFormatted.day.split(' ')[0].slice(-2)}</sup>
+                        </p>
+                        <p className="text-2xl sm:text-3xl lg:text-4xl" style={{ ...dateBigStyle, fontSize: 'inherit' }}>{checkOutFormatted.month}</p>
                       </div>
-                      <p style={smallMetaStyle} className="mt-1">{checkOutFormatted.weekday}, {booking.unitId?.checkInOut?.checkOutUntil || '11am'}</p>
+                      <p style={smallMetaStyle} className="mt-1 text-xs break-words">{checkOutFormatted.weekday}, {booking.unitId?.checkInOut?.checkOutUntil || '11am'}</p>
                     </div>
                   </div>
 
                   {/* Guests */}
-                  <p style={{ fontFamily: "'Work Sans', sans-serif", fontSize: '20px', fontWeight: 600 }} className="text-gray-900">
+                  <p className="text-gray-900 text-base sm:text-lg lg:text-xl font-semibold" style={{ fontFamily: "'Work Sans', sans-serif" }}>
                     {booking.numberOfAdults} Adult{booking.numberOfAdults !== 1 ? 's' : ''}
                     {booking.numberOfChildren > 0 && `, ${booking.numberOfChildren} Child${booking.numberOfChildren !== 1 ? 'ren' : ''}`}
                   </p>
                   
                   {/* Guest Info */}
-                  <div className="mt-4 pt-4 border-t border-gray-200">
-                    <p style={smallMetaStyle} className="mb-1">Guest Name</p>
-                    <p style={{ fontFamily: "'Work Sans', sans-serif", fontSize: '16px', fontWeight: 500 }} className="text-gray-900">
+                  <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-200">
+                    <p style={smallMetaStyle} className="mb-1 text-xs">Guest Name</p>
+                    <p className="text-gray-900 text-sm sm:text-base font-medium break-words" style={{ fontFamily: "'Work Sans', sans-serif" }}>
                       {booking.guestInfo.name} {booking.guestInfo.surname}
                     </p>
-                    <p style={smallMetaStyle} className="mt-2">{booking.guestInfo.email}</p>
-                    <p style={smallMetaStyle}>{booking.guestInfo.phone}</p>
+                    <p style={smallMetaStyle} className="mt-2 text-xs break-all">{booking.guestInfo.email}</p>
+                    <p style={smallMetaStyle} className="text-xs break-words">{booking.guestInfo.phone}</p>
                   </div>
                 </div>
               </div>
@@ -265,67 +268,64 @@ const BookingConfirmed = () => {
 
             {/* RIGHT: Payment Summary card (kept compact) */}
             <div
-              className="bg-white rounded-[28px] p-8 shadow-md"
-              style={{ flex: '0 0 36%', maxWidth: '36%' }}
+              className="bg-white rounded-2xl sm:rounded-[28px] p-4 sm:p-6 lg:p-8 shadow-md w-full lg:w-auto lg:flex-shrink-0"
             >
               <h3
+                className="text-gray-900 mb-4 sm:mb-6 text-2xl sm:text-3xl lg:text-4xl"
                 style={{
                   fontFamily: 'sans',
                   fontWeight: 400,
-                  fontSize: '38px',
                   lineHeight: '150%',
                   letterSpacing: '-2.2%',
-                  marginBottom: 8,
                 }}
-                className="text-gray-900 mb-6"
               >
                 Payment Summary
               </h3>
 
-              <div className="space-y-4 mb-6">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-700 text-sm">
+              <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
+                <div className="flex justify-between items-start gap-2">
+                  <span className="text-gray-700 text-xs sm:text-sm break-words flex-1">
                     {booking.unitId?.name || 'Room'} x {booking.nights} Night{booking.nights !== 1 ? 's' : ''}
                   </span>
-                  <span className="font-semibold text-gray-900">
+                  <span className="font-semibold text-gray-900 text-sm sm:text-base whitespace-nowrap">
                     ₹ {booking.pricing.clientPrice.toLocaleString()}
                   </span>
                 </div>
 
                 {booking.pricing.taxes > 0 && (
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-700 text-sm">Taxes and other charges</span>
-                    <span className="font-semibold text-gray-900">₹ {booking.pricing.taxes.toLocaleString()}</span>
+                  <div className="flex justify-between items-start gap-2">
+                    <span className="text-gray-700 text-xs sm:text-sm">Taxes and other charges</span>
+                    <span className="font-semibold text-gray-900 text-sm sm:text-base whitespace-nowrap">₹ {booking.pricing.taxes.toLocaleString()}</span>
                   </div>
                 )}
 
                 {booking.appliedCoupon && (
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-700 text-sm">Coupon ({booking.appliedCoupon})</span>
-                    <span className="font-semibold text-green-600">Applied</span>
+                  <div className="flex justify-between items-start gap-2">
+                    <span className="text-gray-700 text-xs sm:text-sm break-words">Coupon ({booking.appliedCoupon})</span>
+                    <span className="font-semibold text-green-600 text-sm sm:text-base whitespace-nowrap">Applied</span>
                   </div>
                 )}
 
                 <hr className="border-gray-200" />
 
-                <div className="flex justify-between items-center">
-                  <span className="text-lg font-bold text-gray-900">Amount Paid</span>
-                  <span className="text-lg font-bold text-gray-900">
+                <div className="flex justify-between items-start gap-2">
+                  <span className="text-base sm:text-lg font-bold text-gray-900">Amount Paid</span>
+                  <span className="text-base sm:text-lg font-bold text-gray-900 whitespace-nowrap">
                     ₹ {booking.pricing.alreadyPaid.toLocaleString()}
                   </span>
                 </div>
               </div>
 
-              <div className="bg-gray-50 rounded-2xl p-4 mb-6">
-                <div className="flex items-center gap-3">
-                  <span className="text-gray-700 text-sm">Payment Method:</span>
-                  <span className="text-gray-900 font-medium text-sm capitalize">
+              <div className="bg-gray-50 rounded-xl sm:rounded-2xl p-3 sm:p-4 mb-4 sm:mb-6">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                  <span className="text-gray-700 text-xs sm:text-sm">Payment Method:</span>
+                  <span className="text-gray-900 font-medium text-xs sm:text-sm capitalize">
                     {booking.paymentMethod || 'Card'}
                   </span>
                 </div>
-                <div className="mt-2">
-                  <span className="text-gray-700 text-sm">Status: </span>
-                  <span className={`font-medium text-sm ${
+                <div className="mt-2 flex flex-col sm:flex-row sm:items-center gap-2">
+                  <span className="text-gray-700 text-xs sm:text-sm">Status: </span>
+                  <span className={`font-medium text-xs sm:text-sm ${
                     booking.status === 'confirmed' ? 'text-green-600' : 
                     booking.status === 'cancelled' ? 'text-red-600' : 
                     'text-yellow-600'
@@ -336,14 +336,14 @@ const BookingConfirmed = () => {
               </div>
 
               <div className="text-center space-y-3">
-                <button className="text-gray-500 text-sm underline hover:text-gray-700">
+                <button className="text-gray-500 text-xs sm:text-sm underline hover:text-gray-700">
                   Click here to download an e-receipt
                 </button>
                 
-                <div className="pt-4 border-t">
+                <div className="pt-3 sm:pt-4 border-t">
                   <Link 
                     to={`/my-bookings?token=${booking.accessToken}`}
-                    className="text-blue-600 text-sm hover:underline block"
+                    className="text-blue-600 text-xs sm:text-sm hover:underline block break-words"
                   >
                     View all my bookings
                   </Link>
