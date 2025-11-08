@@ -6,15 +6,18 @@ import { bookingService } from '../api/bookings/bookingService'
 
 const MyBookings = () => {
   const [searchParams, setSearchParams] = useSearchParams()
-  const emailParam = searchParams.get('email')
+  const tokenParam = searchParams.get('token')
   
-  const [email, setEmail] = useState(emailParam || '')
+  const [email, setEmail] = useState('')
   const [bookings, setBookings] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [cancellingBooking, setCancellingBooking] = useState(null)
   const [cancelReason, setCancelReason] = useState('')
   const [showCancelModal, setShowCancelModal] = useState(false)
+  const [requestingAccess, setRequestingAccess] = useState(false)
+  const [accessRequested, setAccessRequested] = useState(false)
+  const [userEmail, setUserEmail] = useState('')
 
   // Typography styles
   const headingStyle = {
@@ -33,26 +36,25 @@ const MyBookings = () => {
     letterSpacing: '-1%',
   }
 
-  // Fetch bookings when email is provided in URL
+  // Fetch bookings when token is provided in URL
   useEffect(() => {
-    if (emailParam) {
-      fetchBookings(emailParam)
+    if (tokenParam) {
+      fetchBookingsByToken(tokenParam)
     }
-  }, [emailParam])
+  }, [tokenParam])
 
-  const fetchBookings = async (emailAddress) => {
+  const fetchBookingsByToken = async (token) => {
     try {
       setLoading(true)
       setError(null)
       
-      const response = await bookingService.getBookingsByEmail(emailAddress)
+      const response = await bookingService.getBookingsByToken(token)
       
       if (response.success) {
         setBookings(response.data.bookings)
-        // Update URL with email
-        setSearchParams({ email: emailAddress })
+        setUserEmail(response.data.email)
       } else {
-        setError(response.message || 'No bookings found')
+        setError(response.message || 'Invalid or expired access token')
       }
     } catch (err) {
       setError(err.message || 'Failed to fetch bookings')
@@ -62,10 +64,27 @@ const MyBookings = () => {
     }
   }
 
-  const handleSearch = (e) => {
+  const handleRequestAccess = async (e) => {
     e.preventDefault()
-    if (email.trim()) {
-      fetchBookings(email.trim())
+    if (!email.trim()) return
+
+    try {
+      setRequestingAccess(true)
+      setError(null)
+      
+      const response = await bookingService.requestAccessLink(email.trim())
+      
+      if (response.success) {
+        setAccessRequested(true)
+        setEmail('')
+      } else {
+        setError(response.message || 'Failed to send access link')
+      }
+    } catch (err) {
+      setError(err.message || 'Failed to send access link')
+      console.error('Error requesting access:', err)
+    } finally {
+      setRequestingAccess(false)
     }
   }
 
@@ -157,37 +176,77 @@ const MyBookings = () => {
       <div className="py-12 px-8">
         <div className="max-w-7xl mx-auto">
           
-          {/* Email Search Form */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm mb-8">
-            <form onSubmit={handleSearch} className="flex gap-4">
-              <input
-                type="email"
-                placeholder="Enter your email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+          {/* Access Request Form - Only show if no token */}
+          {!tokenParam && (
+            <div className="bg-white rounded-2xl p-6 shadow-sm mb-8">
+              <h3 
+                className="text-gray-900 mb-4"
                 style={{
-                  fontFamily: 'Work Sans',
+                  fontFamily: 'Petrona',
                   fontWeight: 400,
-                  fontSize: '16px'
-                }}
-              />
-              <button
-                type="submit"
-                disabled={loading}
-                className="px-8 py-3 text-white rounded-lg hover:opacity-95 transition-all disabled:opacity-50"
-                style={{
-                  background: '#DE754B',
-                  fontFamily: 'Inter, Work Sans, sans-serif',
-                  fontWeight: 500,
-                  fontSize: '16px'
+                  fontSize: '24px'
                 }}
               >
-                {loading ? 'Searching...' : 'Search Bookings'}
-              </button>
-            </form>
-          </div>
+                Access Your Bookings
+              </h3>
+              
+              {accessRequested ? (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <p className="text-green-700">
+                    ✅ Access link sent! Please check your email inbox for the link to view your bookings.
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <p 
+                    className="text-gray-600 mb-4"
+                    style={{
+                      fontFamily: 'Work Sans',
+                      fontSize: '14px'
+                    }}
+                  >
+                    Enter your email address and we'll send you a secure link to access all your bookings.
+                  </p>
+                  
+                  <form onSubmit={handleRequestAccess} className="flex gap-4">
+                    <input
+                      type="email"
+                      placeholder="Enter your email address"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                      style={{
+                        fontFamily: 'Work Sans',
+                        fontWeight: 400,
+                        fontSize: '16px'
+                      }}
+                    />
+                    <button
+                      type="submit"
+                      disabled={requestingAccess}
+                      className="px-8 py-3 text-white rounded-lg hover:opacity-95 transition-all disabled:opacity-50"
+                      style={{
+                        background: '#DE754B',
+                        fontFamily: 'Inter, Work Sans, sans-serif',
+                        fontWeight: 500,
+                        fontSize: '16px'
+                      }}
+                    >
+                      {requestingAccess ? 'Sending...' : 'Send Access Link'}
+                    </button>
+                  </form>
+                  
+                  <p 
+                    className="text-gray-500 text-xs mt-3"
+                    style={{ fontFamily: 'Work Sans' }}
+                  >
+                    🔒 For security, we'll send a secure link to your email instead of showing bookings directly.
+                  </p>
+                </>
+              )}
+            </div>
+          )}
 
           {/* Error Message */}
           {error && (
@@ -321,8 +380,17 @@ const MyBookings = () => {
             </div>
           )}
 
+          {/* User Email Display */}
+          {tokenParam && userEmail && bookings.length > 0 && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+              <p className="text-blue-700 text-sm">
+                📧 Showing bookings for: <strong>{userEmail}</strong>
+              </p>
+            </div>
+          )}
+
           {/* No Bookings Found */}
-          {!loading && bookings.length === 0 && emailParam && (
+          {!loading && bookings.length === 0 && tokenParam && (
             <div className="text-center py-12">
               <div className="bg-white rounded-2xl p-8 shadow-sm max-w-md mx-auto">
                 <svg 

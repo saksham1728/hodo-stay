@@ -342,11 +342,14 @@ const BookingConfirmed = () => {
                 
                 <div className="pt-4 border-t">
                   <Link 
-                    to={`/my-bookings?email=${encodeURIComponent(booking.guestInfo.email)}`}
+                    to={`/my-bookings?token=${booking.accessToken}`}
                     className="text-blue-600 text-sm hover:underline block"
                   >
                     View all my bookings
                   </Link>
+                  <p className="text-gray-500 text-xs mt-2">
+                    Check your email for the secure access link
+                  </p>
                 </div>
               </div>
             </div>

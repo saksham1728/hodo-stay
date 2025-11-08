@@ -49,12 +49,21 @@ export const bookingService = {
   },
 
   /**
-   * Get bookings by email
-   * @param {string} email - Guest email
+   * Get bookings by access token (secure)
+   * @param {string} token - Access token
    * @returns {Promise<Object>} List of bookings
    */
-  getBookingsByEmail: async (email) => {
-    return await api.get(`/bookings/email?email=${encodeURIComponent(email)}`)
+  getBookingsByToken: async (token) => {
+    return await api.get(`/bookings/by-token?token=${encodeURIComponent(token)}`)
+  },
+
+  /**
+   * Request access link via email
+   * @param {string} email - Guest email
+   * @returns {Promise<Object>} Success message
+   */
+  requestAccessLink: async (email) => {
+    return await api.post('/bookings/request-access', { email })
   },
 
   /**
