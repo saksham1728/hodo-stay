@@ -1,3 +1,22 @@
+# Dependencies
+node_modules
+
+# Build output
+dist
+dist-ssr
+build
+
+# Environment variables (NEVER COMMIT THESE!)
+.env
+.env.local
+.env.development
+.env.development.local
+.env.test
+.env.test.local
+.env.production
+.env.production.local
+*.local
+
 # Logs
 logs
 *.log
@@ -7,18 +26,31 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# Test files (keep locally, don't commit)
+test-*.js
+test-*.jsx
+*-test.js
+*-test.jsx
+*.test.js
+*.test.jsx
+*.spec.js
+*.spec.jsx
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
 .idea
 .DS_Store
+Thumbs.db
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+*.swp
+*.swo
+*~
+
+# Coverage
+coverage
+.nyc_output

@@ -4,6 +4,22 @@ import Header2 from '../components/Header2'
 import Footer2 from '../components/Footer2'
 import { bookingService } from '../api/bookings/bookingService'
 
+// Helper function to format currency
+const formatCurrency = (amount, currency = 'USD') => {
+  const localeMap = {
+    'USD': 'en-US',
+    'INR': 'en-IN',
+    'EUR': 'en-EU'
+  }
+  
+  return new Intl.NumberFormat(localeMap[currency] || 'en-US', {
+    style: 'currency',
+    currency: currency,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(amount)
+}
+
 const BookingConfirmed = () => {
   const { bookingReference } = useParams()
   const [booking, setBooking] = useState(null)
@@ -288,14 +304,14 @@ const BookingConfirmed = () => {
                     {booking.unitId?.name || 'Room'} x {booking.nights} Night{booking.nights !== 1 ? 's' : ''}
                   </span>
                   <span className="font-semibold text-gray-900 text-sm sm:text-base whitespace-nowrap">
-                    ₹ {booking.pricing.clientPrice.toLocaleString()}
+                    {formatCurrency(booking.pricing.clientPrice, booking.pricing.currency)}
                   </span>
                 </div>
 
                 {booking.pricing.taxes > 0 && (
                   <div className="flex justify-between items-start gap-2">
                     <span className="text-gray-700 text-xs sm:text-sm">Taxes and other charges</span>
-                    <span className="font-semibold text-gray-900 text-sm sm:text-base whitespace-nowrap">₹ {booking.pricing.taxes.toLocaleString()}</span>
+                    <span className="font-semibold text-gray-900 text-sm sm:text-base whitespace-nowrap">{formatCurrency(booking.pricing.taxes, booking.pricing.currency)}</span>
                   </div>
                 )}
 
@@ -311,7 +327,7 @@ const BookingConfirmed = () => {
                 <div className="flex justify-between items-start gap-2">
                   <span className="text-base sm:text-lg font-bold text-gray-900">Amount Paid</span>
                   <span className="text-base sm:text-lg font-bold text-gray-900 whitespace-nowrap">
-                    ₹ {booking.pricing.alreadyPaid.toLocaleString()}
+                    {formatCurrency(booking.pricing.alreadyPaid, booking.pricing.currency)}
                   </span>
                 </div>
               </div>

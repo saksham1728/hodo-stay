@@ -50,9 +50,12 @@ export const api = {
     apiRequest(endpoint, { method: 'DELETE', ...options }),
 }
 
+// Export api as default for backward compatibility
+export default api
+
 // Export services - Clean Building-Units Architecture
-export { buildingService } from './buildings/buildingService'
 export { unitService } from './units/unitService'
 export { userService } from './users/userService'
 export { bookingService } from './bookings/bookingService'
 export { pricingService } from './pricing/pricingService'
+export { paymentService } from './payments/paymentService'

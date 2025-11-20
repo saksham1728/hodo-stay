@@ -14,6 +14,7 @@ function App() {
         <Route path="/" element={<Layout><Home /></Layout>} />
         <Route path="/properties" element={<Layout><Properties /></Layout>} />
         <Route path="/property/:id" element={<PropertyDetail />} />
+        <Route path="/booking/:buildingId/:unitType" element={<BookingDetails />} />
         <Route path="/booking-details/:unitId" element={<BookingDetails />} />
         <Route path="/booking-confirmed/:bookingReference" element={<BookingConfirmed />} />
         <Route path="/my-bookings" element={<MyBookings />} />

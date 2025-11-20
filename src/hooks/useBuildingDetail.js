@@ -24,10 +24,10 @@ export const useBuildingDetail = (buildingId) => {
       
       const response = await buildingService.getBuildingById(id)
       
-      if (response.success && response.data && response.data.building) {
-        const buildingData = response.data.building
-        setBuilding(buildingData)
-        setUnits(buildingData.units || [])
+      if (response.success && response.data) {
+        // API returns { success: true, data: { building: {...}, units: [...] } }
+        setBuilding(response.data.building)
+        setUnits(response.data.units || [])
       } else {
         setBuilding(null)
         setUnits([])

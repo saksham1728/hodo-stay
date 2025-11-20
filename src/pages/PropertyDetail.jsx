@@ -2,25 +2,57 @@ import { useParams, Link } from "react-router-dom";
 import Footer from "../components/Footer";
 import HomeHeader from "../components/HomeHeader";
 import { useBuildingDetail } from "../hooks/useBuildingDetail";
+import { useEffect, useState } from "react";
 
 function PropertyDetail() {
   const { id } = useParams();
   
-  // Use the building detail hook to fetch data from API
-  const { building: apiBuilding, units: apiUnits, loading, error } = useBuildingDetail(id);
+  // Fetch building with unit types grouped
+  const [building, setBuilding] = useState(null);
+  const [unitTypes, setUnitTypes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchBuildingWithTypes = async () => {
+      try {
+        setLoading(true);
+        const { buildingService } = await import('../api/buildings/buildingService');
+        const response = await buildingService.getBuildingWithUnitTypes(id);
+        
+        if (response.success) {
+          setBuilding(response.data.building);
+          setUnitTypes(response.data.unitTypes);
+        } else {
+          setError('Building not found');
+        }
+      } catch (err) {
+        console.error('Error fetching building:', err);
+        setError('Failed to load property details');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    if (id) {
+      fetchBuildingWithTypes();
+    }
+  }, [id]);
 
   // No static data - 100% API driven
 
-  // Simple function to format building data for PropertyDetail page
-  const formatBuildingData = (building, units) => {
-    if (!building || !units || units.length === 0) return null;
+  // Format unit types for display
+  const formatPropertyData = () => {
+    if (!building || !unitTypes || unitTypes.length === 0) return null;
 
     const location = building.location?.city 
       ? `${building.location.address || ''}, ${building.location.city}, ${building.location.state || ''}, ${building.location.country || 'India'}`.replace(/,\s*,/g, ',').trim()
       : "Bangalore, Karnataka, India";
 
-    // Format each unit as a "space" for the UI
-    const spaces = units.map(unit => {
+    // Format each unit TYPE as a "space" for the UI
+    const spaces = unitTypes.map(unitTypeData => {
+      const rep = unitTypeData.representativeUnit;
+      
       // Extract amenities from description
       const extractAmenities = (description) => {
         if (!description) return ["WiFi", "Air-conditioning"];
@@ -35,20 +67,22 @@ function PropertyDetail() {
       };
 
       return {
-        id: unit._id,
-        ruPropertyId: unit.ruPropertyId, // Important for pricing API
-        name: unit.name,
+        id: unitTypeData.unitType, // Use unitType as ID
+        unitType: unitTypeData.unitType,
+        unitTypeSlug: unitTypeData.unitTypeSlug,
+        count: unitTypeData.count,
+        name: unitTypeData.unitType,
         location: location,
         rating: 4.5,
-        amenities: extractAmenities(unit.description),
-        bedrooms: unit.compositionRooms?.length || 2,
+        amenities: extractAmenities(rep?.description),
+        bedrooms: rep?.compositionRooms?.length || 2,
         bathrooms: 2,
-        area: `${unit.standardGuests || 2} guests`,
-        maxGuests: unit.canSleepMax || unit.standardGuests || 2,
-        description: unit.description || "Modern apartment with all amenities",
-        price: 7000, // Default price - will be fetched from RU API
-        images: unit.images?.length > 0 
-          ? unit.images.map(img => img.url).filter(url => url)
+        area: `${rep?.standardGuests || 2} guests`,
+        maxGuests: rep?.canSleepMax || rep?.standardGuests || 2,
+        description: rep?.description || `${unitTypeData.count} ${unitTypeData.unitType} units available`,
+        price: 7000, // Default price - will be fetched dynamically
+        images: rep?.images?.length > 0 
+          ? rep.images.map(img => img.url).filter(url => url)
           : ["/property_1.png", "/property_3.png", "/property_4.jpg"]
       };
     });
@@ -61,8 +95,7 @@ function PropertyDetail() {
     };
   };
 
-  // Use building and units data
-  const property = apiBuilding && apiUnits ? formatBuildingData(apiBuilding, apiUnits) : null;
+  const property = formatPropertyData();
 
   // Loading state (keeping your design style)
   if (loading) {
@@ -164,9 +197,9 @@ function PropertyDetail() {
             <h2 className="text-3xl font-semibold text-gray-800 m-0">
               Available Spaces
             </h2>
-            {apiBuilding && (
+            {building && (
               <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
-                Live Data - {apiUnits?.length || 0} Units
+                Live Data - {unitTypes?.length || 0} Unit Types
               </div>
             )}
           </div>
@@ -332,7 +365,7 @@ function PropertyDetail() {
                     </div>
 
                     <Link
-                      to={`/booking-details/${space.id}`}
+                      to={`/booking/${id}/${space.unitType}`}
                       className="bg-orange-500 text-white border-none px-6 py-3 rounded-full font-normal text-sm cursor-pointer hover:bg-orange-600 transition-colors max-md:px-4 max-md:py-2 max-md:text-xs inline-block text-center no-underline self-start sm:self-auto"
                       style={{
                         fontFamily: "Petrona",
@@ -340,7 +373,7 @@ function PropertyDetail() {
                         fontSize: "14px",
                       }}
                     >
-                      Book Now
+                      Book Now ({space.count} available)
                     </Link>
                   </div>
                   </div>
@@ -385,21 +418,21 @@ function PropertyDetail() {
               </div>
               <div className="flex flex-col gap-6">
                 {/* Additional composition info from description */}
-                {apiUnits && apiUnits[0] && apiUnits[0].description && (
+                {unitTypes && unitTypes[0] && unitTypes[0].representativeUnit?.description && (
                   <>
-                    {apiUnits[0].description.includes('bedroom') && (
+                    {unitTypes[0].representativeUnit.description.includes('bedroom') && (
                       <div className="flex items-center gap-4 text-base text-gray-800 max-md:text-sm">
                         <span className="text-xl w-8 text-center">🏠</span>
                         <span>Private Bedroom</span>
                       </div>
                     )}
-                    {apiUnits[0].description.includes('bathroom') && (
+                    {unitTypes[0].representativeUnit.description.includes('bathroom') && (
                       <div className="flex items-center gap-4 text-base text-gray-800 max-md:text-sm">
                         <span className="text-xl w-8 text-center">🚿</span>
                         <span>Private Bathroom</span>
                       </div>
                     )}
-                    {apiUnits[0].description.includes('WC') && (
+                    {unitTypes[0].representativeUnit.description.includes('WC') && (
                       <div className="flex items-center gap-4 text-base text-gray-800 max-md:text-sm">
                         <span className="text-xl w-8 text-center">🚽</span>
                         <span>WC</span>
@@ -411,32 +444,32 @@ function PropertyDetail() {
             </div>
           )}
           {/* Building Information */}
-          {apiBuilding && apiUnits && apiUnits.length > 0 && (
+          {building && unitTypes && unitTypes.length > 0 && (
             <div className="mt-8 space-y-6">
               {/* Building Description */}
-              {apiUnits[0].description && (
+              {unitTypes[0].representativeUnit?.description && (
                 <div className="p-6 bg-white rounded-xl shadow-sm">
                   <h3 className="text-xl font-semibold text-gray-800 mb-4">Property Description</h3>
-                  <p className="text-gray-600 leading-relaxed whitespace-pre-line">{apiUnits[0].description}</p>
+                  <p className="text-gray-600 leading-relaxed whitespace-pre-line">{unitTypes[0].representativeUnit.description}</p>
                 </div>
               )}
               
               {/* Check-in/Check-out Information */}
-              {apiUnits[0].checkInOut && (
+              {unitTypes[0].representativeUnit?.checkInOut && (
                 <div className="p-6 bg-white rounded-xl shadow-sm">
                   <h3 className="text-xl font-semibold text-gray-800 mb-4">Check-in & Check-out</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                       <span className="text-sm text-gray-500">Check-in</span>
-                      <p className="font-medium">{apiUnits[0].checkInOut.checkInFrom} - {apiUnits[0].checkInOut.checkInTo}</p>
+                      <p className="font-medium">{unitTypes[0].representativeUnit.checkInOut.checkInFrom} - {unitTypes[0].representativeUnit.checkInOut.checkInTo}</p>
                     </div>
                     <div>
                       <span className="text-sm text-gray-500">Check-out</span>
-                      <p className="font-medium">Until {apiUnits[0].checkInOut.checkOutUntil}</p>
+                      <p className="font-medium">Until {unitTypes[0].representativeUnit.checkInOut.checkOutUntil}</p>
                     </div>
                     <div>
                       <span className="text-sm text-gray-500">Location</span>
-                      <p className="font-medium capitalize">{apiUnits[0].checkInOut.place?.replace(/_/g, ' ')}</p>
+                      <p className="font-medium capitalize">{unitTypes[0].representativeUnit.checkInOut.place?.replace(/_/g, ' ')}</p>
                     </div>
                   </div>
                 </div>
@@ -448,11 +481,11 @@ function PropertyDetail() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <span className="text-sm text-gray-500">Total Units</span>
-                    <p className="font-medium">{apiBuilding.totalUnits}</p>
+                    <p className="font-medium">{building.totalUnits}</p>
                   </div>
                   <div>
-                    <span className="text-sm text-gray-500">Available Units</span>
-                    <p className="font-medium">{apiBuilding.availableUnits}</p>
+                    <span className="text-sm text-gray-500">Unit Types</span>
+                    <p className="font-medium">{unitTypes.length} types</p>
                   </div>
                 </div>
               </div>

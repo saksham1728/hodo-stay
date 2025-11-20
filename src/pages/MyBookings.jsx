@@ -336,7 +336,12 @@ const MyBookings = () => {
                         <div>
                           <p className="text-gray-500 text-xs mb-1">Total Paid</p>
                           <p className="text-gray-900 font-medium text-sm">
-                            ₹{booking.pricing.alreadyPaid.toLocaleString()}
+                            {new Intl.NumberFormat('en-US', {
+                              style: 'currency',
+                              currency: booking.pricing.currency || 'USD',
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            }).format(booking.pricing.alreadyPaid)}
                           </p>
                         </div>
                       </div>

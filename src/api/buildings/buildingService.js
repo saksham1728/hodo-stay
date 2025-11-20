@@ -1,39 +1,51 @@
-import { api } from '../index.js'
+import { api } from '../index';
 
-/**
- * Building API Service
- * Handles all building-related API calls (property groups)
- */
 export const buildingService = {
   /**
-   * Get all buildings (property groups) with optional filters
-   * @param {Object} params - Query parameters for filtering
-   * @returns {Promise<Object>} Buildings data with pagination info
+   * Get all buildings (with pagination)
    */
-  getBuildings: async (params = {}) => {
-    const queryString = new URLSearchParams(params).toString()
-    const endpoint = queryString ? `/buildings?${queryString}` : '/buildings'
-    return await api.get(endpoint)
+  async getBuildings(params = {}) {
+    const queryString = new URLSearchParams(params).toString();
+    const endpoint = queryString ? `/buildings?${queryString}` : '/buildings';
+    const response = await api.get(endpoint);
+    return response;
   },
 
   /**
-   * Get a single building by ID with all its units
-   * @param {string} buildingId - The building ID
-   * @returns {Promise<Object>} Building details with units
+   * Get all buildings (alias)
    */
-  getBuildingById: async (buildingId) => {
-    return await api.get(`/buildings/${buildingId}`)
+  async getAllBuildings() {
+    const response = await api.get('/buildings');
+    return response.data;
   },
 
   /**
-   * Search buildings by location
-   * @param {Object} searchParams - Search criteria
-   * @returns {Promise<Object>} Search results
+   * Get building by ID with all units
    */
-  searchBuildings: async (searchParams) => {
-    const queryString = new URLSearchParams(searchParams).toString()
-    return await api.get(`/buildings?${queryString}`)
+  async getBuildingById(buildingId) {
+    const response = await api.get(`/buildings/${buildingId}`);
+    return response; // Return full response with success flag
+  },
+
+  /**
+   * Get building with unit types grouped
+   */
+  async getBuildingWithUnitTypes(buildingId) {
+    const response = await api.get(`/buildings/${buildingId}/unit-types`);
+    return response; // Return full response with success flag
+  },
+
+  /**
+   * Get cheapest available unit for a unit type
+   */
+  async getBestAvailableUnit({ unitType, buildingId, checkIn, checkOut, guests }) {
+    const response = await api.post('/buildings/best-available', {
+      unitType,
+      buildingId,
+      checkIn,
+      checkOut,
+      guests
+    });
+    return response; // Return full response with success flag
   }
-}
-
-export default buildingService
+};

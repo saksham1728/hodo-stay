@@ -6,25 +6,34 @@ import BookingDateSelector from '../components/BookingDateSelector'
 import { usePricing } from '../hooks/usePricing'
 import { unitService } from '../api'
 import { bookingService } from '../api/bookings/bookingService'
+import { paymentService } from '../api/payments/paymentService'
 
-// Helper function to format currency
-const formatCurrency = (amount) => {
-  return new Intl.NumberFormat('en-IN', {
+// Helper function to format currency - now accepts currency parameter
+const formatCurrency = (amount, currency = 'USD') => {
+  // Map currency codes to locale
+  const localeMap = {
+    'USD': 'en-US',
+    'INR': 'en-IN',
+    'EUR': 'en-EU'
+  }
+  
+  return new Intl.NumberFormat(localeMap[currency] || 'en-US', {
     style: 'currency',
-    currency: 'INR',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
+    currency: currency,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   }).format(amount)
 }
 
 const BookingDetails = () => {
-  const { unitId } = useParams()
+  const { unitId, buildingId, unitType } = useParams()
   const navigate = useNavigate()
   
   // Unit data state
   const [unit, setUnit] = useState(null)
   const [unitLoading, setUnitLoading] = useState(true)
   const [unitError, setUnitError] = useState(null)
+  const [pricing, setPricing] = useState(null)
   
   // Booking submission state
   const [submitting, setSubmitting] = useState(false)
@@ -60,16 +69,59 @@ const BookingDetails = () => {
   
   // Get live pricing based on selected dates and guests
   const totalGuests = guests.adults + guests.children
+  
+  // Use old pricing hook only if we have unitId (old flow)
   const { quote, loading: priceLoading, error: priceError } = usePricing(
-    unitId, 
+    unitId || null, 
     selectedDates.checkIn, 
     selectedDates.checkOut, 
     totalGuests
   )
   
-  // Pricing and booking state management complete
+  // Fetch cheapest unit for unit type (new flow)
+  useEffect(() => {
+    const fetchBestUnit = async () => {
+      if (!buildingId || !unitType) return
+      
+      try {
+        setUnitLoading(true)
+        const { buildingService } = await import('../api/buildings/buildingService')
+        const response = await buildingService.getBestAvailableUnit({
+          unitType,
+          buildingId,
+          checkIn: selectedDates.checkIn,
+          checkOut: selectedDates.checkOut,
+          guests: totalGuests
+        })
+        
+        if (response.success) {
+          setUnit(response.data.unit)
+          setPricing(response.data.pricing)
+          
+          // Update guest count to respect unit capacity
+          if (response.data.unit.standardGuests) {
+            setGuests(prev => ({
+              adults: Math.min(prev.adults, response.data.unit.standardGuests),
+              children: Math.max(0, Math.min(prev.children, response.data.unit.standardGuests - prev.adults))
+            }))
+          }
+        } else {
+          setUnitError('No units available for selected dates')
+        }
+      } catch (error) {
+        console.error('Error fetching best unit:', error)
+        setUnitError('Failed to find available unit')
+      } finally {
+        setUnitLoading(false)
+      }
+    }
+    
+    if (buildingId && unitType) {
+      fetchBestUnit()
+    }
+  }, [buildingId, unitType, selectedDates.checkIn, selectedDates.checkOut, totalGuests])
   
-  // Fetch unit details
+  // Fetch unit details (old flow)
   useEffect(() => {
     const fetchUnit = async () => {
       if (!unitId) return
@@ -186,8 +238,37 @@ const BookingDetails = () => {
     setCouponCode('')
   }
 
-  // Calculate pricing
+  // Calculate pricing - handles both new API pricing and old quote
   const calculatePricing = () => {
+    // New flow: pricing from getBestAvailableUnit API
+    if (pricing && pricing.price) {
+      const basePrice = pricing.pricePerNight || 0
+      const nights = pricing.nights || 0
+      const subtotal = pricing.price || 0
+      const currency = pricing.currency || 'USD'
+      const taxes = 0
+      
+      let couponDiscount = 0
+      if (appliedCoupon) {
+        if (appliedCoupon.type === 'percentage') {
+          couponDiscount = subtotal * appliedCoupon.discount
+        } else {
+          couponDiscount = appliedCoupon.discount
+        }
+      }
+      
+      return {
+        basePrice,
+        nights,
+        subtotal,
+        taxes,
+        couponDiscount,
+        total: Math.max(0, subtotal - couponDiscount),
+        currency
+      }
+    }
+    
+    // Old flow: quote from usePricing hook
     if (!quote || !quote.pricing) {
       return {
         basePrice: 0,
@@ -195,14 +276,16 @@ const BookingDetails = () => {
         subtotal: 0,
         taxes: 0,
         couponDiscount: 0,
-        total: 0
+        total: 0,
+        currency: 'USD'
       }
     }
 
     const basePrice = quote.pricing.pricePerNight || 0
     const nights = quote.nights || 0
     const subtotal = basePrice * nights
-    const taxes = 0 // No tax calculation for now
+    const currency = quote.pricing.currency || 'USD'
+    const taxes = 0
     
     let couponDiscount = 0
     if (appliedCoupon) {
@@ -213,21 +296,23 @@ const BookingDetails = () => {
       }
     }
     
-    const total = Math.max(0, subtotal - couponDiscount) // Removed tax from total calculation
-    
     return {
       basePrice,
       nights,
       subtotal,
       taxes,
       couponDiscount,
-      total
+      total: Math.max(0, subtotal - couponDiscount),
+      currency
     }
   }
 
-  const pricing = calculatePricing()
+  const calculatedPricing = calculatePricing()
+  
+  // Determine if we're currently loading pricing
+  const isPricingLoading = (buildingId && unitType) ? unitLoading : priceLoading
 
-  // Handle booking submission
+  // Handle booking submission with Razorpay payment
   const handleProceedToCheckout = async () => {
     // Validate form
     if (!formData.firstName || !formData.lastName || !formData.email || !formData.mobile) {
@@ -250,6 +335,11 @@ const BookingDetails = () => {
       return
     }
 
+    if (calculatedPricing.total === 0) {
+      setBookingError('Unable to calculate pricing. Please try again.')
+      return
+    }
+
     setSubmitting(true)
     setBookingError(null)
 
@@ -261,7 +351,7 @@ const BookingDetails = () => {
 
       // Prepare booking data
       const bookingData = {
-        unitId: unitId,
+        unitId: unit?._id || unitId, // Use unit._id from API (new flow) or unitId from params (old flow)
         checkIn: selectedDates.checkIn,
         checkOut: selectedDates.checkOut,
         nights: nights,
@@ -275,27 +365,79 @@ const BookingDetails = () => {
           phone: formData.mobile
         },
         pricing: {
-          ruPrice: pricing.total,
-          clientPrice: pricing.total,
-          currency: 'INR'
+          ruPrice: calculatedPricing.total,
+          clientPrice: calculatedPricing.total,
+          currency: calculatedPricing.currency || 'USD'
         },
         paymentMethod: paymentMethod,
         additionalAmenities: additionalAmenities,
         appliedCoupon: appliedCoupon ? appliedCoupon.code : null
       }
 
-      // Create booking
-      const response = await bookingService.createBooking(bookingData)
+      console.log('📝 Creating Razorpay order...')
 
-      if (response.success) {
-        // Navigate to confirmation page with booking reference
-        navigate(`/booking-confirmed/${response.data.booking.bookingReference}`)
-      } else {
-        throw new Error(response.message || 'Booking failed')
+      // Step 1: Create Razorpay order
+      const orderResponse = await paymentService.createOrder({
+        amount: calculatedPricing.total,
+        currency: calculatedPricing.currency || 'USD',
+        bookingData: bookingData
+      })
+
+      if (!orderResponse.success) {
+        throw new Error('Failed to create payment order')
       }
+
+      console.log('✅ Razorpay order created:', orderResponse.data.orderId)
+
+      // Step 2: Open Razorpay payment modal
+      const paymentResponse = await paymentService.openPaymentModal({
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        amount: orderResponse.data.amount,
+        currency: orderResponse.data.currency,
+        orderId: orderResponse.data.orderId,
+        name: 'Hodo Stay',
+        description: `Booking for ${unit?.name || 'Property'}`,
+        image: '/hodo-white-logo.png',
+        prefill: {
+          name: `${formData.firstName} ${formData.lastName}`,
+          email: formData.email,
+          contact: formData.mobile
+        },
+        notes: {
+          unitId: bookingData.unitId,
+          checkIn: bookingData.checkIn,
+          checkOut: bookingData.checkOut
+        },
+        themeColor: '#DE754B'
+      })
+
+      console.log('✅ Payment successful:', paymentResponse.razorpay_payment_id)
+
+      // Step 3: Verify payment and create booking
+      const verifyResponse = await paymentService.verifyPayment({
+        razorpay_order_id: paymentResponse.razorpay_order_id,
+        razorpay_payment_id: paymentResponse.razorpay_payment_id,
+        razorpay_signature: paymentResponse.razorpay_signature,
+        bookingData: bookingData
+      })
+
+      if (verifyResponse.success) {
+        console.log('✅ Booking confirmed:', verifyResponse.data.booking.bookingReference)
+        
+        // Navigate to confirmation page
+        navigate(`/booking-confirmed/${verifyResponse.data.booking.bookingReference}`)
+      } else {
+        throw new Error(verifyResponse.message || 'Booking verification failed')
+      }
+
     } catch (err) {
-      setBookingError(err.message || 'Failed to create booking. Please try again.')
-      console.error('Booking error:', err)
+      console.error('❌ Booking/Payment error:', err)
+      
+      if (err.message === 'Payment cancelled by user') {
+        setBookingError('Payment was cancelled. Please try again when ready.')
+      } else {
+        setBookingError(err.message || 'Failed to process payment. Please try again.')
+      }
     } finally {
       setSubmitting(false)
     }
@@ -411,7 +553,17 @@ const BookingDetails = () => {
             <div className="lg:col-span-2 space-y-6">
               
               {/* Guests Section */}
-              <div className="rounded-2xl p-6" style={smallCardStyle}>
+              <div className="rounded-2xl p-6 relative" style={smallCardStyle}>
+                {/* Loading overlay */}
+                {isPricingLoading && (
+                  <div className="absolute inset-0 bg-white/70 rounded-2xl flex items-center justify-center z-10">
+                    <div className="text-center">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mx-auto"></div>
+                      <p className="text-sm text-gray-600 mt-2">Updating pricing...</p>
+                    </div>
+                  </div>
+                )}
+                
                 <h3 
                   className="text-gray-900 mb-4"
                   style={{
@@ -755,11 +907,28 @@ const BookingDetails = () => {
                 </label>
               </div>
 
-              {/* Error Message */}
+              {/* Error Messages */}
               {bookingError && (
                 <div className="rounded-2xl p-4 bg-red-50 border border-red-200">
-                  <p className="text-red-700 text-sm" style={{ fontFamily: 'Work Sans' }}>
+                  <p className="text-red-700 text-sm font-medium" style={{ fontFamily: 'Work Sans' }}>
+                    ⚠️ Booking Error
+                  </p>
+                  <p className="text-red-600 text-sm mt-1" style={{ fontFamily: 'Work Sans' }}>
                     {bookingError}
+                  </p>
+                </div>
+              )}
+              
+              {unitError && (
+                <div className="rounded-2xl p-4 bg-yellow-50 border border-yellow-200">
+                  <p className="text-yellow-700 text-sm font-medium" style={{ fontFamily: 'Work Sans' }}>
+                    ⚠️ Availability Issue
+                  </p>
+                  <p className="text-yellow-600 text-sm mt-1" style={{ fontFamily: 'Work Sans' }}>
+                    {unitError}
+                  </p>
+                  <p className="text-yellow-600 text-xs mt-2" style={{ fontFamily: 'Work Sans' }}>
+                    Try selecting different dates or contact support.
                   </p>
                 </div>
               )}
@@ -767,14 +936,14 @@ const BookingDetails = () => {
               {/* Proceed Button */}
               <button 
                 onClick={handleProceedToCheckout}
-                disabled={submitting || !acceptTerms || priceLoading || !formData.firstName || !formData.lastName || !formData.email || !formData.mobile}
+                disabled={submitting || !acceptTerms || isPricingLoading || !formData.firstName || !formData.lastName || !formData.email || !formData.mobile || calculatedPricing.total === 0}
                 className="w-full text-white py-4 rounded-lg hover:opacity-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{
                   background: '#DE754B',
                   ...proceedBtnTextStyle
                 }}
               >
-                {submitting ? 'Processing...' : 'Proceed to Check Out'}
+                {submitting ? 'Processing...' : isPricingLoading ? 'Loading Pricing...' : 'Proceed to Check Out'}
               </button>
             </div>
 
@@ -869,35 +1038,40 @@ const BookingDetails = () => {
 
                     {/* Pricing Breakdown */}
                     <div className="border-t pt-4 space-y-2">
-                      {priceLoading ? (
+                      {isPricingLoading ? (
                         <div className="text-center py-4">
                           <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-orange-500 mx-auto"></div>
                           <p className="text-sm text-gray-500 mt-2">Getting live prices...</p>
+                          <p className="text-xs text-gray-400 mt-1">Checking all available units</p>
                         </div>
-                      ) : priceError ? (
+                      ) : (priceError || unitError) ? (
                         <div className="text-center py-4">
                           <p className="text-sm text-red-500">Unable to get live pricing</p>
                           <p className="text-xs text-gray-500">Please try different dates</p>
+                        </div>
+                      ) : calculatedPricing.total === 0 ? (
+                        <div className="text-center py-4">
+                          <p className="text-sm text-gray-500">Select dates to see pricing</p>
                         </div>
                       ) : (
                         <>
                           <div className="flex justify-between items-center">
                             <span className="text-gray-600 text-sm">
-                              {formatCurrency(pricing.basePrice)} x {pricing.nights} Night{pricing.nights !== 1 ? 's' : ''}
+                              {formatCurrency(calculatedPricing.basePrice, calculatedPricing.currency)} x {calculatedPricing.nights} Night{calculatedPricing.nights !== 1 ? 's' : ''}
                             </span>
                             <span className="text-gray-900 font-medium text-sm">
-                              {formatCurrency(pricing.subtotal)}
+                              {formatCurrency(calculatedPricing.subtotal, calculatedPricing.currency)}
                             </span>
                           </div>
                           
                           {/* Tax line hidden for now */}
-                          {pricing.taxes > 0 && (
+                          {calculatedPricing.taxes > 0 && (
                             <div className="flex justify-between items-center">
                               <span className="text-gray-600 text-sm">
                                 Taxes and charges
                               </span>
                               <span className="text-gray-900 font-medium text-sm">
-                                {formatCurrency(pricing.taxes)}
+                                {formatCurrency(calculatedPricing.taxes, calculatedPricing.currency)}
                               </span>
                             </div>
                           )}
@@ -914,7 +1088,7 @@ const BookingDetails = () => {
                                 </button>
                               </span>
                               <span className="text-green-600 font-medium text-sm">
-                                -{formatCurrency(pricing.couponDiscount)}
+                                -{formatCurrency(calculatedPricing.couponDiscount, calculatedPricing.currency)}
                               </span>
                             </div>
                           )}
@@ -926,7 +1100,7 @@ const BookingDetails = () => {
                               Total Payable Amount
                             </span>
                             <span className="text-gray-900 font-bold text-lg">
-                              {formatCurrency(pricing.total)}
+                              {formatCurrency(calculatedPricing.total, calculatedPricing.currency)}
                             </span>
                           </div>
 
@@ -934,9 +1108,17 @@ const BookingDetails = () => {
                           <div className="flex items-center justify-center mt-2">
                             <div className="flex items-center gap-2 text-xs text-green-600">
                               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                              Live Pricing
+                              Live Pricing from Rentals United
                             </div>
                           </div>
+                          
+                          {/* Show which unit was selected (new flow only) */}
+                          {pricing && pricing.propertyId && (
+                            <div className="mt-2 p-2 bg-blue-50 rounded text-xs text-blue-700">
+                              <p className="font-medium">✓ Best available unit selected</p>
+                              <p className="text-blue-600 mt-1">Property ID: {pricing.propertyId}</p>
+                            </div>
+                          )}
                         </>
                       )}
                     </div>
