@@ -102,57 +102,6 @@ const ImageCarousel = ({ images }) => {
 };
 
 const Properties = () => {
-  // Fallback static data (same as before)
-  const fallbackProperties = [
-    {
-      id: 1,
-      title: "Hodo Heiwa - HSR Layout",
-      location: "Sector 6, HSR Layout, Bangalore",
-      size: "348 x 48",
-      rating: 4.6,
-      amenities: ["WiFi", "Air-conditioning", "Free Parking on Premises"],
-      description:
-        "Luxury, eco-friendly apartments in the heart of HSR Layout. Fully equipped with modern comforts for work and relaxation...",
-      price: 7000,
-      images: ["/card-1.png", "/card-2.png", "/card-3.png"],
-    },
-    {
-      id: 2,
-      title: "Hodo Hummus - Manyata",
-      location: "Sector 370, Manyata, Bangalore",
-      rating: 4.5,
-      amenities: ["WiFi", "Air-conditioning", "Free Parking on Premises"],
-      description:
-        "Luxury, eco-friendly apartments in the heart of HSR Layout. Fully equipped with modern comforts for work and relaxation...",
-      price: 7000,
-      images: ["/card-4.png", "/card-5.png", "/card-6.png"],
-    },
-    {
-      id: 3,
-      title: "Hodo Honeybee - Bannerghatta",
-      location: "Sector 12, Bannerghatta, Bangalore",
-      size: "420 x 52",
-      rating: 4.7,
-      amenities: ["WiFi", "Air-conditioning", "Free Parking on Premises"],
-      description:
-        "Luxury, eco-friendly apartments in the heart of HSR Layout. Fully equipped with modern comforts for work and relaxation...",
-      price: 7500,
-      images: ["/card-1.png", "/card-2.png", "/card-3.png"],
-    },
-    {
-      id: 4,
-      title: "Hodo Harmony - Whitefield",
-      location: "Sector 8, Whitefield, Bangalore",
-      size: "380 x 50",
-      rating: 4.8,
-      amenities: ["WiFi", "Air-conditioning", "Free Parking on Premises"],
-      description:
-        "Luxury, eco-friendly apartments in the heart of HSR Layout. Fully equipped with modern comforts for work and relaxation...",
-      price: 8000,
-      images: ["/card-4.png", "/card-5.png", "/card-6.png"],
-    },
-  ];
-
   // Use the buildings hook to fetch data from API
   const { buildings: apiBuildings, loading, error } = useBuildings();
   
@@ -181,10 +130,8 @@ const Properties = () => {
     };
   };
 
-  // Use buildings data or fallback to static
-  const properties = apiBuildings.length > 0 
-    ? apiBuildings.map(formatBuildingForDisplay).filter(Boolean)
-    : fallbackProperties;
+  // Use buildings data from API only
+  const properties = apiBuildings.map(formatBuildingForDisplay).filter(Boolean);
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -230,22 +177,28 @@ const Properties = () => {
 
           {/* Loading State */}
           {loading && (
-            <div className="flex justify-center items-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+            <div className="flex justify-center items-center py-20">
+              <div className="flex flex-col items-center gap-4">
+                <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-orange-500"></div>
+                <p className="text-gray-600" style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
+                  Loading properties...
+                </p>
+              </div>
             </div>
           )}
 
           {/* Error State */}
           {error && !loading && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-              <p className="text-red-800 text-sm">
-                Unable to load properties from server. Showing sample properties instead.
+            <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+              <p className="text-red-800" style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
+                Unable to load properties. Please try again later.
               </p>
             </div>
           )}
 
-          <div className="space-y-6">
-            {properties.map((property) => (
+          {!loading && !error && (
+            <div className="space-y-6">
+              {properties.map((property) => (
               <div
                 key={property.id}
                 className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden"
@@ -258,7 +211,10 @@ const Properties = () => {
                   </div>
 
                   {/* Right: Content (40%) */}
-                  <div className="w-full md:w-2/5 p-4 md:p-6 flex flex-col justify-between">
+                  <Link 
+                    to={`/property/${property.id}`}
+                    className="w-full md:w-2/5 p-4 md:p-6 flex flex-col justify-between hover:bg-gray-50 md:hover:bg-white transition-colors"
+                  >
                     <div>
                       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3 gap-2 sm:gap-0">
                         <div className="flex-1">
@@ -302,8 +258,8 @@ const Properties = () => {
                         {property.location}
                       </p>
 
-                      {/* Amenities (restored) */}
-                      <div className="flex flex-wrap gap-2 mb-4">
+                      {/* Amenities - hidden on mobile */}
+                      <div className="hidden md:flex flex-wrap gap-2 mb-4">
                         {property.amenities.map((amenity, index) => (
                           <span
                             key={index}
@@ -322,8 +278,9 @@ const Properties = () => {
                         ))}
                       </div>
 
+                      {/* Description - hidden on mobile */}
                       <p
-                        className="mb-6"
+                        className="hidden md:block mb-6"
                         style={{
                           color: "#8B8B8B",
                           fontFamily: "Petrona",
@@ -375,8 +332,7 @@ const Properties = () => {
                         </div>
                       </div>
 
-                      <Link
-                        to={`/property/${property.id}`}
+                      <span
                         className="text-gray-600 hover:text-gray-800 transition-colors self-start sm:self-auto underline underline-offset-2"
                         style={{
                           fontFamily: "Petrona",
@@ -385,13 +341,14 @@ const Properties = () => {
                         }}
                       >
                         View rooms
-                      </Link>
+                      </span>
                     </div>
-                  </div>
+                  </Link>
                 </div>
               </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 

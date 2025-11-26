@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 import CardStack from '../components/CardStack'
 import HomeHeader from '../components/HomeHeader'
-import MobileBookingForm from '../components/MobileBookingForm'
 import OurProperties from '../components/OurProperties'
 import HodoBlogs from '../components/HodoBlogs'
 import Footer from '../components/Footer'
@@ -78,8 +77,6 @@ const Home = () => {
         <HomeHeader />
       </div>
 
-      <MobileBookingForm/>
-      
       {/* Card Stack Section */}
       <CardStack />
       

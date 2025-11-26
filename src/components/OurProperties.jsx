@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useBuildings } from '../hooks/useBuildings'
 
 /**
  * Simple ImageCarousel: arrows on desktop, swipe on mobile, dots indicator.
@@ -99,42 +100,32 @@ const ImageCarousel = ({ images }) => {
 }
 
 const OurProperties = () => {
-  // using explicit card images as requested
-  const commonImages1 = ['/card-1.png', '/card-2.png', '/card-3.png']
-  const commonImages2 = ['/card-4.png', '/card-5.png', '/card-6.png']
-
-  const properties = [
-    {
-      id: 1,
-      title: 'Bloom Boutique | Ranjit Avenue',
-      address: 'B - Block, District Shopping Complex, Ranjit Avenue, Amritsar, 143001',
-      highlights: [
-        '15 mins away from Shree Guru Ramdas Jee International Airport',
-        '20 mins away from Gobindgarh Fort',
-        'Flat 15% F&B Discount'
-      ],
-      rating: 5.0,
-      price: 2646,
-      images: commonImages1,
-      amenities: ['WiFi', 'Air-conditioning', 'Free Parking on Premises']
-    },
-    {
-      id: 2,
-      title: 'Bloom Stay | Civic Center',
-      address: 'Civic Complex, Near Main Market, Amritsar, 143002',
-      highlights: [
-        '10 mins away from City Center',
-        'Near popular eateries & shopping areas',
-        'Complimentary breakfast'
-      ],
-      rating: 4.8,
-      price: 2199,
-      images: commonImages2,
-      amenities: ['WiFi', 'Air-conditioning', 'Free Parking on Premises']
-    }
-  ]
-
+  const navigate = useNavigate()
   const [isMobile, setIsMobile] = useState(false)
+  
+  // Fetch real buildings from API
+  const { buildings, loading, error } = useBuildings()
+  
+  // Format buildings for display
+  const properties = buildings.map(building => {
+    const location = building.location?.city 
+      ? `${building.location.address || ''}, ${building.location.city}`.trim().replace(/^,\s*/, '')
+      : "Bangalore, India"
+    
+    const images = building.images?.length > 0 
+      ? building.images.map(img => img.url).filter(url => url)
+      : ['/card-1.png', '/card-2.png', '/card-3.png']
+    
+    return {
+      id: building._id,
+      title: building.name,
+      address: location,
+      rating: 4.5,
+      price: 7000,
+      images: images,
+      amenities: building.amenities?.slice(0, 3) || ['WiFi', 'Air-conditioning', 'Free Parking on Premises']
+    }
+  })
 
   useEffect(() => {
     const onResize = () => setIsMobile(window.innerWidth < 768)
@@ -173,9 +164,31 @@ const OurProperties = () => {
           </Link>
         </div>
 
+        {/* Loading State */}
+        {loading && (
+          <div className="flex justify-center items-center py-20">
+            <div className="flex flex-col items-center gap-4">
+              <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-orange-500"></div>
+              <p className="text-gray-600" style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
+                Loading properties...
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && !loading && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+            <p className="text-red-800" style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
+              Unable to load properties. Please try again later.
+            </p>
+          </div>
+        )}
+
         {/* Properties List */}
-        <div className="space-y-8">
-          {properties.map((property) => (
+        {!loading && !error && (
+          <div className="space-y-8">
+            {properties.map((property) => (
             <div
               key={property.id}
               className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden"
@@ -187,7 +200,10 @@ const OurProperties = () => {
                 </div>
 
                 {/* Right: Content (40%) */}
-                <div className="w-full md:w-2/5 p-6 md:px-8 md:py-6 flex flex-col justify-between">
+                <div 
+                  className="w-full md:w-2/5 p-4 md:p-6 md:px-8 md:py-6 flex flex-col justify-between md:cursor-default cursor-pointer hover:bg-gray-50 md:hover:bg-white transition-colors"
+                  onClick={() => isMobile && navigate(`/property/${property.id}`)}
+                >
                   <div>
                     <div className="flex items-start justify-between">
                       <div className="pr-2">
@@ -230,8 +246,8 @@ const OurProperties = () => {
                       </div>
                     </div>
 
-                    {/* Amenities badges (restored) */}
-                    <div className="flex flex-wrap gap-2 mb-4">
+                    {/* Amenities badges - hidden on mobile */}
+                    <div className="hidden md:flex flex-wrap gap-2 mb-4">
                       {property.amenities.map((amenity, idx) => (
                         <span
                           key={idx}
@@ -270,8 +286,9 @@ const OurProperties = () => {
                       ))}
                     </ul> */}
 
+                    {/* Description - hidden on mobile */}
                     <p
-                      className="mb-6"
+                      className="hidden md:block mb-6"
                       style={{
                         color: '#8B8B8B',
                         fontFamily: 'Petrona',
@@ -281,7 +298,6 @@ const OurProperties = () => {
                         letterSpacing: '-2.2%'
                       }}
                     >
-                      {/* short description placeholder */}
                       Comfortable, thoughtfully designed spaces for short & long stays.
                     </p>
                   </div>
@@ -345,8 +361,9 @@ const OurProperties = () => {
                 </div>
               </div>
             </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   )
