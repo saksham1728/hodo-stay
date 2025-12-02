@@ -6,10 +6,12 @@ import PropertyDetail from './pages/PropertyDetail'
 import BookingDetails from './pages/BookingDetails'
 import BookingConfirmed from './pages/BookingConfirmed'
 import MyBookings from './pages/MyBookings'
+import ScrollToTop from './components/ScrollToTop'
 
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Layout><Home /></Layout>} />
         <Route path="/properties" element={<Layout><Properties /></Layout>} />
