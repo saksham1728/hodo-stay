@@ -113,9 +113,9 @@ const HodoBlogs = () => {
             <button
               className="text-white underline hover:text-white/80 transition-colors inline-block"
               style={{
-                fontFamily: 'Work Sans, sans-serif',
-                fontWeight: 400,
-                fontSize: '18px'
+                fontFamily: 'Petrona',
+                fontWeight: 500,
+                fontSize: '14px'
               }}
             >
               View more

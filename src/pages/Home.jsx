@@ -50,7 +50,7 @@ const Home = () => {
             <div className="flex justify-center">
               <Link 
                 to="/properties" 
-                className="bg-white text-gray-900 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors duration-200"
+                className="bg-transparent border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white/10 transition-colors duration-200"
               >
                 Explore Properties
               </Link>

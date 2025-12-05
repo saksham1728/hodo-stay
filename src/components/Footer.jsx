@@ -165,7 +165,7 @@ const FAQSection = () => {
               <img
                 src="/hodo-white-logo.png"
                 alt="Hodo Logo"
-                className="h-52 w-auto max-md:h-28"
+                className="h-52 w-auto max-md:h-30"
               />
             </div>
             <div className="text-right max-md:text-left max-md:order-1">

@@ -10,32 +10,28 @@ const HomeHeader = () => {
   return (
     <div style={{ backgroundColor: "#FFF7F0" }} className="shadow-md">
       {/* Header */}
-      <header className="md:mt-0 px-4 md:px-8 md:py-2 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto flex items-center py-4 md:py-0">
+      <header className="px-8 max-md:px-4 py-2 md:py-3 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto flex items-center md:-my-9 -my-12">
           {/* Logo */}
-          <div className="flex items-center md:-my-4 md:-ml-6 -ml-3">
+          <div className="flex items-center md:-ml-15   -ml-13">
             <img
               src="/hodo-header-logo.png"
               alt="Hodo Stays"
-              className="h-12 md:h-20 w-auto"
+              className="h-33 md:h-30 md:w-60 w-auto"
             />
           </div>
 
-          {/* Desktop Center Navigation */}
-          <div className="hidden md:flex items-center justify-center flex-1 gap-8">
+          {/* Spacer to push content right */}
+          <div className="hidden md:flex flex-1"></div>
+
+          {/* Desktop Right Navigation */}
+          <div className="hidden md:flex items-center gap-8">
             <a href="#" className="text-gray-800 font-medium hover:text-gray-600 transition-colors">
               About
             </a>
             <Link to="/properties" className="text-gray-800 font-medium hover:text-gray-600 transition-colors">
               Properties
             </Link>
-            <a href="#" className="text-gray-800 font-medium hover:text-gray-600 transition-colors">
-              Book Now
-            </a>
-          </div>
-
-          {/* Desktop Search Icon */}
-          <div className="hidden md:block">
             <button className="p-2 hover:bg-black/10 rounded-lg transition-colors">
               <svg
                 className="w-6 h-6 text-gray-800"
@@ -111,13 +107,6 @@ const HomeHeader = () => {
             >
               Properties
             </Link>
-            <a 
-              href="#" 
-              className="block text-gray-800 font-medium text-lg py-3 px-4 rounded-lg hover:bg-gray-50 transition-colors"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Book Now
-            </a>
             
             {/* Search in Mobile Menu */}
             <div className="pt-4 border-t border-gray-200">
