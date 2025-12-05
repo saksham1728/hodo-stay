@@ -166,11 +166,12 @@ const HodoBlogs = () => {
               {blogs.map((blog) => (
                 <div
                   key={blog.id}
-                  className="flex-shrink-0 bg-white rounded-3xl overflow-hidden shadow-lg"
+                  className="flex-shrink-0 rounded-3xl overflow-hidden shadow-lg"
                   style={{
                     width: window.innerWidth < 768 ? '280px' : '304px',
                     height: window.innerWidth < 768 ? '360px' : '385px',
-                    scrollSnapAlign: 'center'
+                    scrollSnapAlign: 'center',
+                    backgroundColor: '#FAF2E8'
                   }}
                 >
                   {/* Image */}
@@ -186,7 +187,7 @@ const HodoBlogs = () => {
                   </div>
 
                   {/* Content */}
-                  <div className="p-6 md:p-8 bg-white h-full flex flex-col justify-between">
+                  <div className="p-6 md:p-8 h-full flex flex-col justify-between" style={{ backgroundColor: '#FAF2E8' }}>
                     <div>
                       <h3
                         className="mb-3 text-center"

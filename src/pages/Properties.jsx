@@ -213,7 +213,7 @@ const Properties = () => {
                   {/* Right: Content (40%) */}
                   <Link 
                     to={`/property/${property.id}`}
-                    className="w-full md:w-2/5 p-4 md:p-6 flex flex-col justify-between hover:bg-gray-50 md:hover:bg-white transition-colors"
+                    className="w-full md:w-2/5 p-4 md:p-6 flex flex-col justify-between"
                   >
                     <div>
                       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3 gap-2 sm:gap-0">

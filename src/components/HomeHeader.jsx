@@ -8,7 +8,7 @@ const HomeHeader = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen)
   }
   return (
-    <div style={{ backgroundColor: "#FFF7F0" }}>
+    <div style={{ backgroundColor: "#FFF7F0" }} className="shadow-md">
       {/* Header */}
       <header className="md:mt-0 px-4 md:px-8 md:py-2 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto flex items-center py-4 md:py-0">
@@ -17,7 +17,7 @@ const HomeHeader = () => {
             <img
               src="/hodo-header-logo.png"
               alt="Hodo Stays"
-              className="h-16 md:h-24 w-auto"
+              className="h-12 md:h-20 w-auto"
             />
           </div>
 

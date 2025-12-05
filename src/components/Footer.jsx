@@ -133,19 +133,20 @@ const FAQSection = () => {
 
         {/* Footer section */}
         <div className="mt-16 pt-8">
-          <div className="flex justify-between items-start max-md:flex-col max-md:gap-8">
+          {/* Links, Contact, and Social Icons */}
+          <div className="flex justify-between items-start max-md:grid max-md:grid-cols-2 max-md:gap-x-4 max-md:gap-y-6">
             <div className="text-left">
               <div className="text-white text-sm mb-1">Business and Groups</div>
               <div className="text-white/80 text-sm mb-1">Blogs</div>
               <div className="text-white/80 text-sm">Careers</div>
             </div>
-            <div className="text-left">
+            <div className="text-left max-md:flex max-md:flex-col max-md:items-end">
               <div className="text-white/80 text-sm mb-1">
                 hello@hodostays.com
               </div>
-              <div className="text-white/80 text-sm">+91 7483413235</div>
+              <div className="text-white/80 text-sm max-md:mb-3">+91 7483413235</div>
             </div>
-            <div className="flex gap-3">
+            <div className="flex gap-3 max-md:col-span-2 max-md:justify-end">
               <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
                 <span className="text-white text-sm font-bold">in</span>
               </div>
@@ -158,19 +159,20 @@ const FAQSection = () => {
             </div>
           </div>
 
-          <div className="flex justify-between items-center mt-12 max-md:flex-col max-md:items-center max-md:gap-6">
-            <div className="flex items-center -ml-18">
+          {/* Logo and Tagline Section */}
+          <div className="flex justify-between items-center mt-12 max-md:grid max-md:grid-cols-2 max-md:gap-4 max-md:mt-10">
+            <div className="flex items-center -ml-18 max-md:ml-0 max-md:order-2 max-md:justify-end">
               <img
                 src="/hodo-white-logo.png"
                 alt="Hodo Logo"
-                className="h-52 w-auto"
+                className="h-52 w-auto max-md:h-28"
               />
             </div>
-            <div className="text-right max-md:text-center">
-              <div className="text-white text-4xl font-medium mb-1">
+            <div className="text-right max-md:text-left max-md:order-1">
+              <div className="text-white text-4xl font-medium mb-1 max-md:text-2xl max-md:leading-tight">
                 Redefining Stays,
               </div>
-              <div className="text-white text-4xl font-medium">
+              <div className="text-white text-4xl font-medium max-md:text-2xl max-md:leading-tight">
                 beyond hotels
               </div>
             </div>
@@ -190,7 +192,7 @@ const Footer = () => {
       id: 1,
       name: "Sehda",
       rating: 5,
-      text: "Had a great 2-day stay with my family at Hodo Stays. The rooms were clean, spacious, and modern. Friendly staff and great service made the experience even better. Perfect location with easy access to local attractions. Highly recommend!",
+      text: "Had a great 2-day stay with my family at Hodo Stays.",
       avatar: "/api/placeholder/50/50",
     },
     {
@@ -294,10 +296,12 @@ const Footer = () => {
               <div className="flex items-center justify-center gap-6 px-16">
                 {/* Left card - Previous review */}
                 <div 
-                  className="w-80 rounded-2xl p-6 opacity-75"
+                  className="w-80 rounded-2xl p-6 opacity-75 flex flex-col"
                   style={{ 
                     backgroundColor: '#F6F0E7',
-                    boxShadow: '0px 4px 4px 0px #00000040'
+                    boxShadow: '0px 4px 4px 0px #00000040',
+                    minHeight: '320px',
+                    maxHeight: '320px'
                   }}
                 >
                   <div className="flex justify-between items-start mb-4">
@@ -324,17 +328,17 @@ const Footer = () => {
                       )}
                     </div>
                   </div>
-                  <p className="text-gray-800 text-sm leading-relaxed mb-4 text-center">
-                    {
+                  <p className="text-gray-700 text-sm leading-7 mb-4" style={{ fontFamily: 'Georgia, serif', fontStyle: 'italic' }}>
+                    "{
                       reviews[
                         activeReview > 0
                           ? activeReview - 1
                           : reviews.length - 1
                       ].text
-                    }
+                    }"
                   </p>
-                  <div className="font-medium text-gray-800 text-sm text-right">
-                    {
+                  <div className="font-semibold text-gray-900 text-sm text-right mt-auto">
+                    — {
                       reviews[
                         activeReview > 0
                           ? activeReview - 1
@@ -346,10 +350,12 @@ const Footer = () => {
 
                 {/* Center card - Active review (highlighted) */}
                 <div 
-                  className="w-96 rounded-2xl p-8 transform scale-105 z-10"
+                  className="w-96 rounded-2xl p-8 transform scale-105 z-10 flex flex-col"
                   style={{ 
                     backgroundColor: '#F6F0E7',
-                    boxShadow: '0px 4px 4px 0px #00000040'
+                    boxShadow: '0px 4px 4px 0px #00000040',
+                    minHeight: '320px',
+                    maxHeight: '320px'
                   }}
                 >
                   <div className="flex justify-between items-start mb-6">
@@ -364,20 +370,31 @@ const Footer = () => {
                       {"★".repeat(reviews[activeReview].rating)}
                     </div>
                   </div>
-                  <p className="text-gray-800 text-base leading-relaxed mb-6 text-center">
-                    {reviews[activeReview].text}
+                  <p className="text-gray-800 text-base leading-8 mb-6" style={{ fontFamily: 'Georgia, serif', fontStyle: 'italic' }}>
+                    "{reviews[activeReview].text.split(reviews[activeReview].highlight).map((part, index, array) => (
+                      <span key={index}>
+                        {part}
+                        {index < array.length - 1 && (
+                          <span className="not-italic font-bold text-orange-600 underline decoration-yellow-300 decoration-2">
+                            {reviews[activeReview].highlight}
+                          </span>
+                        )}
+                      </span>
+                    ))}"
                   </p>
-                  <div className="font-medium text-gray-800 text-lg text-right">
-                    {reviews[activeReview].name}
+                  <div className="font-bold text-gray-900 text-lg text-right mt-auto">
+                    — {reviews[activeReview].name}
                   </div>
                 </div>
 
                 {/* Right card - Next review */}
                 <div 
-                  className="w-80 rounded-2xl p-6 opacity-75"
+                  className="w-80 rounded-2xl p-6 opacity-75 flex flex-col"
                   style={{ 
                     backgroundColor: '#F6F0E7',
-                    boxShadow: '0px 4px 4px 0px #00000040'
+                    boxShadow: '0px 4px 4px 0px #00000040',
+                    minHeight: '320px',
+                    maxHeight: '320px'
                   }}
                 >
                   <div className="flex justify-between items-start mb-4">
@@ -404,17 +421,17 @@ const Footer = () => {
                       )}
                     </div>
                   </div>
-                  <p className="text-gray-800 text-sm leading-relaxed mb-4 text-center">
-                    {
+                  <p className="text-gray-700 text-sm leading-7 mb-4" style={{ fontFamily: 'Georgia, serif', fontStyle: 'italic' }}>
+                    "{
                       reviews[
                         activeReview < reviews.length - 1
                           ? activeReview + 1
                           : 0
                       ].text
-                    }
+                    }"
                   </p>
-                  <div className="font-medium text-gray-800 text-sm text-right">
-                    {
+                  <div className="font-semibold text-gray-900 text-sm text-right mt-auto">
+                    — {
                       reviews[
                         activeReview < reviews.length - 1
                           ? activeReview + 1

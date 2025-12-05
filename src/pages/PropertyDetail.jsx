@@ -207,7 +207,8 @@ function PropertyDetail() {
             {property.spaces.map((space) => (
               <div
                 key={space.id}
-                className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden"
+                className="rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden"
+                style={{ backgroundColor: '#FAF2E8' }}
               >
                 {/* 60:40 layout on md+, stacked on mobile */}
                 <div className="flex flex-col md:flex-row">
@@ -448,7 +449,7 @@ function PropertyDetail() {
             <div className="mt-8 space-y-6">
               {/* Building Description */}
               {unitTypes[0].representativeUnit?.description && (
-                <div className="p-6 bg-white rounded-xl shadow-sm">
+                <div className="p-6 rounded-xl shadow-sm" style={{ backgroundColor: '#FAF2E8' }}>
                   <h3 className="text-xl font-semibold text-gray-800 mb-4">Property Description</h3>
                   <p className="text-gray-600 leading-relaxed whitespace-pre-line">{unitTypes[0].representativeUnit.description}</p>
                 </div>
@@ -456,7 +457,7 @@ function PropertyDetail() {
               
               {/* Check-in/Check-out Information */}
               {unitTypes[0].representativeUnit?.checkInOut && (
-                <div className="p-6 bg-white rounded-xl shadow-sm">
+                <div className="p-6 rounded-xl shadow-sm" style={{ backgroundColor: '#FAF2E8' }}>
                   <h3 className="text-xl font-semibold text-gray-800 mb-4">Check-in & Check-out</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
@@ -476,7 +477,7 @@ function PropertyDetail() {
               )}
               
               {/* Building Stats */}
-              <div className="p-6 bg-white rounded-xl shadow-sm">
+              <div className="p-6 rounded-xl shadow-sm" style={{ backgroundColor: '#FAF2E8' }}>
                 <h3 className="text-xl font-semibold text-gray-800 mb-4">Building Information</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
@@ -502,7 +503,7 @@ function PropertyDetail() {
           </h2>
           <div className="flex gap-12 max-md:flex-col max-md:gap-8">
             <div className="flex-1 flex flex-col gap-8">
-              <div className="bg-white p-6 rounded-xl shadow-sm max-md:p-4">
+              <div className="p-6 rounded-xl shadow-sm max-md:p-4" style={{ backgroundColor: '#FAF2E8' }}>
                 <div className="flex flex-col gap-6">
                   <div className="pb-6 border-b border-gray-200">
                     <div className="flex items-center gap-3 mb-4 max-md:gap-2">

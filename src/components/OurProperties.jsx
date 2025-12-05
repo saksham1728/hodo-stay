@@ -191,7 +191,8 @@ const OurProperties = () => {
             {properties.map((property) => (
             <div
               key={property.id}
-              className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden"
+              className="rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden"
+              style={{ backgroundColor: '#FAF2E8' }}
             >
               <div className="flex flex-col md:flex-row">
                 {/* Left: Image carousel (60%) */}
@@ -199,10 +200,10 @@ const OurProperties = () => {
                   <ImageCarousel images={property.images} />
                 </div>
 
-                {/* Right: Content (40%) */}
+                {/* Right: Content (40%) - Clickable */}
                 <div 
-                  className="w-full md:w-2/5 p-4 md:p-6 md:px-8 md:py-6 flex flex-col justify-between md:cursor-default cursor-pointer hover:bg-gray-50 md:hover:bg-white transition-colors"
-                  onClick={() => isMobile && navigate(`/property/${property.id}`)}
+                  className="w-full md:w-2/5 p-4 md:p-6 md:px-8 md:py-6 flex flex-col justify-between cursor-pointer"
+                  onClick={() => navigate(`/property/${property.id}`)}
                 >
                   <div>
                     <div className="flex items-start justify-between">

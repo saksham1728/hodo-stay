@@ -46,17 +46,14 @@ const Home = () => {
               Welcome to eco-friendly stays with global hotel standards
             </p>
             
-            {/* Action Buttons */}
-            <div className="flex gap-4 justify-center max-md:flex-col">
+            {/* Action Button */}
+            <div className="flex justify-center">
               <Link 
                 to="/properties" 
                 className="bg-white text-gray-900 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors duration-200"
               >
                 Explore Properties
               </Link>
-              <button className="border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-gray-900 transition-colors duration-200">
-                Book Now
-              </button>
             </div>
           </div>
         </div>
