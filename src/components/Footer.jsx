@@ -190,24 +190,27 @@ const Footer = () => {
   const reviews = [
     {
       id: 1,
-      name: "Sehda",
+      name: "David",
       rating: 5,
-      text: "Had a great 2-day stay with my family at Hodo Stays.",
-      avatar: "/api/placeholder/50/50",
+      country: "China",
+      countryCode: "CN",
+      text: "Back to the Future was excellent. Effects were amazing, quirky and great acting. Highly recommended!!!",
     },
     {
       id: 2,
-      name: "Rahul",
+      name: "Sarah",
       rating: 5,
+      country: "Japan",
+      countryCode: "JP",
       text: "One of the best stays I've had in Bangalore. The amenities were top-notch and the location was perfect for exploring the city.",
-      avatar: "/api/placeholder/50/50",
     },
     {
       id: 3,
       name: "Priya",
       rating: 5,
+      country: "India",
+      countryCode: "IN",
       text: "Amazing experience! The property was exactly as described and the host was very responsive. Will definitely book again.",
-      avatar: "/api/placeholder/50/50",
     },
   ];
 
@@ -296,149 +299,119 @@ const Footer = () => {
               <div className="flex items-center justify-center gap-6 px-16">
                 {/* Left card - Previous review */}
                 <div 
-                  className="w-80 rounded-2xl p-6 opacity-75 flex flex-col"
+                  className="w-96 rounded-2xl p-5 opacity-75 flex flex-col"
                   style={{ 
                     backgroundColor: '#F6F0E7',
                     boxShadow: '0px 4px 4px 0px #00000040',
-                    minHeight: '320px',
-                    maxHeight: '320px'
+                    minHeight: '280px',
+                    maxHeight: '280px'
                   }}
                 >
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
-                      <img
-                        src={
-                          reviews[
-                            activeReview > 0
-                              ? activeReview - 1
-                              : reviews.length - 1
-                          ].avatar
-                        }
-                        alt="Reviewer"
-                        className="w-full h-full object-cover"
-                      />
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-start gap-3">
+                      <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 text-white text-xl font-bold" style={{ backgroundColor: '#4A5568' }}>
+                        {reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].name.charAt(0)}
+                      </div>
+                      <div>
+                        <div className="font-semibold text-gray-900 text-base mb-1">{reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].name}</div>
+                        <div className="flex items-center gap-2 text-gray-600 text-sm">
+                          <img 
+                            src={`https://flagcdn.com/w20/${reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].countryCode.toLowerCase()}.png`}
+                            alt={reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].country}
+                            className="w-5 h-4"
+                          />
+                          <span>{reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].country}</span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="text-yellow-400 text-lg">
-                      {"★".repeat(
-                        reviews[
-                          activeReview > 0
-                            ? activeReview - 1
-                            : reviews.length - 1
-                        ].rating
-                      )}
+                    <div className="flex items-center gap-1 flex-shrink-0">
+                      <div className="text-pink-500 text-sm flex">
+                        {"★".repeat(reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].rating)}
+                      </div>
+                      <span className="text-gray-700 font-medium text-sm">{reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].rating}/5</span>
                     </div>
                   </div>
-                  <p className="text-gray-700 text-sm leading-7 mb-4" style={{ fontFamily: 'Georgia, serif', fontStyle: 'italic' }}>
-                    "{
-                      reviews[
-                        activeReview > 0
-                          ? activeReview - 1
-                          : reviews.length - 1
-                      ].text
-                    }"
+                  <p className="text-gray-700 text-sm leading-relaxed">
+                    {reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].text}
                   </p>
-                  <div className="font-semibold text-gray-900 text-sm text-right mt-auto">
-                    — {
-                      reviews[
-                        activeReview > 0
-                          ? activeReview - 1
-                          : reviews.length - 1
-                      ].name
-                    }
-                  </div>
                 </div>
 
                 {/* Center card - Active review (highlighted) */}
                 <div 
-                  className="w-96 rounded-2xl p-8 transform scale-105 z-10 flex flex-col"
+                  className="w-[420px] rounded-2xl p-6 transform scale-105 z-10 flex flex-col"
                   style={{ 
                     backgroundColor: '#F6F0E7',
                     boxShadow: '0px 4px 4px 0px #00000040',
-                    minHeight: '320px',
-                    maxHeight: '320px'
+                    minHeight: '280px',
+                    maxHeight: '280px'
                   }}
                 >
-                  <div className="flex justify-between items-start mb-6">
-                    <div className="w-16 h-16 rounded-full overflow-hidden flex-shrink-0">
-                      <img
-                        src={reviews[activeReview].avatar}
-                        alt="Reviewer"
-                        className="w-full h-full object-cover"
-                      />
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-start gap-4">
+                      <div className="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 text-white text-2xl font-bold" style={{ backgroundColor: '#4A5568' }}>
+                        {reviews[activeReview].name.charAt(0)}
+                      </div>
+                      <div>
+                        <div className="font-bold text-gray-900 text-lg mb-1">{reviews[activeReview].name}</div>
+                        <div className="flex items-center gap-2 text-gray-700 text-base">
+                          <img 
+                            src={`https://flagcdn.com/w20/${reviews[activeReview].countryCode.toLowerCase()}.png`}
+                            alt={reviews[activeReview].country}
+                            className="w-5 h-4"
+                          />
+                          <span>{reviews[activeReview].country}</span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="text-yellow-400 text-xl">
-                      {"★".repeat(reviews[activeReview].rating)}
+                    <div className="flex items-center gap-1 flex-shrink-0">
+                      <div className="text-pink-500 text-base flex">
+                        {"★".repeat(reviews[activeReview].rating)}
+                      </div>
+                      <span className="text-gray-800 font-semibold text-base">{reviews[activeReview].rating}/5</span>
                     </div>
                   </div>
-                  <p className="text-gray-800 text-base leading-8 mb-6" style={{ fontFamily: 'Georgia, serif', fontStyle: 'italic' }}>
-                    "{reviews[activeReview].text.split(reviews[activeReview].highlight).map((part, index, array) => (
-                      <span key={index}>
-                        {part}
-                        {index < array.length - 1 && (
-                          <span className="not-italic font-bold text-orange-600 underline decoration-yellow-300 decoration-2">
-                            {reviews[activeReview].highlight}
-                          </span>
-                        )}
-                      </span>
-                    ))}"
+                  <p className="text-gray-800 text-base leading-relaxed">
+                    {reviews[activeReview].text}
                   </p>
-                  <div className="font-bold text-gray-900 text-lg text-right mt-auto">
-                    — {reviews[activeReview].name}
-                  </div>
                 </div>
 
                 {/* Right card - Next review */}
                 <div 
-                  className="w-80 rounded-2xl p-6 opacity-75 flex flex-col"
+                  className="w-96 rounded-2xl p-5 opacity-75 flex flex-col"
                   style={{ 
                     backgroundColor: '#F6F0E7',
                     boxShadow: '0px 4px 4px 0px #00000040',
-                    minHeight: '320px',
-                    maxHeight: '320px'
+                    minHeight: '280px',
+                    maxHeight: '280px'
                   }}
                 >
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
-                      <img
-                        src={
-                          reviews[
-                            activeReview < reviews.length - 1
-                              ? activeReview + 1
-                              : 0
-                          ].avatar
-                        }
-                        alt="Reviewer"
-                        className="w-full h-full object-cover"
-                      />
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-start gap-3">
+                      <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 text-white text-xl font-bold" style={{ backgroundColor: '#4A5568' }}>
+                        {reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].name.charAt(0)}
+                      </div>
+                      <div>
+                        <div className="font-semibold text-gray-900 text-base mb-1">{reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].name}</div>
+                        <div className="flex items-center gap-2 text-gray-600 text-sm">
+                          <img 
+                            src={`https://flagcdn.com/w20/${reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].countryCode.toLowerCase()}.png`}
+                            alt={reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].country}
+                            className="w-5 h-4"
+                          />
+                          <span>{reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].country}</span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="text-yellow-400 text-lg">
-                      {"★".repeat(
-                        reviews[
-                          activeReview < reviews.length - 1
-                            ? activeReview + 1
-                            : 0
-                        ].rating
-                      )}
+                    <div className="flex items-center gap-1 flex-shrink-0">
+                      <div className="text-pink-500 text-sm flex">
+                        {"★".repeat(reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].rating)}
+                      </div>
+                      <span className="text-gray-700 font-medium text-sm">{reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].rating}/5</span>
                     </div>
                   </div>
-                  <p className="text-gray-700 text-sm leading-7 mb-4" style={{ fontFamily: 'Georgia, serif', fontStyle: 'italic' }}>
-                    "{
-                      reviews[
-                        activeReview < reviews.length - 1
-                          ? activeReview + 1
-                          : 0
-                      ].text
-                    }"
+                  <p className="text-gray-700 text-sm leading-relaxed">
+                    {reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].text}
                   </p>
-                  <div className="font-semibold text-gray-900 text-sm text-right mt-auto">
-                    — {
-                      reviews[
-                        activeReview < reviews.length - 1
-                          ? activeReview + 1
-                          : 0
-                      ].name
-                    }
-                  </div>
                 </div>
               </div>
             </div>
@@ -458,38 +431,41 @@ const Footer = () => {
               {reviews.map((review) => (
                 <div 
                   key={review.id}
-                  className="rounded-2xl p-6 flex-shrink-0 w-full snap-start"
+                  className="rounded-2xl p-5 flex-shrink-0 w-full snap-start"
                   style={{ 
                     minWidth: 'calc(100vw - 32px)',
                     backgroundColor: '#F6F0E7',
                     boxShadow: '0px 4px 4px 0px #00000040'
                   }}
                 >
-                  {/* Photo and Rating on top */}
-                  <div className="flex justify-between items-start mb-6">
-                    <div className="w-16 h-16 rounded-full overflow-hidden flex-shrink-0">
-                      <img
-                        src={review.avatar}
-                        alt="Reviewer"
-                        className="w-full h-full object-cover"
-                      />
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-start gap-3">
+                      <div className="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 text-white text-2xl font-bold" style={{ backgroundColor: '#4A5568' }}>
+                        {review.name.charAt(0)}
+                      </div>
+                      <div>
+                        <div className="font-bold text-gray-900 text-lg mb-1">{review.name}</div>
+                        <div className="flex items-center gap-2 text-gray-700 text-base">
+                          <img 
+                            src={`https://flagcdn.com/w20/${review.countryCode.toLowerCase()}.png`}
+                            alt={review.country}
+                            className="w-5 h-4"
+                          />
+                          <span>{review.country}</span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="text-yellow-400 text-xl">
-                      {"★".repeat(review.rating)}
+                    <div className="flex items-center gap-1 flex-shrink-0">
+                      <div className="text-pink-500 text-base flex">
+                        {"★".repeat(review.rating)}
+                      </div>
+                      <span className="text-gray-800 font-semibold text-base">{review.rating}/5</span>
                     </div>
                   </div>
                   
-                  {/* Review text full width */}
-                  <div className="w-full mb-6">
-                    <p className="text-gray-800 text-base leading-relaxed text-center">
-                      {review.text}
-                    </p>
-                  </div>
-                  
-                  {/* Name at bottom right */}
-                  <div className="font-medium text-gray-800 text-lg text-right">
-                    {review.name}
-                  </div>
+                  <p className="text-gray-800 text-base leading-relaxed">
+                    {review.text}
+                  </p>
                 </div>
               ))}
             </div>
