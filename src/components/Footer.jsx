@@ -133,46 +133,99 @@ const FAQSection = () => {
 
         {/* Footer section */}
         <div className="mt-16 pt-8">
-          {/* Links, Contact, and Social Icons */}
-          <div className="flex justify-between items-start max-md:grid max-md:grid-cols-2 max-md:gap-x-4 max-md:gap-y-6">
-            <div className="text-left">
-              <div className="text-white text-sm mb-1">Business and Groups</div>
-              <div className="text-white/80 text-sm mb-1">Blogs</div>
-              <div className="text-white/80 text-sm">Careers</div>
+          {/* Desktop Layout */}
+          <div className="hidden md:block">
+            {/* Links, Contact, and Social Icons */}
+            <div className="flex justify-between items-start">
+              <div className="text-left">
+                <div className="text-white text-sm mb-1">Business and Groups</div>
+                <div className="text-white/80 text-sm mb-1">Blogs</div>
+                <div className="text-white/80 text-sm">Careers</div>
+              </div>
+              <div className="text-left">
+                <div className="text-white/80 text-sm mb-1">
+                  hello@hodostays.com
+                </div>
+                <div className="text-white/80 text-sm">+91 7483413235</div>
+              </div>
+              <div className="flex gap-3">
+                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
+                  <span className="text-white text-sm font-bold">in</span>
+                </div>
+                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
+                  <span className="text-white text-sm">@</span>
+                </div>
+                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
+                  <span className="text-white text-sm font-bold">f</span>
+                </div>
+              </div>
             </div>
-            <div className="text-left max-md:flex max-md:flex-col max-md:items-end">
-              <div className="text-white/80 text-sm mb-1">
-                hello@hodostays.com
+
+            {/* Logo and Tagline Section */}
+            <div className="flex justify-between items-center mt-12">
+              <div className="flex items-center -ml-18">
+                <img
+                  src="/hodo-white-logo.png"
+                  alt="Hodo Logo"
+                  className="h-52 w-auto"
+                />
               </div>
-              <div className="text-white/80 text-sm max-md:mb-3">+91 7483413235</div>
-            </div>
-            <div className="flex gap-3 max-md:col-span-2 max-md:justify-end">
-              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
-                <span className="text-white text-sm font-bold">in</span>
-              </div>
-              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
-                <span className="text-white text-sm">@</span>
-              </div>
-              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
-                <span className="text-white text-sm font-bold">f</span>
+              <div className="text-right">
+                <div className="text-white text-4xl font-medium mb-1">
+                  Redefining Stays,
+                </div>
+                <div className="text-white text-4xl font-medium">
+                  beyond hotels
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Logo and Tagline Section */}
-          <div className="flex justify-between items-center mt-12 max-md:grid max-md:grid-cols-2 max-md:gap-4 max-md:mt-10">
-            <div className="flex items-center -ml-18 max-md:ml-0 max-md:order-2 max-md:justify-end">
-              <img
-                src="/hodo-white-logo.png"
-                alt="Hodo Logo"
-                className="h-52 w-auto max-md:h-30"
-              />
+          {/* Mobile Layout */}
+          <div className="md:hidden">
+            {/* Row 1: Logo and Social Icons */}
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              <div className="flex items-center">
+                <img
+                  src="/hodo-white-logo.png"
+                  alt="Hodo Logo"
+                  className="h-32 w-auto -ml-10"
+                />
+              </div>
+              <div className="flex gap-3 justify-end items-center">
+                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
+                  <span className="text-white text-sm font-bold">in</span>
+                </div>
+                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
+                  <span className="text-white text-sm">@</span>
+                </div>
+                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
+                  <span className="text-white text-sm font-bold">f</span>
+                </div>
+              </div>
             </div>
-            <div className="text-right max-md:text-left max-md:order-1">
-              <div className="text-white text-4xl font-medium mb-1 max-md:text-2xl max-md:leading-tight">
+
+            {/* Row 2: Links and Contact */}
+            <div className="grid grid-cols-2 gap-4 mb-20">
+              <div className="text-left">
+                <div className="text-white text-sm mb-1">Business and Groups</div>
+                <div className="text-white/80 text-sm mb-1">Blogs</div>
+                <div className="text-white/80 text-sm">Careers</div>
+              </div>
+              <div className="text-right">
+                <div className="text-white/80 text-sm mb-1">
+                  hello@hodostays.com
+                </div>
+                <div className="text-white/80 text-sm">+91 7483413235</div>
+              </div>
+            </div>
+
+            {/* Row 3: Tagline - Full Width */}
+            <div className="text-center">
+              <div className="text-white text-2xl font-medium mb-1 leading-tight">
                 Redefining Stays,
               </div>
-              <div className="text-white text-4xl font-medium max-md:text-2xl max-md:leading-tight">
+              <div className="text-white text-2xl font-medium leading-tight">
                 beyond hotels
               </div>
             </div>
