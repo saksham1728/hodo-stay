@@ -431,9 +431,10 @@ const Footer = () => {
               {reviews.map((review) => (
                 <div 
                   key={review.id}
-                  className="rounded-2xl p-5 flex-shrink-0 w-full snap-start"
+                  className="rounded-2xl p-8 flex-shrink-0 w-full snap-start"
                   style={{ 
                     minWidth: 'calc(100vw - 32px)',
+                    minHeight: '280px',
                     backgroundColor: '#F6F0E7',
                     boxShadow: '0px 4px 4px 0px #00000040'
                   }}
