@@ -1,17 +1,21 @@
 import { useParams, Link } from "react-router-dom";
-import Footer from "../components/Footer";
+import { useEffect, useState, useRef } from "react";
+import Footer2 from "../components/Footer2";
 import HomeHeader from "../components/HomeHeader";
-import { useBuildingDetail } from "../hooks/useBuildingDetail";
-import { useEffect, useState } from "react";
 
 function PropertyDetail() {
   const { id } = useParams();
-  
-  // Fetch building with unit types grouped
   const [building, setBuilding] = useState(null);
   const [unitTypes, setUnitTypes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [activeSection, setActiveSection] = useState('overview');
+  
+  const overviewRef = useRef(null);
+  const aboutRef = useRef(null);
+  const roomsRef = useRef(null);
+  const accessibilityRef = useRef(null);
+  const policiesRef = useRef(null);
 
   useEffect(() => {
     const fetchBuildingWithTypes = async () => {
@@ -39,541 +43,442 @@ function PropertyDetail() {
     }
   }, [id]);
 
-  // No static data - 100% API driven
+  // Auto-update active section on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = [
+        { ref: overviewRef, name: 'overview' },
+        { ref: aboutRef, name: 'about' },
+        { ref: roomsRef, name: 'rooms' },
+        { ref: accessibilityRef, name: 'accessibility' },
+        { ref: policiesRef, name: 'policies' }
+      ];
 
-  // Format unit types for display
-  const formatPropertyData = () => {
-    if (!building || !unitTypes || unitTypes.length === 0) return null;
-
-    const location = building.location?.city 
-      ? `${building.location.address || ''}, ${building.location.city}, ${building.location.state || ''}, ${building.location.country || 'India'}`.replace(/,\s*,/g, ',').trim()
-      : "Bangalore, Karnataka, India";
-
-    // Format each unit TYPE as a "space" for the UI
-    const spaces = unitTypes.map(unitTypeData => {
-      const rep = unitTypeData.representativeUnit;
-      
-      // Extract amenities from description
-      const extractAmenities = (description) => {
-        if (!description) return ["WiFi", "Air-conditioning"];
-        
-        const amenities = [];
-        if (description.includes('bed')) amenities.push('Double Bed');
-        if (description.includes('bathroom')) amenities.push('Private Bathroom');
-        if (description.includes('bedroom')) amenities.push('Bedroom');
-        if (description.includes('WC')) amenities.push('WC');
-        
-        return amenities.length > 0 ? amenities : ["WiFi", "Air-conditioning"];
-      };
-
-      return {
-        id: unitTypeData.unitType, // Use unitType as ID
-        unitType: unitTypeData.unitType,
-        unitTypeSlug: unitTypeData.unitTypeSlug,
-        count: unitTypeData.count,
-        name: unitTypeData.unitType,
-        location: location,
-        rating: 4.5,
-        amenities: extractAmenities(rep?.description),
-        bedrooms: rep?.compositionRooms?.length || 2,
-        bathrooms: 2,
-        area: `${rep?.standardGuests || 2} guests`,
-        maxGuests: rep?.canSleepMax || rep?.standardGuests || 2,
-        description: rep?.description || `${unitTypeData.count} ${unitTypeData.unitType} units available`,
-        price: 7000, // Default price - will be fetched dynamically
-        images: rep?.images?.length > 0 
-          ? rep.images.map(img => img.url).filter(url => url)
-          : ["/property_1.png", "/property_3.png", "/property_4.jpg"]
-      };
-    });
-
-    return {
-      title: building.name || "Property Details",
-      address: location,
-      heroImage: spaces[0]?.images[0] || "/property_details_main.png",
-      spaces: spaces
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const section = sections[i];
+        if (section.ref.current) {
+          const rect = section.ref.current.getBoundingClientRect();
+          if (rect.top <= 150) {
+            setActiveSection(section.name);
+            break;
+          }
+        }
+      }
     };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Call once on mount
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToSection = (ref) => {
+    if (ref.current) {
+      const yOffset = -80;
+      const y = ref.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
   };
 
-  const property = formatPropertyData();
+  // Get images for hero grid
+  const getHeroImages = () => {
+    if (!building || !building.images || building.images.length === 0) {
+      return [
+        '/property_1.png',
+        '/property_2.jpg',
+        '/property_3.png',
+        '/property_4.jpg',
+        '/property_5.jpg'
+      ];
+    }
+    
+    const images = building.images.map(img => img.url).filter(url => url);
+    while (images.length < 5) {
+      images.push(...images.slice(0, Math.min(images.length, 5 - images.length)));
+    }
+    return images.slice(0, 5);
+  };
 
-  // Loading state (keeping your design style)
   if (loading) {
     return (
-      <div className="property-detail">
-        <div className="h-[60vh] bg-gray-200 relative flex flex-col">
-          <div className="bg-gradient-to-b from-black/30 to-black/50 h-full flex flex-col p-6">
-            <div className="mt-auto">
-              <div className="animate-pulse">
-                <div className="h-8 bg-white/20 rounded mb-4 w-3/4"></div>
-                <div className="h-4 bg-white/20 rounded w-1/2"></div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div className="min-h-screen" style={{ backgroundColor: '#FFF7F0' }}>
         <HomeHeader />
-        <div className="py-10 px-8 bg-orange-50 min-h-screen max-md:py-12 max-md:px-4">
-          <div className="max-w-7xl mx-auto">
-            <div className="flex justify-center items-center py-20">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
-            </div>
-          </div>
+        <div className="flex justify-center items-center py-20">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-orange-500"></div>
         </div>
-        <Footer />
+        <Footer2 />
       </div>
     );
   }
 
-  // Error state or property not found
-  if (error || !property) {
+  if (error || !building) {
     return (
-      <div className="property-detail">
-        <div className="h-[60vh] bg-gray-200 relative flex flex-col">
-          <div className="bg-gradient-to-b from-black/30 to-black/50 h-full flex flex-col p-6">
-            <div className="mt-auto">
-              <h1 className="text-white text-4xl font-bold m-0 mb-2 drop-shadow-lg max-md:text-3xl">
-                {loading ? "Loading..." : "Property Not Found"}
-              </h1>
-              <p className="text-white text-base m-0 drop-shadow-sm">
-                {error || "Unable to load property details. Please try again."}
-              </p>
-            </div>
-          </div>
-        </div>
+      <div className="min-h-screen" style={{ backgroundColor: '#FFF7F0' }}>
         <HomeHeader />
-        <div className="py-10 px-8 bg-orange-50 min-h-screen max-md:py-12 max-md:px-4">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center py-20">
-              <Link 
-                to="/properties" 
-                className="bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 transition-colors inline-block no-underline"
-              >
-                Back to Properties
-              </Link>
-            </div>
-          </div>
+        <div className="text-center py-20 px-4">
+          <h1 className="text-3xl font-bold text-gray-800 mb-4">Property Not Found</h1>
+          <p className="text-gray-600 mb-8">{error || "Unable to load property details"}</p>
+          <Link 
+            to="/properties" 
+            className="bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 transition-colors inline-block no-underline"
+          >
+            Back to Properties
+          </Link>
         </div>
-        <Footer />
+        <Footer2 />
       </div>
     );
   }
+
+  const heroImages = getHeroImages();
+  const location = building.location?.city 
+    ? `${building.location.address || ''}, ${building.location.city}, ${building.location.state || ''}, ${building.location.country || 'India'}`.replace(/,\s*,/g, ',').trim()
+    : "Bangalore, Karnataka, India";
 
   return (
-    <div className="property-detail">
-      {/* Hero Section */}
-      <div
-        className="h-[60vh] bg-cover bg-center relative flex flex-col"
-        style={{ backgroundImage: `url(${property.heroImage})` }}
-      >
-        <div className="bg-gradient-to-b from-black/30 to-black/50 h-full flex flex-col p-6">
-          <div className="mt-auto">
-            <div className="flex gap-4 mb-8 max-md:flex-col max-md:gap-2">
-              <button className="bg-white/90 border-none px-6 py-3 rounded-lg cursor-pointer font-medium backdrop-blur-sm">
-                📅 Select Dates
-              </button>
-              <button className="bg-white/90 border-none px-6 py-3 rounded-lg cursor-pointer font-medium backdrop-blur-sm">
-                👤 Add Guests
-              </button>
-            </div>
-            <div className="hero-info">
-              <h1 className="text-white text-4xl font-bold m-0 mb-2 drop-shadow-lg max-md:text-3xl">
-                {property.title}
-              </h1>
-              <p className="text-white text-base m-0 drop-shadow-sm">
-                {property.address}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Header */}
+    <div className="min-h-screen" style={{ backgroundColor: '#FFF7F0' }}>
       <HomeHeader />
-
-      {/* Available Spaces */}
-      <div className="py-10 px-8 bg-orange-50 min-h-screen max-md:py-12 max-md:px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-semibold text-gray-800 m-0">
-              Available Spaces
-            </h2>
-            {building && (
-              <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
-                Live Data - {unitTypes?.length || 0} Unit Types
-              </div>
-            )}
-          </div>
-          <div className="flex flex-col gap-8 w-full">
-            {property.spaces.map((space) => (
-              <div
-                key={space.id}
-                className="rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden"
-                style={{ backgroundColor: '#FAF2E8' }}
-              >
-                {/* 60:40 layout on md+, stacked on mobile */}
-                <div className="flex flex-col md:flex-row">
-                  {/* Left: Image carousel (60%) */}
-                  <div className="w-full md:w-3/5 h-[360px] md:h-[360px] flex-shrink-0 relative overflow-hidden" style={{ minHeight: "300px" }}>
-                  <div className="flex overflow-x-auto scrollbar-hide gap-0 h-full snap-x snap-mandatory">
-                    {space.images.map((image, index) => (
-                      <div key={index} className="flex-shrink-0 w-full h-full snap-start">
-                        <img 
-                          src={image} 
-                          alt={`${space.name} - Image ${index + 1}`}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                  {/* Scroll indicators */}
-                  <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex gap-1.5">
-                    {space.images.map((_, index) => (
-                      <div key={index} className="w-2 h-2 bg-white/70 rounded-full shadow-sm"></div>
-                    ))}
-                  </div>
-                  </div>
-
-                  {/* Right: Content (40%) */}
-                  <div className="w-full md:w-2/5 p-4 md:p-6 flex flex-col justify-between">
-                  <div>
-                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3 gap-2 sm:gap-0">
-                      <div className="flex-1">
-                        <h3
-                          className="text-black mb-1"
-                          style={{
-                            fontFamily: "Petrona",
-                            fontWeight: 600,
-                            fontSize: "30px",
-                            lineHeight: "100%",
-                            letterSpacing: "-2.2%",
-                          }}
-                        >
-                          {space.name}
-                        </h3>
-                      </div>
-
-                      <div className="flex items-center gap-1 self-start sm:self-auto">
-                        <span
-                          className="font-medium"
-                          style={{
-                            fontFamily: "Petrona",
-                            fontWeight: 500,
-                            fontSize: "14px",
-                          }}
-                        >
-                          {space.rating}
-                        </span>
-                      </div>
-                    </div>
-
-                    <p
-                      className="text-gray-600 mb-4"
-                      style={{
-                        fontFamily: "Petrona",
-                        fontWeight: 400,
-                        fontSize: "14px",
-                        lineHeight: "140%",
-                      }}
-                    >
-                      {space.location}
-                    </p>
-
-                    {/* Amenities */}
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {space.amenities.map((amenity, index) => (
-                        <span
-                          key={index}
-                          className="flex items-center gap-1 text-gray-600 px-2 py-1 bg-gray-50 rounded-md"
-                          style={{
-                            fontFamily: "Petrona",
-                            fontWeight: 400,
-                            fontSize: "12px",
-                          }}
-                        >
-                          {amenity === "WiFi" && "📶"}
-                          {amenity === "Air-conditioning" && "❄️"}
-                          {amenity === "Free Parking on Premises" && "🅿️"}
-                          {amenity}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* Room Details */}
-                    <div className="flex flex-wrap gap-4 mb-4">
-                      <span
-                        className="text-gray-600"
-                        style={{
-                          fontFamily: "Petrona",
-                          fontWeight: 400,
-                          fontSize: "12px",
-                        }}
-                      >
-                        {space.bedrooms} bedroom • {space.bathrooms} bathroom • {space.area}
-                      </span>
-                    </div>
-
-                    <p
-                      className="mb-6"
-                      style={{
-                        color: "#8B8B8B",
-                        fontFamily: "Petrona",
-                        fontWeight: 400,
-                        fontSize: "18px",
-                        lineHeight: "150%",
-                        letterSpacing: "-2.2%",
-                      }}
-                    >
-                      {space.description}
-                    </p>
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-0 mb-4">
-                    <div className="flex flex-col">
-                      <span
-                        className="text-gray-500 mb-1"
-                        style={{
-                          fontFamily: "Petrona",
-                          fontWeight: 400,
-                          fontSize: "12px",
-                        }}
-                      >
-                        from
-                      </span>
-                      <div className="flex items-baseline gap-1">
-                        <span
-                          style={{
-                            color: "#4A4A4A",
-                            fontFamily: "Petrona",
-                            fontWeight: 600,
-                            fontSize: "30px",
-                            lineHeight: "100%",
-                            letterSpacing: "-2.2%",
-                          }}
-                        >
-                          Rs. {space.price.toLocaleString()}
-                        </span>
-                        <span
-                          className="text-gray-500 ml-1"
-                          style={{
-                            fontFamily: "Petrona",
-                            fontWeight: 400,
-                            fontSize: "12px",
-                          }}
-                        >
-                          per night
-                        </span>
-                      </div>
-                    </div>
-
-                    <Link
-                      to={`/booking/${id}/${space.unitType}`}
-                      className="bg-orange-500 text-white border-none px-6 py-3 rounded-full font-normal text-sm cursor-pointer hover:bg-orange-600 transition-colors max-md:px-4 max-md:py-2 max-md:text-xs inline-block text-center no-underline self-start sm:self-auto"
-                      style={{
-                        fontFamily: "Petrona",
-                        fontWeight: 500,
-                        fontSize: "14px",
-                      }}
-                    >
-                      Book Now ({space.count} available)
-                    </Link>
-                  </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Amenities Section - Real Data from API */}
-      <div className="py-10 px-8 bg-amber-50 max-md:py-12 max-md:px-4">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-semibold text-gray-800 m-0 mb-8 max-md:text-2xl">
-            Amenities
-          </h2>
-          {property && property.spaces && property.spaces[0] && (
-            <div className="grid grid-cols-2 gap-12 max-md:grid-cols-1 max-md:gap-8">
-              <div className="flex flex-col gap-6">
-                {property.spaces[0].amenities.map((amenity, index) => {
-                  // Get appropriate emoji for each amenity
-                  const getAmenityEmoji = (amenityName) => {
-                    const name = amenityName.toLowerCase();
-                    if (name.includes('wifi') || name.includes('internet')) return '📶';
-                    if (name.includes('air') || name.includes('cooling')) return '❄️';
-                    if (name.includes('parking')) return '🅿️';
-                    if (name.includes('tv') || name.includes('television')) return '📺';
-                    if (name.includes('kitchen')) return '🍳';
-                    if (name.includes('bed')) return '🛏️';
-                    if (name.includes('bathroom')) return '🚿';
-                    if (name.includes('bedroom')) return '🏠';
-                    return '✅'; // Default emoji
-                  };
-
-                  return (
-                    <div key={index} className="flex items-center gap-4 text-base text-gray-800 max-md:text-sm">
-                      <span className="text-xl w-8 text-center">{getAmenityEmoji(amenity)}</span>
-                      <span>{amenity}</span>
-                    </div>
-                  );
-                })}
-              </div>
-              <div className="flex flex-col gap-6">
-                {/* Additional composition info from description */}
-                {unitTypes && unitTypes[0] && unitTypes[0].representativeUnit?.description && (
-                  <>
-                    {unitTypes[0].representativeUnit.description.includes('bedroom') && (
-                      <div className="flex items-center gap-4 text-base text-gray-800 max-md:text-sm">
-                        <span className="text-xl w-8 text-center">🏠</span>
-                        <span>Private Bedroom</span>
-                      </div>
-                    )}
-                    {unitTypes[0].representativeUnit.description.includes('bathroom') && (
-                      <div className="flex items-center gap-4 text-base text-gray-800 max-md:text-sm">
-                        <span className="text-xl w-8 text-center">🚿</span>
-                        <span>Private Bathroom</span>
-                      </div>
-                    )}
-                    {unitTypes[0].representativeUnit.description.includes('WC') && (
-                      <div className="flex items-center gap-4 text-base text-gray-800 max-md:text-sm">
-                        <span className="text-xl w-8 text-center">🚽</span>
-                        <span>WC</span>
-                      </div>
-                    )}
-                  </>
-                )}
-              </div>
-            </div>
-          )}
-          {/* Building Information */}
-          {building && unitTypes && unitTypes.length > 0 && (
-            <div className="mt-8 space-y-6">
-              {/* Building Description */}
-              {unitTypes[0].representativeUnit?.description && (
-                <div className="p-6 rounded-xl shadow-sm" style={{ backgroundColor: '#FAF2E8' }}>
-                  <h3 className="text-xl font-semibold text-gray-800 mb-4">Property Description</h3>
-                  <p className="text-gray-600 leading-relaxed whitespace-pre-line">{unitTypes[0].representativeUnit.description}</p>
-                </div>
-              )}
-              
-              {/* Check-in/Check-out Information */}
-              {unitTypes[0].representativeUnit?.checkInOut && (
-                <div className="p-6 rounded-xl shadow-sm" style={{ backgroundColor: '#FAF2E8' }}>
-                  <h3 className="text-xl font-semibold text-gray-800 mb-4">Check-in & Check-out</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                      <span className="text-sm text-gray-500">Check-in</span>
-                      <p className="font-medium">{unitTypes[0].representativeUnit.checkInOut.checkInFrom} - {unitTypes[0].representativeUnit.checkInOut.checkInTo}</p>
-                    </div>
-                    <div>
-                      <span className="text-sm text-gray-500">Check-out</span>
-                      <p className="font-medium">Until {unitTypes[0].representativeUnit.checkInOut.checkOutUntil}</p>
-                    </div>
-                    <div>
-                      <span className="text-sm text-gray-500">Location</span>
-                      <p className="font-medium capitalize">{unitTypes[0].representativeUnit.checkInOut.place?.replace(/_/g, ' ')}</p>
-                    </div>
-                  </div>
-                </div>
-              )}
-              
-              {/* Building Stats */}
-              <div className="p-6 rounded-xl shadow-sm" style={{ backgroundColor: '#FAF2E8' }}>
-                <h3 className="text-xl font-semibold text-gray-800 mb-4">Building Information</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <span className="text-sm text-gray-500">Total Units</span>
-                    <p className="font-medium">{building.totalUnits}</p>
-                  </div>
-                  <div>
-                    <span className="text-sm text-gray-500">Unit Types</span>
-                    <p className="font-medium">{unitTypes.length} types</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Map Section */}
-      <div className="py-10 px-8 bg-orange-50 max-md:py-12 max-md:px-4">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-semibold text-gray-800 m-0 mb-8 max-md:text-2xl">
-            Map
-          </h2>
-          <div className="flex gap-12 max-md:flex-col max-md:gap-8">
-            <div className="flex-1 flex flex-col gap-8">
-              <div className="p-6 rounded-xl shadow-sm max-md:p-4" style={{ backgroundColor: '#FAF2E8' }}>
-                <div className="flex flex-col gap-6">
-                  <div className="pb-6 border-b border-gray-200">
-                    <div className="flex items-center gap-3 mb-4 max-md:gap-2">
-                      <span className="text-xl w-8 text-center">📍</span>
-                      <h3 className="text-xl font-semibold text-gray-800 m-0 max-md:text-lg">
-                        Address
-                      </h3>
-                    </div>
-                    <p className="text-gray-600 text-sm m-0 leading-relaxed max-md:text-xs">
-                      {property.address}
-                    </p>
-                  </div>
-                  <div className="pb-6 border-b border-gray-200">
-                    <div className="flex items-center gap-3 mb-4 max-md:gap-2">
-                      <span className="text-xl w-8 text-center">🚌</span>
-                      <h3 className="text-xl font-semibold text-gray-800 m-0 max-md:text-lg">
-                        Public transport
-                      </h3>
-                    </div>
-                    <p className="text-gray-600 text-sm m-0 leading-relaxed max-md:text-xs">
-                      Nearest Public Transportation: Bus from HSR BDA. Public
-                      Transportation to City Center: 20 min.
-                    </p>
-                  </div>
-                  <div className="pb-6">
-                    <div className="flex items-center gap-3 mb-4 max-md:gap-2">
-                      <span className="text-xl w-8 text-center">🎯</span>
-                      <h3 className="text-xl font-semibold text-gray-800 m-0 max-md:text-lg">
-                        Attractions
-                      </h3>
-                    </div>
-                    <p className="text-gray-600 text-sm m-0 leading-relaxed max-md:text-xs">
-                      Wonderla, Bannerghatta Zoo, Lal Bagh, Cubbon Park
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="flex-1 min-h-96 max-md:min-h-72">
-              <div className="bg-gray-100 rounded-xl h-full flex items-center justify-center border border-gray-300 relative overflow-hidden">
-                <div className="text-center relative z-10">
-                  <div className="text-3xl text-red-600 mb-2">📍</div>
-                  <p className="text-gray-600 text-base m-0 font-medium">
-                    Interactive Map
-                  </p>
-                  <div className="absolute inset-0 z-0">
-                    <div className="absolute h-0.5 w-3/5 top-2/5 left-1/5 bg-gray-400"></div>
-                    <div className="absolute w-0.5 h-1/2 left-3/5 top-1/4 bg-gray-400"></div>
-                    <div className="absolute h-0.5 w-2/5 top-3/4 left-1/10 bg-gray-400 transform -rotate-12"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <Footer />
       
-      {/* Hide scrollbar styles */}
-      <style jsx>{`
-        .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
+      {/* Hero Image Grid - EXACTLY 5 images */}
+      <div className="px-8 max-md:px-4 py-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex gap-2 h-[400px] max-md:h-[300px]">
+          {/* Left: 1 Large image (50% width) */}
+          <div className="w-1/2 max-md:w-full">
+            <img 
+              src={heroImages[0]} 
+              alt={building.name}
+              className="w-full h-full object-cover rounded-lg"
+            />
+          </div>
+          
+          {/* Right: 4 small images in 2x2 grid (50% width) */}
+          <div className="w-1/2 flex flex-col gap-2 max-md:hidden">
+            <div className="flex gap-2 h-1/2">
+              <img 
+                src={heroImages[1]} 
+                alt={building.name}
+                className="w-1/2 h-full object-cover rounded-lg"
+              />
+              <img 
+                src={heroImages[2]} 
+                alt={building.name}
+                className="w-1/2 h-full object-cover rounded-lg"
+              />
+            </div>
+            <div className="flex gap-2 h-1/2">
+              <img 
+                src={heroImages[3]} 
+                alt={building.name}
+                className="w-1/2 h-full object-cover rounded-lg"
+              />
+              <img 
+                src={heroImages[4]} 
+                alt={building.name}
+                className="w-1/2 h-full object-cover rounded-lg"
+              />
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+
+      {/* Navigation - Simple sticky */}
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-30 px-8 max-md:px-4">
+        <div className="max-w-7xl mx-auto">
+          <nav className="flex gap-8 max-md:gap-4 overflow-x-auto">
+            {[
+              { name: 'Overview', ref: overviewRef, id: 'overview' },
+              { name: 'About', ref: aboutRef, id: 'about' },
+              { name: 'Rooms', ref: roomsRef, id: 'rooms' },
+              { name: 'Accessibility', ref: accessibilityRef, id: 'accessibility' },
+              { name: 'Policies', ref: policiesRef, id: 'policies' }
+            ].map((item) => (
+              <button
+                key={item.name}
+                onClick={() => scrollToSection(item.ref)}
+                className={`py-4 px-2 border-b-2 transition-colors whitespace-nowrap ${
+                  activeSection === item.id
+                    ? 'border-blue-600 text-blue-600 font-semibold'
+                    : 'border-transparent text-gray-600 hover:text-gray-900'
+                }`}
+                style={{ fontFamily: 'Petrona', fontSize: '16px' }}
+              >
+                {item.name}
+              </button>
+            ))}
+          </nav>
+        </div>
+      </div>
+
+      {/* Main Content - Clean sections with NO overlapping */}
+      <div className="px-8 max-md:px-4 py-8 max-md:py-6">
+        <div className="max-w-7xl mx-auto">
+        
+        {/* Overview Section */}
+        <section ref={overviewRef} className="mb-16">
+          <h1 
+            className="text-gray-900 mb-3 max-md:text-3xl"
+            style={{ fontFamily: 'Petrona', fontSize: '48px', fontWeight: 600 }}
+          >
+            {building.name}
+          </h1>
+          
+          <div className="flex items-center gap-4 mb-4">
+            <div className="bg-green-700 text-white px-2 py-1 rounded font-bold text-sm">
+              9.8
+            </div>
+            <span className="text-gray-900 font-semibold" style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
+              Exceptional
+            </span>
+          </div>
+          
+          <p 
+            className="text-gray-600 mb-6"
+            style={{ fontFamily: 'Petrona', fontSize: '16px' }}
+          >
+            {location}
+          </p>
+          
+          {/* Amenities */}
+          {building.amenities && building.amenities.length > 0 && (
+            <div className="grid grid-cols-2 gap-4 max-md:grid-cols-1 mt-6">
+              {building.amenities.slice(0, 6).map((amenity, index) => {
+                const amenityName = typeof amenity === 'string' ? amenity : amenity.amenityID || '';
+                return (
+                  <div key={index} className="flex items-center gap-3">
+                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="text-gray-700" style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
+                      {amenityName}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </section>
+
+        {/* About Section */}
+        <section ref={aboutRef} className="mb-16">
+          <h2 
+            className="text-gray-900 mb-6 max-md:text-2xl"
+            style={{ fontFamily: 'Petrona', fontSize: '36px', fontWeight: 600 }}
+          >
+            About this property
+          </h2>
+          <p 
+            className="text-gray-700"
+            style={{ fontFamily: 'Petrona', fontSize: '16px', lineHeight: '160%' }}
+          >
+            {building.description || `Experience comfort and luxury at ${building.name}. Located in ${building.location?.city || 'Bangalore'}, this property offers modern amenities and exceptional service for both short and long stays.`}
+          </p>
+        </section>
+
+        {/* Rooms Section */}
+        <section ref={roomsRef} className="mb-16">
+          <h2 
+            className="text-gray-900 mb-6 max-md:text-2xl"
+            style={{ fontFamily: 'Petrona', fontSize: '36px', fontWeight: 600 }}
+          >
+            Rooms
+          </h2>
+          <div className="space-y-6">
+            {unitTypes.map((unitTypeData) => {
+              const rep = unitTypeData.representativeUnit;
+              const images = rep?.images?.length > 0 
+                ? rep.images.map(img => img.url).filter(url => url)
+                : ["/card-1.png"];
+
+              return (
+                <div
+                  key={unitTypeData.unitType}
+                  className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow overflow-hidden"
+                >
+                  <div className="flex flex-col md:flex-row">
+                    {/* Image */}
+                    <div className="w-full md:w-3/5 h-[400px] md:h-[450px]" style={{ minHeight: "350px" }}>
+                      <img 
+                        src={images[0]} 
+                        alt={unitTypeData.unitType}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+
+                    {/* Content */}
+                    <div className="w-full md:w-2/5 p-6 flex flex-col justify-between">
+                      <div>
+                        <div className="flex justify-between items-start mb-3">
+                          <h3
+                            className="text-black"
+                            style={{
+                              fontFamily: "Petrona",
+                              fontWeight: 600,
+                              fontSize: "30px",
+                            }}
+                          >
+                            {unitTypeData.unitType}
+                          </h3>
+
+                          <div className="flex items-center gap-2">
+                            <svg className="w-6 h-6 text-green-600 fill-current" viewBox="0 0 20 20">
+                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                            </svg>
+                            <span
+                              className="text-green-600 font-medium"
+                              style={{ fontFamily: "Petrona", fontWeight: 600, fontSize: "18px" }}
+                            >
+                              4.5
+                            </span>
+                          </div>
+                        </div>
+
+                        <p
+                          className="text-gray-600 mb-4"
+                          style={{ fontFamily: "Petrona", fontSize: "14px" }}
+                        >
+                          {rep?.standardGuests || 2} guests • {rep?.compositionRooms?.length || 1} bedroom
+                        </p>
+
+                        <p
+                          className="hidden md:block mb-6"
+                          style={{
+                            color: "#8B8B8B",
+                            fontFamily: "Petrona",
+                            fontSize: "18px",
+                          }}
+                        >
+                          Comfortable, thoughtfully designed spaces for short & long stays.
+                        </p>
+                      </div>
+
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <span
+                            className="text-gray-500 block mb-1"
+                            style={{ fontFamily: "Petrona", fontSize: "12px" }}
+                          >
+                            from
+                          </span>
+                          <div className="flex items-baseline">
+                            <span
+                              style={{
+                                color: "#4A4A4A",
+                                fontFamily: "Petrona",
+                                fontWeight: 600,
+                                fontSize: "30px",
+                              }}
+                            >
+                              Rs. 7,000
+                            </span>
+                            <span
+                              className="text-gray-500"
+                              style={{ fontFamily: "Petrona", fontSize: "12px", marginLeft: "2px" }}
+                            >
+                              per night
+                            </span>
+                          </div>
+                        </div>
+
+                        <Link
+                          to={`/booking/${id}/${unitTypeData.unitType}`}
+                          className="bg-orange-500 text-white px-8 py-3 rounded-full hover:bg-orange-600 no-underline font-medium"
+                          style={{ fontFamily: "Petrona", fontSize: "16px" }}
+                        >
+                          Book now
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Accessibility Section */}
+        <section ref={accessibilityRef} className="mb-16">
+          <h2 
+            className="text-gray-900 mb-6 max-md:text-2xl"
+            style={{ fontFamily: 'Petrona', fontSize: '36px', fontWeight: 600 }}
+          >
+            Accessibility
+          </h2>
+          <p 
+            className="text-gray-700 mb-6"
+            style={{ fontFamily: 'Petrona', fontSize: '16px' }}
+          >
+            If you have requests for specific accessibility needs, please contact the property using the information on the reservation confirmation received after booking.
+          </p>
+          
+          <div className="bg-white rounded-lg p-6 border border-gray-200">
+            <h3 
+              className="text-gray-900 mb-4"
+              style={{ fontFamily: 'Petrona', fontSize: '20px', fontWeight: 600 }}
+            >
+              Common areas
+            </h3>
+            <ul className="space-y-2 text-gray-700" style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
+              <li>• No elevator</li>
+              <li>• Well-lit path to entrance</li>
+            </ul>
+          </div>
+        </section>
+
+        {/* Policies Section */}
+        <section ref={policiesRef} className="mb-16">
+          <h2 
+            className="text-gray-900 mb-6 max-md:text-2xl"
+            style={{ fontFamily: 'Petrona', fontSize: '36px', fontWeight: 600 }}
+          >
+            Policies
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+            <div className="bg-white rounded-lg p-6 border border-gray-200">
+              <h3 
+                className="text-gray-900 mb-4"
+                style={{ fontFamily: 'Petrona', fontSize: '20px', fontWeight: 600 }}
+              >
+                Check-in
+              </h3>
+              <div className="space-y-2 text-gray-700" style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
+                <p>Check-in start time: 2:00 PM</p>
+                <p>Check-in end time: midnight</p>
+                <p>Minimum check-in age: 18</p>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg p-6 border border-gray-200">
+              <h3 
+                className="text-gray-900 mb-4"
+                style={{ fontFamily: 'Petrona', fontSize: '20px', fontWeight: 600 }}
+              >
+                Check-out
+              </h3>
+              <div className="space-y-2 text-gray-700" style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
+                <p>Check-out before noon</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg p-6 border border-gray-200">
+            <h3 
+              className="text-gray-900 mb-4"
+              style={{ fontFamily: 'Petrona', fontSize: '20px', fontWeight: 600 }}
+            >
+              Special check-in instructions
+            </h3>
+            <div className="space-y-2 text-gray-700" style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
+              <p>Front desk staff will greet guests on arrival at the property.</p>
+              <p>If you are planning to arrive after 6:00 PM, please contact the property in advance.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+      </div>
+
+      <Footer2 />
     </div>
   );
 }
