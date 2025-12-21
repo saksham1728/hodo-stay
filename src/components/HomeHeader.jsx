@@ -13,11 +13,12 @@ const HomeHeader = () => {
       <header className="px-8 max-md:px-4 py-2 md:py-3 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto flex items-center md:-my-9 -my-12">
           {/* Logo */}
-          <div className="flex items-center md:-ml-15 -ml-13">
+          <div className="flex items-center md:-ml-15 -ml-9">
             <img
               src="/hodo-header-logo.png"
               alt="Hodo Stays"
-              className="h-30 md:h-30 md:w-52 w-auto mt-4 md:mt-0 mb-4 md:mb-0"
+              className="h-24 md:h-32 w-auto mt-4 md:mt-0 mb-4 md:mb-0"
+              style={{ objectFit: 'contain' }}
             />
           </div>
 

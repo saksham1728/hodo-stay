@@ -179,6 +179,19 @@ const FAQSection = () => {
                 </div>
               </div>
             </div>
+
+            {/* Policy Links - Centered Below Everything */}
+            <div className="flex gap-6 justify-center mt-8">
+              <a href="#" className="text-white/70 text-sm hover:text-white transition-colors">
+                Terms & Conditions
+              </a>
+              <a href="#" className="text-white/70 text-sm hover:text-white transition-colors">
+                Privacy Policy
+              </a>
+              <a href="#" className="text-white/70 text-sm hover:text-white transition-colors">
+                Refund Policy
+              </a>
+            </div>
           </div>
 
           {/* Mobile Layout */}
@@ -222,11 +235,21 @@ const FAQSection = () => {
 
             {/* Row 3: Tagline - Full Width */}
             <div className="text-center">
-              <div className="text-white text-2xl font-medium mb-1 leading-tight">
-                Redefining Stays,
+              <div className="text-white text-2xl font-medium leading-tight mb-4">
+                Redefining Stays, beyond hotels
               </div>
-              <div className="text-white text-2xl font-medium leading-tight">
-                beyond hotels
+              <div className="border-t border-white/30 pt-4 mt-4">
+                <div className="flex gap-4 justify-center">
+                  <a href="#" className="text-white/70 text-sm hover:text-white transition-colors">
+                    Terms & Conditions
+                  </a>
+                  <a href="#" className="text-white/70 text-sm hover:text-white transition-colors">
+                    Privacy Policy
+                  </a>
+                  <a href="#" className="text-white/70 text-sm hover:text-white transition-colors">
+                    Refund Policy
+                  </a>
+                </div>
               </div>
             </div>
           </div>

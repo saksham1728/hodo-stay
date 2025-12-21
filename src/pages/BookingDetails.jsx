@@ -1,33 +1,29 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import Header2 from '../components/Header2'
-import Footer2 from '../components/Footer2'
-import BookingDateSelector from '../components/BookingDateSelector'
-import { usePricing } from '../hooks/usePricing'
+import HomeHeader from '../components/HomeHeader'
 import { unitService } from '../api'
-import { bookingService } from '../api/bookings/bookingService'
 import { paymentService } from '../api/payments/paymentService'
 
-// Helper function to format currency - now accepts currency parameter
+// Helper function to format currency - always displays in USD ($)
 const formatCurrency = (amount, currency = 'USD') => {
-  // Map currency codes to locale
-  const localeMap = {
-    'USD': 'en-US',
-    'INR': 'en-IN',
-    'EUR': 'en-EU'
-  }
-  
-  return new Intl.NumberFormat(localeMap[currency] || 'en-US', {
+  // Always use USD for display, regardless of backend currency
+  return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: currency,
+    currency: 'USD',
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(amount)
 }
 
 const BookingDetails = () => {
-  const { unitId, buildingId, unitType } = useParams()
+  const { unitId } = useParams()
   const navigate = useNavigate()
+  
+  // Get URL parameters for check-in, check-out, and guests
+  const searchParams = new URLSearchParams(window.location.search)
+  const checkInParam = searchParams.get('checkIn')
+  const checkOutParam = searchParams.get('checkOut')
+  const guestsParam = searchParams.get('guests')
   
   // Unit data state
   const [unit, setUnit] = useState(null)
@@ -39,23 +35,13 @@ const BookingDetails = () => {
   const [submitting, setSubmitting] = useState(false)
   const [bookingError, setBookingError] = useState(null)
   
-  // Booking state with default dates
-  const getDefaultDates = () => {
-    const today = new Date();
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const dayAfter = new Date(tomorrow);
-    dayAfter.setDate(dayAfter.getDate() + 1);
-    
-    return {
-      checkIn: tomorrow.toISOString().split('T')[0],
-      checkOut: dayAfter.toISOString().split('T')[0]
-    };
-  };
-  
-  const [selectedDates, setSelectedDates] = useState(getDefaultDates())
+  // Booking state - pre-filled from URL parameters (READ-ONLY)
+  const [selectedDates, setSelectedDates] = useState({
+    checkIn: checkInParam || '',
+    checkOut: checkOutParam || ''
+  })
   const [guests, setGuests] = useState({
-    adults: 1, // Start with 1 adult (will be updated when unit loads)
+    adults: parseInt(guestsParam) || 1,
     children: 0
   })
   
@@ -70,85 +56,65 @@ const BookingDetails = () => {
   // Get live pricing based on selected dates and guests
   const totalGuests = guests.adults + guests.children
   
-  // Use old pricing hook only if we have unitId (old flow)
-  const { quote, loading: priceLoading, error: priceError } = usePricing(
-    unitId || null, 
-    selectedDates.checkIn, 
-    selectedDates.checkOut, 
-    totalGuests
-  )
-  
-  // Fetch cheapest unit for unit type (new flow)
+  // Fetch unit details and live pricing
   useEffect(() => {
-    const fetchBestUnit = async () => {
-      if (!buildingId || !unitType) return
-      
-      try {
-        setUnitLoading(true)
-        const { buildingService } = await import('../api/buildings/buildingService')
-        const response = await buildingService.getBestAvailableUnit({
-          unitType,
-          buildingId,
-          checkIn: selectedDates.checkIn,
-          checkOut: selectedDates.checkOut,
-          guests: totalGuests
-        })
-        
-        if (response.success) {
-          setUnit(response.data.unit)
-          setPricing(response.data.pricing)
-          
-          // Update guest count to respect unit capacity
-          if (response.data.unit.standardGuests) {
-            setGuests(prev => ({
-              adults: Math.min(prev.adults, response.data.unit.standardGuests),
-              children: Math.max(0, Math.min(prev.children, response.data.unit.standardGuests - prev.adults))
-            }))
-          }
-        } else {
-          setUnitError('No units available for selected dates')
-        }
-      } catch (error) {
-        console.error('Error fetching best unit:', error)
-        setUnitError('Failed to find available unit')
-      } finally {
-        setUnitLoading(false)
+    const fetchUnitAndPricing = async () => {
+      if (!unitId || !selectedDates.checkIn || !selectedDates.checkOut) {
+        console.log('Missing required params:', { unitId, checkIn: selectedDates.checkIn, checkOut: selectedDates.checkOut })
+        return
       }
-    }
-    
-    if (buildingId && unitType) {
-      fetchBestUnit()
-    }
-  }, [buildingId, unitType, selectedDates.checkIn, selectedDates.checkOut, totalGuests])
-  
-  // Fetch unit details (old flow)
-  useEffect(() => {
-    const fetchUnit = async () => {
-      if (!unitId) return
       
       try {
         setUnitLoading(true)
-        const response = await unitService.getUnitById(unitId)
-        const unitData = response.data.unit
+        setUnitError(null)
+        
+        console.log('📊 Fetching unit and pricing for:', { unitId, checkIn: selectedDates.checkIn, checkOut: selectedDates.checkOut, guests: totalGuests })
+        
+        // Step 1: Fetch unit details to get RU Property ID
+        const unitResponse = await unitService.getUnitById(unitId)
+        if (!unitResponse.success) {
+          throw new Error('Failed to fetch unit details')
+        }
+        
+        const unitData = unitResponse.data.unit
         setUnit(unitData)
+        console.log('✅ Unit loaded:', unitData.name, 'RU ID:', unitData.ruPropertyId)
         
-        // Update guest count to respect unit capacity
-        if (unitData.standardGuests) {
-          setGuests(prev => ({
-            adults: Math.min(prev.adults, unitData.standardGuests),
-            children: Math.max(0, Math.min(prev.children, unitData.standardGuests - prev.adults))
-          }))
+        // Step 2: Get live pricing from Rentals United via our API
+        const { pricingService } = await import('../api/pricing/pricingService')
+        const pricingResponse = await pricingService.getPriceQuote(
+          unitId,
+          selectedDates.checkIn,
+          selectedDates.checkOut,
+          totalGuests
+        )
+        
+        console.log('💰 Pricing response:', pricingResponse)
+        
+        if (pricingResponse.success && pricingResponse.data.quote) {
+          const quote = pricingResponse.data.quote
+          setPricing({
+            price: quote.pricing.totalPrice,
+            pricePerNight: quote.pricing.pricePerNight,
+            nights: quote.nights,
+            currency: quote.pricing.currency,
+            available: quote.available
+          })
+          console.log('✅ Pricing loaded:', quote.pricing.totalPrice, quote.pricing.currency)
+        } else {
+          throw new Error(pricingResponse.message || 'Failed to get pricing')
         }
+        
       } catch (error) {
-        console.error('Error fetching unit:', error)
-        setUnitError('Failed to load unit details')
+        console.error('❌ Error fetching unit and pricing:', error)
+        setUnitError(error.message || 'Failed to load unit details and pricing')
       } finally {
         setUnitLoading(false)
       }
     }
     
-    fetchUnit()
-  }, [unitId])
+    fetchUnitAndPricing()
+  }, [unitId, selectedDates.checkIn, selectedDates.checkOut, totalGuests])
   
   const [additionalAmenities, setAdditionalAmenities] = useState({
     roomOnly: false,
@@ -166,35 +132,7 @@ const BookingDetails = () => {
 
   const [acceptTerms, setAcceptTerms] = useState(false)
 
-  // Handle date changes
-  const handleDatesChange = (checkIn, checkOut) => {
-    setSelectedDates({ checkIn, checkOut })
-  }
-
-  const handleGuestChange = (type, operation) => {
-    setGuests(prev => {
-      const newValue = operation === 'increment' 
-        ? prev[type] + 1 
-        : Math.max(0, prev[type] - 1);
-      
-      const newGuests = { ...prev, [type]: newValue };
-      const totalGuests = newGuests.adults + newGuests.children;
-      const maxGuests = unit?.standardGuests || 1;
-      
-      // Check if total exceeds unit capacity
-      if (totalGuests > maxGuests) {
-        // Show warning message
-        setGuestWarning(`This unit can accommodate maximum ${maxGuests} guest${maxGuests !== 1 ? 's' : ''}. Please select a different unit for more guests.`);
-        setTimeout(() => setGuestWarning(''), 5000); // Clear warning after 5 seconds
-        return prev; // Don't update state
-      }
-      
-      // Clear warning if valid
-      setGuestWarning('');
-      
-      return newGuests;
-    });
-  }
+  // Dates and guests are READ-ONLY - user must go back to property page to change them
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({
@@ -215,7 +153,7 @@ const BookingDetails = () => {
       // Mock coupon logic
       const mockCoupons = {
         'SAVE10': { discount: 0.1, type: 'percentage', description: '10% off' },
-        'FLAT500': { discount: 500, type: 'fixed', description: '₹500 off' },
+        'FLAT500': { discount: 500, type: 'fixed', description: '$500 off' },
         'WELCOME': { discount: 0.15, type: 'percentage', description: '15% off for new users' }
       }
       
@@ -238,38 +176,9 @@ const BookingDetails = () => {
     setCouponCode('')
   }
 
-  // Calculate pricing - handles both new API pricing and old quote
+  // Calculate pricing from live API data
   const calculatePricing = () => {
-    // New flow: pricing from getBestAvailableUnit API
-    if (pricing && pricing.price) {
-      const basePrice = pricing.pricePerNight || 0
-      const nights = pricing.nights || 0
-      const subtotal = pricing.price || 0
-      const currency = pricing.currency || 'USD'
-      const taxes = 0
-      
-      let couponDiscount = 0
-      if (appliedCoupon) {
-        if (appliedCoupon.type === 'percentage') {
-          couponDiscount = subtotal * appliedCoupon.discount
-        } else {
-          couponDiscount = appliedCoupon.discount
-        }
-      }
-      
-      return {
-        basePrice,
-        nights,
-        subtotal,
-        taxes,
-        couponDiscount,
-        total: Math.max(0, subtotal - couponDiscount),
-        currency
-      }
-    }
-    
-    // Old flow: quote from usePricing hook
-    if (!quote || !quote.pricing) {
+    if (!pricing || !pricing.price) {
       return {
         basePrice: 0,
         nights: 0,
@@ -281,10 +190,10 @@ const BookingDetails = () => {
       }
     }
 
-    const basePrice = quote.pricing.pricePerNight || 0
-    const nights = quote.nights || 0
-    const subtotal = basePrice * nights
-    const currency = quote.pricing.currency || 'USD'
+    const basePrice = pricing.pricePerNight || 0
+    const nights = pricing.nights || 0
+    const subtotal = pricing.price || 0
+    const currency = pricing.currency || 'USD'
     const taxes = 0
     
     let couponDiscount = 0
@@ -310,7 +219,7 @@ const BookingDetails = () => {
   const calculatedPricing = calculatePricing()
   
   // Determine if we're currently loading pricing
-  const isPricingLoading = (buildingId && unitType) ? unitLoading : priceLoading
+  const isPricingLoading = unitLoading
 
   // Handle booking submission with Razorpay payment
   const handleProceedToCheckout = async () => {
@@ -487,62 +396,7 @@ const BookingDetails = () => {
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#FFF7F0' }}>
       {/* Header */}
-      <Header2 />
-      
-      {/* Dark Green Booking Details Section */}
-      <div 
-        className="py-16 px-8 text-white"
-        style={{ backgroundColor: '#2D3A36' }}
-      >
-        <div className="max-w-7xl mx-auto">
-          <h1 
-            className="text-white mb-4"
-            style={{
-              fontFamily: 'Petrona',
-              fontWeight: 500,
-              fontSize: '48px',
-              lineHeight: '100%',
-              letterSpacing: '-2.2%'
-            }}
-          >
-            Booking Details
-          </h1>
-          <h2 
-            className="text-white mb-4"
-            style={{
-              fontFamily: 'Petrona',
-              fontWeight: 400,
-              fontSize: '32px',
-              lineHeight: '120%',
-              letterSpacing: '-1.5%'
-            }}
-          >
-            {unitLoading ? 'Loading...' : unit?.name || 'Hodo Heiwa - HSR Layout'}
-          </h2>
-          <p 
-            className="text-white/80 mb-2"
-            style={{
-              fontFamily: 'Work Sans',
-              fontWeight: 400,
-              fontSize: '14px',
-              lineHeight: '140%'
-            }}
-          >
-            HSR Layout, Bangalore South, Bengaluru Urban, Karnataka, India
-          </p>
-          <p 
-            className="text-white/70"
-            style={{
-              fontFamily: 'Work Sans',
-              fontWeight: 400,
-              fontSize: '12px',
-              lineHeight: '140%'
-            }}
-          >
-            {unit?.description || 'Our apartment offers the comfort of home with the luxury of a hotel. Strategically located in the heart of HSR Layout, Bengaluru.'}
-          </p>
-        </div>
-      </div>
+      <HomeHeader />
 
       {/* Main Content */}
       <div className="py-12 px-8">
@@ -552,200 +406,7 @@ const BookingDetails = () => {
             {/* Left Column - Forms */}
             <div className="lg:col-span-2 space-y-6">
               
-              {/* Guests Section */}
-              <div className="rounded-2xl p-6 relative" style={smallCardStyle}>
-                {/* Loading overlay */}
-                {isPricingLoading && (
-                  <div className="absolute inset-0 bg-white/70 rounded-2xl flex items-center justify-center z-10">
-                    <div className="text-center">
-                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mx-auto"></div>
-                      <p className="text-sm text-gray-600 mt-2">Updating pricing...</p>
-                    </div>
-                  </div>
-                )}
-                
-                <h3 
-                  className="text-gray-900 mb-4"
-                  style={{
-                    fontFamily: 'Petrona',
-                    fontWeight: 400,
-                    fontSize: '24px',
-                    lineHeight: '130%',
-                    letterSpacing: '-1%'
-                  }}
-                >
-                  Guests
-                </h3>
-                
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span 
-                      className="text-gray-700"
-                      style={{
-                        fontFamily: 'Work Sans',
-                        fontWeight: 400,
-                        fontSize: '16px'
-                      }}
-                    >
-                      Adult
-                    </span>
-                    <div className="flex items-center gap-3">
-                      <button 
-                        onClick={() => handleGuestChange('adults', 'decrement')}
-                        className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50"
-                        style={{ background: 'transparent' }}
-                        aria-label="decrement-adult"
-                      >
-                        -
-                      </button>
-                      <span className="w-8 text-center font-medium">{guests.adults}</span>
-                      <button 
-                        onClick={() => handleGuestChange('adults', 'increment')}
-                        className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50"
-                        style={{ background: 'transparent' }}
-                        aria-label="increment-adult"
-                      >
-                        +
-                      </button>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <span 
-                      className="text-gray-700"
-                      style={{
-                        fontFamily: 'Work Sans',
-                        fontWeight: 400,
-                        fontSize: '16px'
-                      }}
-                    >
-                      Child
-                    </span>
-                    <div className="flex items-center gap-3">
-                      <button 
-                        onClick={() => handleGuestChange('children', 'decrement')}
-                        className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50"
-                        aria-label="decrement-child"
-                      >
-                        -
-                      </button>
-                      <span className="w-8 text-center font-medium">{guests.children}</span>
-                      <button 
-                        onClick={() => handleGuestChange('children', 'increment')}
-                        className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50"
-                        aria-label="increment-child"
-                      >
-                        +
-                      </button>
-                    </div>
-                  </div>
-                  
-                  <p 
-                    className="text-gray-500 text-sm"
-                    style={{
-                      fontFamily: 'Work Sans',
-                      fontWeight: 400,
-                      fontSize: '12px'
-                    }}
-                  >
-                    Above 18 years are considered as adults
-                  </p>
-                  
-                  {/* Unit capacity info */}
-                  {unit && (
-                    <p 
-                      className="text-blue-600 text-sm mt-2"
-                      style={{
-                        fontFamily: 'Work Sans',
-                        fontWeight: 400,
-                        fontSize: '12px'
-                      }}
-                    >
-                      This unit can accommodate maximum {unit.standardGuests} guest{unit.standardGuests !== 1 ? 's' : ''}
-                    </p>
-                  )}
-                  
-                  {/* Warning message */}
-                  {guestWarning && (
-                    <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
-                      <p 
-                        className="text-red-700 text-sm"
-                        style={{
-                          fontFamily: 'Work Sans',
-                          fontWeight: 500,
-                          fontSize: '12px'
-                        }}
-                      >
-                        ⚠️ {guestWarning}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Additional Amenities */}
-              <div className="rounded-2xl p-6" style={smallCardStyle}>
-                <h3 
-                  className="text-gray-900 mb-4"
-                  style={{
-                    fontFamily: 'Petrona',
-                    fontWeight: 400,
-                    fontSize: '24px',
-                    lineHeight: '130%',
-                    letterSpacing: '-1%'
-                  }}
-                >
-                  Additional Amenities
-                </h3>
-                
-                <div className="space-y-3">
-                  <label className="flex items-center gap-3">
-                    <input 
-                      type="checkbox"
-                      checked={additionalAmenities.roomOnly}
-                      onChange={(e) => setAdditionalAmenities(prev => ({
-                        ...prev,
-                        roomOnly: e.target.checked
-                      }))}
-                      className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
-                    />
-                    <span 
-                      className="text-gray-700"
-                      style={{
-                        fontFamily: 'Work Sans',
-                        fontWeight: 400,
-                        fontSize: '16px'
-                      }}
-                    >
-                      Room Only
-                    </span>
-                  </label>
-                  
-                  <label className="flex items-center gap-3">
-                    <input 
-                      type="checkbox"
-                      checked={additionalAmenities.breakfastIncluded}
-                      onChange={(e) => setAdditionalAmenities(prev => ({
-                        ...prev,
-                        breakfastIncluded: e.target.checked
-                      }))}
-                      className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
-                    />
-                    <span 
-                      className="text-gray-700"
-                      style={{
-                        fontFamily: 'Work Sans',
-                        fontWeight: 400,
-                        fontSize: '16px'
-                      }}
-                    >
-                      Breakfast Included
-                    </span>
-                  </label>
-                </div>
-              </div>
-
-              {/* Guest Information */}
+              {/* Guest Information - FIRST */}
               <div className="rounded-2xl p-6" style={smallCardStyle}>
                 <h3 
                   className="text-gray-900 mb-4"
@@ -821,6 +482,68 @@ const BookingDetails = () => {
                       }}
                     />
                   </div>
+                </div>
+              </div>
+
+              {/* Additional Amenities */}
+              <div className="rounded-2xl p-6" style={smallCardStyle}>
+                <h3 
+                  className="text-gray-900 mb-4"
+                  style={{
+                    fontFamily: 'Petrona',
+                    fontWeight: 400,
+                    fontSize: '24px',
+                    lineHeight: '130%',
+                    letterSpacing: '-1%'
+                  }}
+                >
+                  Additional Amenities
+                </h3>
+                
+                <div className="space-y-3">
+                  <label className="flex items-center gap-3">
+                    <input 
+                      type="checkbox"
+                      checked={additionalAmenities.roomOnly}
+                      onChange={(e) => setAdditionalAmenities(prev => ({
+                        ...prev,
+                        roomOnly: e.target.checked
+                      }))}
+                      className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
+                    />
+                    <span 
+                      className="text-gray-700"
+                      style={{
+                        fontFamily: 'Work Sans',
+                        fontWeight: 400,
+                        fontSize: '16px'
+                      }}
+                    >
+                      Room Only
+                    </span>
+                  </label>
+                  
+                  <label className="flex items-center gap-3">
+                    <input 
+                      type="checkbox"
+                      checked={additionalAmenities.breakfastIncluded}
+                      onChange={(e) => setAdditionalAmenities(prev => ({
+                        ...prev,
+                        breakfastIncluded: e.target.checked
+                      }))}
+                      className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
+                    />
+                    <span 
+                      className="text-gray-700"
+                      style={{
+                        fontFamily: 'Work Sans',
+                        fontWeight: 400,
+                        fontSize: '16px'
+                      }}
+                    >
+                      Breakfast Included
+                    </span>
+                  </label>
                 </div>
               </div>
 
@@ -949,49 +672,28 @@ const BookingDetails = () => {
 
             {/* Right Column - Live Pricing Card */}
             <div className="lg:col-span-1">
-              <div className="bg-white rounded-2xl p-6 shadow-sm sticky top-8">
+              <div className="bg-white rounded-2xl p-5 shadow-sm sticky top-8">
                 {/* Unit Image and Info */}
-                <div className="mb-4">
+                <div className="mb-3">
                   <img 
                     src={unit?.images?.[0]?.url || "/property_1.png"} 
-                    alt={unit?.name || "Property"}
-                    className="w-full h-48 object-cover rounded-xl"
+                    alt={unit?.unitType || "Property"}
+                    className="w-full h-32 object-cover rounded-xl"
                   />
                 </div>
                 
                 <h3 
-                  className="text-gray-900 mb-2"
+                  className="text-gray-900 mb-3"
                   style={{
                     fontFamily: 'Petrona',
-                    fontWeight: 400,
-                    fontSize: '20px',
+                    fontWeight: 500,
+                    fontSize: '18px',
                     lineHeight: '130%',
                     letterSpacing: '-1%'
                   }}
                 >
-                  {unit?.name || 'Loading...'}
+                  {unit?.unitType || 'Loading...'}
                 </h3>
-                
-                <p 
-                  className="text-gray-600 text-sm mb-4"
-                  style={{
-                    fontFamily: 'Work Sans',
-                    fontWeight: 400,
-                    fontSize: '14px'
-                  }}
-                >
-                  {unit ? `Max ${unit.standardGuests} guest${unit.standardGuests !== 1 ? 's' : ''}` : 'Room details'}
-                </p>
-
-                {/* Date Selector */}
-                <div className="mb-6">
-                  <h4 className="text-sm font-medium text-gray-700 mb-3">Select Dates</h4>
-                  <BookingDateSelector
-                    onDatesChange={handleDatesChange}
-                    initialCheckIn={selectedDates.checkIn}
-                    initialCheckOut={selectedDates.checkOut}
-                  />
-                </div>
 
                 {/* Live Pricing Display */}
                 {selectedDates.checkIn && selectedDates.checkOut && (
@@ -1044,7 +746,7 @@ const BookingDetails = () => {
                           <p className="text-sm text-gray-500 mt-2">Getting live prices...</p>
                           <p className="text-xs text-gray-400 mt-1">Checking all available units</p>
                         </div>
-                      ) : (priceError || unitError) ? (
+                      ) : unitError ? (
                         <div className="text-center py-4">
                           <p className="text-sm text-red-500">Unable to get live pricing</p>
                           <p className="text-xs text-gray-500">Please try different dates</p>
@@ -1177,9 +879,6 @@ const BookingDetails = () => {
           </div>
         </div>
       </div>
-
-      {/* Footer */}
-      <Footer2 />
     </div>
   )
 }

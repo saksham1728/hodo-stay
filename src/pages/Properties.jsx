@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import Footer2 from "../components/Footer2";
+import FooterSimple from "../components/FooterSimple";
 import HomeHeader from "../components/HomeHeader";
 import { useBuildings } from "../hooks/useBuildings";
 
@@ -125,7 +125,7 @@ const Properties = () => {
       rating: 4.5,
       amenities: building.amenities?.slice(0, 3) || ["WiFi", "Air-conditioning", "Free Parking on Premises"],
       description: building.description || "Modern apartments with all amenities",
-      price: 7000,
+      price: 70,
       images: images
     };
   };
@@ -356,7 +356,7 @@ const Properties = () => {
         </div>
       </div>
 
-      <Footer2 />
+      <FooterSimple />
     </div>
   );
 };

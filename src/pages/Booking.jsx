@@ -134,8 +134,8 @@ const Booking = () => {
         numberOfChildren: formData.numberOfChildren,
         guestInfo: formData.guestInfo,
         pricing: {
-          ruPrice: pricing?.price || 7000 * calculateNights(),
-          clientPrice: pricing?.price || 7000 * calculateNights(),
+          ruPrice: pricing?.price || 70 * calculateNights(),
+          clientPrice: pricing?.price || 70 * calculateNights(),
           currency: 'INR'
         },
         specialRequests: formData.specialRequests
@@ -171,7 +171,7 @@ const Booking = () => {
   }
 
   const nights = calculateNights();
-  const totalPrice = pricing?.price || 7000 * nights;
+  const totalPrice = pricing?.price || 70 * nights;
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#FFF7F0' }}>
@@ -396,8 +396,8 @@ const Booking = () => {
 
               <div className="border-t pt-4 space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">₹7,000 x {nights} nights</span>
-                  <span>₹{(7000 * nights).toLocaleString()}</span>
+                  <span className="text-gray-600">$70 x {nights} nights</span>
+                  <span>${(70 * nights).toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-lg font-semibold pt-2 border-t">
                   <span>Total</span>

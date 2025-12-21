@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
-import Footer2 from "../components/Footer2";
+import FooterSimple from "../components/FooterSimple";
 import HomeHeader from "../components/HomeHeader";
 
 function PropertyDetail() {
@@ -10,6 +10,15 @@ function PropertyDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeSection, setActiveSection] = useState('overview');
+  
+  // Search state
+  const [checkIn, setCheckIn] = useState('');
+  const [checkOut, setCheckOut] = useState('');
+  const [guests, setGuests] = useState(2);
+  const [searchPerformed, setSearchPerformed] = useState(false);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [pricingData, setPricingData] = useState({});
+  const [searchError, setSearchError] = useState('');
   
   const overviewRef = useRef(null);
   const aboutRef = useRef(null);
@@ -79,6 +88,67 @@ function PropertyDetail() {
     }
   };
 
+  // Handle search for available rooms with pricing
+  const handleSearch = async () => {
+    if (!checkIn || !checkOut || !guests) {
+      setSearchError('Please fill in all fields');
+      return;
+    }
+
+    if (new Date(checkIn) >= new Date(checkOut)) {
+      setSearchError('Check-out date must be after check-in date');
+      return;
+    }
+
+    setSearchLoading(true);
+    setSearchError('');
+    const newPricingData = {};
+
+    try {
+      const { buildingService } = await import('../api/buildings/buildingService');
+
+      // Get pricing for each unit type
+      for (const unitTypeData of unitTypes) {
+        try {
+          const response = await buildingService.getBestAvailableUnit({
+            unitType: unitTypeData.unitType,
+            buildingId: id,
+            checkIn,
+            checkOut,
+            guests: parseInt(guests)
+          });
+
+          if (response.success) {
+            newPricingData[unitTypeData.unitType] = {
+              unit: response.data.unit,
+              pricing: response.data.pricing,
+              available: true
+            };
+          }
+        } catch (err) {
+          console.error(`Error getting pricing for ${unitTypeData.unitType}:`, err);
+          newPricingData[unitTypeData.unitType] = {
+            available: false,
+            error: err.response?.data?.message || 'Not available'
+          };
+        }
+      }
+
+      setPricingData(newPricingData);
+      setSearchPerformed(true);
+      
+      // Scroll to rooms section
+      if (roomsRef.current) {
+        setTimeout(() => scrollToSection(roomsRef), 300);
+      }
+    } catch (err) {
+      console.error('Error searching:', err);
+      setSearchError('Failed to search. Please try again.');
+    } finally {
+      setSearchLoading(false);
+    }
+  };
+
   // Get images for hero grid
   const getHeroImages = () => {
     if (!building || !building.images || building.images.length === 0) {
@@ -105,7 +175,7 @@ function PropertyDetail() {
         <div className="flex justify-center items-center py-20">
           <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-orange-500"></div>
         </div>
-        <Footer2 />
+        <FooterSimple />
       </div>
     );
   }
@@ -124,7 +194,7 @@ function PropertyDetail() {
             Back to Properties
           </Link>
         </div>
-        <Footer2 />
+        <FooterSimple />
       </div>
     );
   }
@@ -275,6 +345,95 @@ function PropertyDetail() {
           </p>
         </section>
 
+        {/* Search Section - Before Rooms */}
+        <section className="mb-12">
+          <div className="bg-white rounded-2xl shadow-md p-6 border border-gray-200">
+            <h3 className="text-gray-900 mb-6" style={{ fontFamily: 'Petrona', fontSize: '24px', fontWeight: 600 }}>
+              Check Availability & Pricing
+            </h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              {/* Check-in Date */}
+              <div>
+                <label className="block text-gray-700 mb-2" style={{ fontFamily: 'Petrona', fontSize: '14px', fontWeight: 500 }}>
+                  Check-in
+                </label>
+                <input
+                  type="date"
+                  value={checkIn}
+                  onChange={(e) => setCheckIn(e.target.value)}
+                  min={new Date().toISOString().split('T')[0]}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  style={{ fontFamily: 'Petrona' }}
+                />
+              </div>
+
+              {/* Check-out Date */}
+              <div>
+                <label className="block text-gray-700 mb-2" style={{ fontFamily: 'Petrona', fontSize: '14px', fontWeight: 500 }}>
+                  Check-out
+                </label>
+                <input
+                  type="date"
+                  value={checkOut}
+                  onChange={(e) => setCheckOut(e.target.value)}
+                  min={checkIn || new Date().toISOString().split('T')[0]}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  style={{ fontFamily: 'Petrona' }}
+                />
+              </div>
+
+              {/* Guests */}
+              <div>
+                <label className="block text-gray-700 mb-2" style={{ fontFamily: 'Petrona', fontSize: '14px', fontWeight: 500 }}>
+                  Guests
+                </label>
+                <input
+                  type="number"
+                  value={guests}
+                  onChange={(e) => setGuests(e.target.value)}
+                  min="1"
+                  max="10"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  style={{ fontFamily: 'Petrona' }}
+                />
+              </div>
+
+              {/* Search Button */}
+              <div className="flex items-end">
+                <button
+                  onClick={handleSearch}
+                  disabled={searchLoading || !checkIn || !checkOut || !guests}
+                  className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-colors"
+                  style={{ fontFamily: 'Petrona', fontSize: '16px', fontWeight: 500 }}
+                >
+                  {searchLoading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                      Searching...
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                      Search
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {searchError && (
+              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-red-800" style={{ fontFamily: 'Petrona', fontSize: '14px' }}>
+                  {searchError}
+                </p>
+              </div>
+            )}
+          </div>
+        </section>
+
         {/* Rooms Section */}
         <section ref={roomsRef} className="mb-16">
           <h2 
@@ -289,6 +448,11 @@ function PropertyDetail() {
               const images = rep?.images?.length > 0 
                 ? rep.images.map(img => img.url).filter(url => url)
                 : ["/card-1.png"];
+
+              // Get pricing data for this unit type
+              const unitPricing = pricingData[unitTypeData.unitType];
+              const hasPrice = unitPricing && unitPricing.available;
+              const priceError = unitPricing && !unitPricing.available ? unitPricing.error : null;
 
               return (
                 <div
@@ -352,41 +516,90 @@ function PropertyDetail() {
                         </p>
                       </div>
 
-                      <div className="flex justify-between items-center">
+                      <div className="flex flex-col gap-4">
+                        {/* Pricing Display */}
                         <div>
-                          <span
-                            className="text-gray-500 block mb-1"
-                            style={{ fontFamily: "Petrona", fontSize: "12px" }}
-                          >
-                            from
-                          </span>
-                          <div className="flex items-baseline">
-                            <span
-                              style={{
-                                color: "#4A4A4A",
-                                fontFamily: "Petrona",
-                                fontWeight: 600,
-                                fontSize: "30px",
-                              }}
-                            >
-                              Rs. 7,000
-                            </span>
-                            <span
-                              className="text-gray-500"
-                              style={{ fontFamily: "Petrona", fontSize: "12px", marginLeft: "2px" }}
-                            >
-                              per night
-                            </span>
-                          </div>
+                          {hasPrice ? (
+                            <>
+                              <span
+                                className="text-gray-500 block mb-1"
+                                style={{ fontFamily: "Petrona", fontSize: "12px" }}
+                              >
+                                Total for {unitPricing.pricing.nights} nights
+                              </span>
+                              <div className="flex items-baseline gap-2">
+                                <span
+                                  style={{
+                                    color: "#4A4A4A",
+                                    fontFamily: "Petrona",
+                                    fontWeight: 600,
+                                    fontSize: "30px",
+                                  }}
+                                >
+                                  $ {Math.round(unitPricing.pricing.price).toLocaleString()}
+                                </span>
+                                <span
+                                  className="text-gray-500"
+                                  style={{ fontFamily: "Petrona", fontSize: "14px" }}
+                                >
+                                  ($ {Math.round(unitPricing.pricing.pricePerNight).toLocaleString()}/night)
+                                </span>
+                              </div>
+                            </>
+                          ) : priceError ? (
+                            <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                              <p className="text-red-800 text-sm" style={{ fontFamily: "Petrona" }}>
+                                {priceError}
+                              </p>
+                            </div>
+                          ) : (
+                            <>
+                              <span
+                                className="text-gray-500 block mb-1"
+                                style={{ fontFamily: "Petrona", fontSize: "12px" }}
+                              >
+                                from
+                              </span>
+                              <div className="flex items-baseline">
+                                <span
+                                  style={{
+                                    color: "#4A4A4A",
+                                    fontFamily: "Petrona",
+                                    fontWeight: 600,
+                                    fontSize: "30px",
+                                  }}
+                                >
+                                  $ 70
+                                </span>
+                                <span
+                                  className="text-gray-500"
+                                  style={{ fontFamily: "Petrona", fontSize: "12px", marginLeft: "2px" }}
+                                >
+                                  per night
+                                </span>
+                              </div>
+                            </>
+                          )}
                         </div>
 
-                        <Link
-                          to={`/booking/${id}/${unitTypeData.unitType}`}
-                          className="bg-orange-500 text-white px-8 py-3 rounded-full hover:bg-orange-600 no-underline font-medium"
-                          style={{ fontFamily: "Petrona", fontSize: "16px" }}
-                        >
-                          Book now
-                        </Link>
+                        {/* Book Now Button */}
+                        {hasPrice ? (
+                          <Link
+                            to={`/booking-details/${unitPricing.unit._id}?checkIn=${checkIn}&checkOut=${checkOut}&guests=${guests}`}
+                            className="bg-orange-500 text-white px-8 py-3 rounded-full hover:bg-orange-600 no-underline font-medium text-center"
+                            style={{ fontFamily: "Petrona", fontSize: "16px" }}
+                          >
+                            Book now
+                          </Link>
+                        ) : (
+                          <button
+                            disabled
+                            className="bg-gray-400 text-white px-8 py-3 rounded-full cursor-not-allowed font-medium"
+                            style={{ fontFamily: "Petrona", fontSize: "16px" }}
+                          >
+                            {searchPerformed ? 'Not Available' : 'Search to Book'}
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -478,7 +691,7 @@ function PropertyDetail() {
       </div>
       </div>
 
-      <Footer2 />
+      <FooterSimple />
     </div>
   );
 }
