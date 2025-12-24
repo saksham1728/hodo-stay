@@ -2,6 +2,7 @@ import { useParams, Link } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import dayjs from "dayjs";
 import FooterSimple from "../components/FooterSimple";
+import ReviewsSection from "../components/ReviewsSection";
 import HomeHeader from "../components/HomeHeader";
 import DateRangePicker from "../components/DateRangePicker";
 
@@ -190,6 +191,7 @@ function PropertyDetail() {
         <div className="flex justify-center items-center py-20">
           <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-orange-500"></div>
         </div>
+        <ReviewsSection />
         <FooterSimple />
       </div>
     );
@@ -209,6 +211,7 @@ function PropertyDetail() {
             Back to Properties
           </Link>
         </div>
+        <ReviewsSection />
         <FooterSimple />
       </div>
     );
@@ -735,6 +738,7 @@ function PropertyDetail() {
       </div>
       </div>
 
+      <ReviewsSection />
       <FooterSimple />
     </div>
   );
