@@ -19,6 +19,21 @@ const BookingDetails = () => {
   const { unitId } = useParams()
   const navigate = useNavigate()
   
+  // Add CSS for animations
+  const animationStyles = `
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+      }
+      to {
+        transform: translateY(0);
+      }
+    }
+    .animate-slide-up {
+      animation: slideUp 0.3s ease-out;
+    }
+  `
+  
   // Get URL parameters for check-in, check-out, and guests
   const searchParams = new URLSearchParams(window.location.search)
   const checkInParam = searchParams.get('checkIn')
@@ -131,6 +146,9 @@ const BookingDetails = () => {
   })
 
   const [acceptTerms, setAcceptTerms] = useState(false)
+  
+  // Mobile pricing dropdown state
+  const [showPricingDetails, setShowPricingDetails] = useState(false)
 
   // Dates and guests are READ-ONLY - user must go back to property page to change them
 
@@ -395,11 +413,253 @@ const BookingDetails = () => {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#FFF7F0' }}>
+      {/* Animation Styles */}
+      <style>{animationStyles}</style>
+      
       {/* Header */}
       <HomeHeader />
 
+      {/* Mobile Sticky Top Card - Only visible on mobile */}
+      <div className="lg:hidden sticky top-0 z-40 bg-white shadow-md">
+        {/* Room Image - Full Width with Centered White Box */}
+        <div className="relative">
+          <img 
+            src={unit?.images?.[0]?.url || "/property_1.png"} 
+            alt={unit?.unitType || "Property"}
+            className="w-full h-48 object-cover"
+          />
+          
+          {/* Centered Compact White Box */}
+          <div className="absolute inset-0 flex items-center justify-center p-4">
+            <div className="bg-white rounded-xl shadow-lg p-3 w-full max-w-sm">
+              {/* Check-in and Check-out */}
+              <div className="flex justify-between items-center mb-2">
+                <div className="flex-1">
+                  <p className="text-xs text-gray-600 mb-0.5">Check-in</p>
+                  <p className="font-semibold text-sm text-gray-900">{checkInFormatted.day}</p>
+                  <p className="text-xs text-gray-500">{checkInFormatted.weekday}</p>
+                </div>
+                
+                <div className="px-2">
+                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </div>
+                
+                <div className="flex-1 text-right">
+                  <p className="text-xs text-gray-600 mb-0.5">Check-out</p>
+                  <p className="font-semibold text-sm text-gray-900">{checkOutFormatted.day}</p>
+                  <p className="text-xs text-gray-500">{checkOutFormatted.weekday}</p>
+                </div>
+              </div>
+              
+              {/* Underline */}
+              <hr className="border-gray-300 mb-2" />
+              
+              {/* Pricing Row - Left: Label & Info, Right: Price & Arrow */}
+              <div 
+                className="flex justify-between items-center cursor-pointer"
+                onClick={() => setShowPricingDetails(!showPricingDetails)}
+              >
+                {/* Left Side - Total Amount Label and Info */}
+                <div>
+                  <p className="text-xs text-gray-600 mb-0.5">Total Amount</p>
+                  {!isPricingLoading && calculatedPricing.nights > 0 && (
+                    <p className="text-xs text-gray-500">
+                      {calculatedPricing.nights} night{calculatedPricing.nights !== 1 ? 's' : ''} • {guests.adults} guest{guests.adults !== 1 ? 's' : ''}
+                    </p>
+                  )}
+                </div>
+                
+                {/* Right Side - Price and Dropdown Arrow */}
+                <div className="flex items-center gap-2">
+                  <p className="text-lg font-bold text-gray-900">
+                    {isPricingLoading ? (
+                      <span className="text-sm">Loading...</span>
+                    ) : (
+                      formatCurrency(calculatedPricing.total, calculatedPricing.currency)
+                    )}
+                  </p>
+                  
+                  <svg 
+                    className={`w-5 h-5 text-gray-600 transition-transform ${showPricingDetails ? 'rotate-180' : ''}`}
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Bottom Sheet - Pricing Details */}
+      {showPricingDetails && (
+        <div className="lg:hidden fixed inset-0 z-50 flex items-end">
+          {/* Backdrop */}
+          <div 
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setShowPricingDetails(false)}
+          />
+          
+          {/* Bottom Sheet - Reduced Height */}
+          <div className="relative w-full bg-white rounded-t-3xl shadow-2xl max-h-[70vh] overflow-y-auto animate-slide-up">
+            {/* Handle */}
+            <div className="flex justify-center pt-2 pb-1">
+              <div className="w-12 h-1 bg-gray-300 rounded-full" />
+            </div>
+            
+            {/* Content - Compact Spacing */}
+            <div className="p-4 space-y-4">
+              {/* Unit Info - Compact */}
+              <div>
+                <h3 className="text-base font-semibold text-gray-900 mb-1">
+                  {unit?.unitType || 'Loading...'}
+                </h3>
+                <p className="text-xs text-gray-600">
+                  {unit?.name || ''}
+                </p>
+              </div>
+
+              {/* Date Summary - Compact */}
+              <div className="p-3 bg-gray-50 rounded-lg">
+                <div className="flex justify-between items-center mb-2">
+                  <div>
+                    <p className="text-xs text-gray-600">Check-in</p>
+                    <p className="text-sm font-semibold text-gray-900">{checkInFormatted.day}</p>
+                    <p className="text-xs text-gray-600">{checkInFormatted.weekday}, {unit?.checkInOut?.checkInFrom || '2pm'}</p>
+                  </div>
+                  
+                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                  
+                  <div className="text-right">
+                    <p className="text-xs text-gray-600">Check-out</p>
+                    <p className="text-sm font-semibold text-gray-900">{checkOutFormatted.day}</p>
+                    <p className="text-xs text-gray-600">{checkOutFormatted.weekday}, {unit?.checkInOut?.checkOutUntil || '11am'}</p>
+                  </div>
+                </div>
+                
+                <div className="pt-2 border-t border-gray-200">
+                  <p className="text-xs text-gray-600 mb-0.5">Guests</p>
+                  <p className="text-sm font-medium text-gray-900">
+                    {guests.adults} Adult{guests.adults !== 1 ? 's' : ''}
+                    {guests.children > 0 && `, ${guests.children} Child${guests.children !== 1 ? 'ren' : ''}`}
+                  </p>
+                </div>
+              </div>
+
+              {/* Pricing Breakdown - Compact */}
+              <div className="space-y-2">
+                <h4 className="font-semibold text-gray-900 text-sm">Price Breakdown</h4>
+                
+                {isPricingLoading ? (
+                  <div className="text-center py-3">
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-orange-500 mx-auto"></div>
+                    <p className="text-xs text-gray-500 mt-2">Getting live prices...</p>
+                  </div>
+                ) : calculatedPricing.total === 0 ? (
+                  <p className="text-sm text-gray-500">Select dates to see pricing</p>
+                ) : (
+                  <>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">
+                        {formatCurrency(calculatedPricing.basePrice, calculatedPricing.currency)} x {calculatedPricing.nights} Night{calculatedPricing.nights !== 1 ? 's' : ''}
+                      </span>
+                      <span className="text-sm font-medium text-gray-900">
+                        {formatCurrency(calculatedPricing.subtotal, calculatedPricing.currency)}
+                      </span>
+                    </div>
+                    
+                    {calculatedPricing.taxes > 0 && (
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600">Taxes and charges</span>
+                        <span className="text-sm font-medium text-gray-900">
+                          {formatCurrency(calculatedPricing.taxes, calculatedPricing.currency)}
+                        </span>
+                      </div>
+                    )}
+                    
+                    {appliedCoupon && (
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600">
+                          Coupon ({appliedCoupon.code})
+                          <button 
+                            onClick={removeCoupon}
+                            className="ml-2 text-red-500 hover:text-red-700"
+                          >
+                            ×
+                          </button>
+                        </span>
+                        <span className="text-sm font-medium text-green-600">
+                          -{formatCurrency(calculatedPricing.couponDiscount, calculatedPricing.currency)}
+                        </span>
+                      </div>
+                    )}
+                    
+                    <hr className="my-2" />
+                    
+                    <div className="flex justify-between items-center">
+                      <span className="font-semibold text-gray-900">Total Payable</span>
+                      <span className="text-lg font-bold text-gray-900">
+                        {formatCurrency(calculatedPricing.total, calculatedPricing.currency)}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-center mt-1">
+                      <div className="flex items-center gap-2 text-xs text-green-600">
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        Live Pricing from Rentals United
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {/* Coupon Section - Compact */}
+              <div className="p-3 bg-gray-50 rounded-lg">
+                <p className="text-sm text-gray-600 mb-2">Got a coupon?</p>
+                <div className="flex gap-2">
+                  <input 
+                    type="text"
+                    placeholder="Enter coupon code"
+                    value={couponCode}
+                    onChange={(e) => setCouponCode(e.target.value)}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded text-sm"
+                  />
+                  <button 
+                    onClick={handleApplyCoupon}
+                    disabled={couponLoading || !couponCode.trim()}
+                    className="px-4 py-2 bg-orange-500 text-white rounded text-sm hover:opacity-95 disabled:opacity-50"
+                  >
+                    {couponLoading ? '...' : 'Apply'}
+                  </button>
+                </div>
+                {appliedCoupon && (
+                  <p className="text-green-600 text-xs mt-2">
+                    ✓ {appliedCoupon.description} applied!
+                  </p>
+                )}
+              </div>
+
+              {/* Close Button - Compact */}
+              <button
+                onClick={() => setShowPricingDetails(false)}
+                className="w-full py-2.5 bg-gray-200 text-gray-900 rounded-lg font-medium text-sm"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Main Content */}
-      <div className="py-12 px-8">
+      <div className="py-6 lg:py-12 px-4 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
@@ -407,7 +667,17 @@ const BookingDetails = () => {
             <div className="lg:col-span-2 space-y-6">
               
               {/* Guest Information - FIRST */}
-              <div className="rounded-2xl p-6" style={smallCardStyle}>
+              <div className="lg:rounded-2xl lg:p-6 p-0 lg:shadow-sm" style={{ backgroundColor: '#FAF2E8', boxShadow: '0px 4px 4px 0px rgba(0,0,0,0.25)' }} 
+                   data-mobile-transparent="true">
+                <style>{`
+                  @media (max-width: 1023px) {
+                    [data-mobile-transparent="true"] {
+                      background-color: transparent !important;
+                      box-shadow: none !important;
+                      padding: 0 !important;
+                    }
+                  }
+                `}</style>
                 <h3 
                   className="text-gray-900 mb-4"
                   style={{
@@ -486,7 +756,8 @@ const BookingDetails = () => {
               </div>
 
               {/* Additional Amenities */}
-              <div className="rounded-2xl p-6" style={smallCardStyle}>
+              <div className="lg:rounded-2xl lg:p-6 p-0 lg:shadow-sm" style={{ backgroundColor: '#FAF2E8', boxShadow: '0px 4px 4px 0px rgba(0,0,0,0.25)' }} 
+                   data-mobile-transparent="true">
                 <h3 
                   className="text-gray-900 mb-4"
                   style={{
@@ -548,7 +819,8 @@ const BookingDetails = () => {
               </div>
 
               {/* Payment Information */}
-              <div className="rounded-2xl p-6" style={smallCardStyle}>
+              <div className="lg:rounded-2xl lg:p-6 p-0 lg:shadow-sm" style={{ backgroundColor: '#FAF2E8', boxShadow: '0px 4px 4px 0px rgba(0,0,0,0.25)' }} 
+                   data-mobile-transparent="true">
                 <h3 
                   className="text-gray-900 mb-4"
                   style={{
@@ -608,7 +880,8 @@ const BookingDetails = () => {
               </div>
 
               {/* Terms and Conditions */}
-              <div className="rounded-2xl p-6" style={smallCardStyle}>
+              <div className="lg:rounded-2xl lg:p-6 p-0 lg:shadow-sm" style={{ backgroundColor: '#FAF2E8', boxShadow: '0px 4px 4px 0px rgba(0,0,0,0.25)' }} 
+                   data-mobile-transparent="true">
                 <label className="flex items-start gap-3">
                   <input 
                     type="checkbox"
@@ -670,8 +943,8 @@ const BookingDetails = () => {
               </button>
             </div>
 
-            {/* Right Column - Live Pricing Card */}
-            <div className="lg:col-span-1">
+            {/* Right Column - Live Pricing Card - Hidden on Mobile */}
+            <div className="hidden lg:block lg:col-span-1">
               <div className="bg-white rounded-2xl p-5 shadow-sm sticky top-8">
                 {/* Unit Image and Info */}
                 <div className="mb-3">
