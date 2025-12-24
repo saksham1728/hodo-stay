@@ -180,17 +180,19 @@ const FAQSection = () => {
               </div>
             </div>
 
-            {/* Policy Links - Centered Below Everything */}
-            <div className="flex gap-6 justify-center mt-8">
-              <a href="#" className="text-white/70 text-sm hover:text-white transition-colors">
-                Terms & Conditions
-              </a>
-              <a href="#" className="text-white/70 text-sm hover:text-white transition-colors">
-                Privacy Policy
-              </a>
-              <a href="#" className="text-white/70 text-sm hover:text-white transition-colors">
-                Refund Policy
-              </a>
+            {/* Policy Links - Centered Below Everything with Border */}
+            <div className="border-t border-white/30 pt-3 mt-10">
+              <div className="flex gap-3 justify-center">
+                <a href="#" className="text-white/70 text-xs hover:text-white transition-colors">
+                  Terms & Conditions
+                </a>
+                <a href="#" className="text-white/70 text-xs hover:text-white transition-colors">
+                  Privacy Policy
+                </a>
+                <a href="#" className="text-white/70 text-xs hover:text-white transition-colors">
+                  Refund Policy
+                </a>
+              </div>
             </div>
           </div>
 
@@ -238,15 +240,15 @@ const FAQSection = () => {
               <div className="text-white text-2xl font-medium leading-tight mb-4">
                 Redefining Stays, beyond hotels
               </div>
-              <div className="border-t border-white/30 pt-4 mt-4">
-                <div className="flex gap-4 justify-center">
-                  <a href="#" className="text-white/70 text-sm hover:text-white transition-colors">
+              <div className="border-t border-white/30 pt-3 mt-10">
+                <div className="flex gap-3 justify-center">
+                  <a href="#" className="text-white/70 text-xs hover:text-white transition-colors">
                     Terms & Conditions
                   </a>
-                  <a href="#" className="text-white/70 text-sm hover:text-white transition-colors">
+                  <a href="#" className="text-white/70 text-xs hover:text-white transition-colors">
                     Privacy Policy
                   </a>
-                  <a href="#" className="text-white/70 text-sm hover:text-white transition-colors">
+                  <a href="#" className="text-white/70 text-xs hover:text-white transition-colors">
                     Refund Policy
                   </a>
                 </div>
