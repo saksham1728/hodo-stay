@@ -1,0 +1,90 @@
+/* Mantine DatePicker custom styling */
+
+.calendar-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.mantine-calendar-custom {
+  font-family: 'Petrona', serif !important;
+}
+
+/* Month header styling */
+.mantine-calendar-custom .mantine-DatePicker-calendarHeader {
+  font-family: 'Petrona', serif !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+}
+
+/* Weekday labels */
+.mantine-calendar-custom .mantine-DatePicker-weekday {
+  font-family: 'Petrona', serif !important;
+  font-weight: 600 !important;
+  color: #6b7280 !important;
+  font-size: 13px !important;
+}
+
+/* Day cells */
+.mantine-calendar-custom .mantine-DatePicker-day {
+  font-family: 'Petrona', serif !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #1f2937 !important;
+}
+
+/* Hover effect */
+.mantine-calendar-custom .mantine-DatePicker-day:hover {
+  border: 2px solid #ea580c !important;
+  border-radius: 50% !important;
+  background-color: transparent !important;
+}
+
+/* Selected range start and end */
+.mantine-calendar-custom .mantine-DatePicker-day[data-selected] {
+  background-color: #ea580c !important;
+  color: white !important;
+  border-radius: 50% !important;
+  font-weight: 600 !important;
+}
+
+/* In-range dates */
+.mantine-calendar-custom .mantine-DatePicker-day[data-in-range] {
+  background-color: #fed7aa !important;
+  color: #1f2937 !important;
+  border-radius: 0 !important;
+}
+
+/* Navigation arrows */
+.mantine-calendar-custom .mantine-DatePicker-calendarHeaderControl {
+  color: #ea580c !important;
+}
+
+.mantine-calendar-custom .mantine-DatePicker-calendarHeaderControl:hover {
+  background-color: #f3f4f6 !important;
+}
+
+/* Mobile responsive - full width and centered */
+@media (max-width: 768px) {
+  .calendar-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .mantine-calendar-custom {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  
+  .mantine-calendar-custom > div {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+  }
+  
+  .mantine-calendar-custom .mantine-DatePicker-calendarHeader {
+    font-size: 18px !important;
+  }
+}

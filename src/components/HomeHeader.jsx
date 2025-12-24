@@ -10,8 +10,8 @@ const HomeHeader = () => {
   return (
     <div style={{ backgroundColor: "#FFF7F0" }} className="shadow-md">
       {/* Header */}
-      <header className="px-8 max-md:px-4 py-2 md:py-3 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto flex items-center md:-my-9 -my-12">
+      <header className="px-8 max-md:px-4 py-3 md:py-3 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto flex items-center md:-my-9 -my-10">
           {/* Logo */}
           <div className="flex items-center md:-ml-15 -ml-9">
             <img

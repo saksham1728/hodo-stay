@@ -1,7 +1,9 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
+import dayjs from "dayjs";
 import FooterSimple from "../components/FooterSimple";
 import HomeHeader from "../components/HomeHeader";
+import DateRangePicker from "../components/DateRangePicker";
 
 function PropertyDetail() {
   const { id } = useParams();
@@ -19,6 +21,7 @@ function PropertyDetail() {
   const [searchLoading, setSearchLoading] = useState(false);
   const [pricingData, setPricingData] = useState({});
   const [searchError, setSearchError] = useState('');
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   
   const overviewRef = useRef(null);
   const aboutRef = useRef(null);
@@ -147,6 +150,18 @@ function PropertyDetail() {
     } finally {
       setSearchLoading(false);
     }
+  };
+
+  // Handle date change from DateRangePicker
+  const handleDateChange = (startDate, endDate) => {
+    setCheckIn(startDate);
+    setCheckOut(endDate);
+  };
+
+  // Format date for display
+  const formatDateDisplay = (dateString) => {
+    if (!dateString) return '';
+    return dayjs(dateString).format('MMM DD, YYYY');
   };
 
   // Get images for hero grid
@@ -346,57 +361,75 @@ function PropertyDetail() {
         </section>
 
         {/* Search Section - Before Rooms */}
-        <section className="mb-12">
+        <section className="mb-12 relative">
           <div className="bg-white rounded-2xl shadow-md p-6 border border-gray-200">
             <h3 className="text-gray-900 mb-6" style={{ fontFamily: 'Petrona', fontSize: '24px', fontWeight: 600 }}>
               Check Availability & Pricing
             </h3>
             
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="flex flex-col md:flex-row gap-4">
               {/* Check-in Date */}
-              <div>
+              <div className="flex-1">
                 <label className="block text-gray-700 mb-2" style={{ fontFamily: 'Petrona', fontSize: '14px', fontWeight: 500 }}>
                   Check-in
                 </label>
-                <input
-                  type="date"
-                  value={checkIn}
-                  onChange={(e) => setCheckIn(e.target.value)}
-                  min={new Date().toISOString().split('T')[0]}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                <div
+                  onClick={() => setIsDatePickerOpen(true)}
+                  className="w-full px-4 py-4 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-orange-500 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500 bg-white flex items-center justify-between transition-colors"
                   style={{ fontFamily: 'Petrona' }}
-                />
+                >
+                  <span className={checkIn ? 'text-gray-900' : 'text-gray-400'}>
+                    {checkIn ? formatDateDisplay(checkIn) : 'Select date'}
+                  </span>
+                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
               </div>
 
               {/* Check-out Date */}
-              <div>
+              <div className="flex-1">
                 <label className="block text-gray-700 mb-2" style={{ fontFamily: 'Petrona', fontSize: '14px', fontWeight: 500 }}>
                   Check-out
                 </label>
-                <input
-                  type="date"
-                  value={checkOut}
-                  onChange={(e) => setCheckOut(e.target.value)}
-                  min={checkIn || new Date().toISOString().split('T')[0]}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                <div
+                  onClick={() => setIsDatePickerOpen(true)}
+                  className="w-full px-4 py-4 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-orange-500 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500 bg-white flex items-center justify-between transition-colors"
                   style={{ fontFamily: 'Petrona' }}
-                />
+                >
+                  <span className={checkOut ? 'text-gray-900' : 'text-gray-400'}>
+                    {checkOut ? formatDateDisplay(checkOut) : 'Select date'}
+                  </span>
+                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
               </div>
 
-              {/* Guests */}
-              <div>
+              {/* Guests with +/- buttons */}
+              <div className="w-full md:w-48">
                 <label className="block text-gray-700 mb-2" style={{ fontFamily: 'Petrona', fontSize: '14px', fontWeight: 500 }}>
                   Guests
                 </label>
-                <input
-                  type="number"
-                  value={guests}
-                  onChange={(e) => setGuests(e.target.value)}
-                  min="1"
-                  max="10"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  style={{ fontFamily: 'Petrona' }}
-                />
+                <div className="flex items-center border-2 border-gray-300 rounded-lg overflow-hidden bg-white">
+                  <button
+                    onClick={() => setGuests(Math.max(1, guests - 1))}
+                    className="px-4 py-4 bg-gray-50 hover:bg-gray-100 text-gray-700 font-bold transition-colors"
+                    style={{ fontFamily: 'Petrona' }}
+                  >
+                    −
+                  </button>
+                  <div className="flex-1 text-center py-4 font-medium" style={{ fontFamily: 'Petrona' }}>
+                    {guests}
+                  </div>
+                  <button
+                    onClick={() => setGuests(Math.min(10, guests + 1))}
+                    className="px-4 py-4 bg-gray-50 hover:bg-gray-100 text-gray-700 font-bold transition-colors"
+                    style={{ fontFamily: 'Petrona' }}
+                  >
+                    +
+                  </button>
+                </div>
               </div>
 
               {/* Search Button */}
@@ -404,7 +437,7 @@ function PropertyDetail() {
                 <button
                   onClick={handleSearch}
                   disabled={searchLoading || !checkIn || !checkOut || !guests}
-                  className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-colors"
+                  className="w-full md:w-auto bg-orange-600 text-white px-8 py-4 rounded-lg hover:bg-orange-700 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-colors whitespace-nowrap"
                   style={{ fontFamily: 'Petrona', fontSize: '16px', fontWeight: 500 }}
                 >
                   {searchLoading ? (
@@ -431,6 +464,15 @@ function PropertyDetail() {
                 </p>
               </div>
             )}
+
+            {/* Date Range Picker Dropdown */}
+            <DateRangePicker
+              isOpen={isDatePickerOpen}
+              onClose={() => setIsDatePickerOpen(false)}
+              checkIn={checkIn}
+              checkOut={checkOut}
+              onDateChange={handleDateChange}
+            />
           </div>
         </section>
 
@@ -442,7 +484,7 @@ function PropertyDetail() {
           >
             Rooms
           </h2>
-          <div className="space-y-6">
+          <div className="space-y-6 max-md:space-y-4">
             {unitTypes.map((unitTypeData) => {
               const rep = unitTypeData.representativeUnit;
               const images = rep?.images?.length > 0 
@@ -457,11 +499,11 @@ function PropertyDetail() {
               return (
                 <div
                   key={unitTypeData.unitType}
-                  className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow overflow-hidden"
+                  className="bg-white rounded-2xl max-md:rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden"
                 >
                   <div className="flex flex-col md:flex-row">
                     {/* Image */}
-                    <div className="w-full md:w-3/5 h-[400px] md:h-[450px]" style={{ minHeight: "350px" }}>
+                    <div className="w-full md:w-3/5 h-[200px] md:h-[450px]">
                       <img 
                         src={images[0]} 
                         alt={unitTypeData.unitType}
@@ -470,11 +512,11 @@ function PropertyDetail() {
                     </div>
 
                     {/* Content */}
-                    <div className="w-full md:w-2/5 p-6 flex flex-col justify-between">
+                    <div className="w-full md:w-2/5 p-3 md:p-6 flex flex-col justify-between">
                       <div>
-                        <div className="flex justify-between items-start mb-3">
+                        <div className="flex justify-between items-start mb-2 md:mb-3">
                           <h3
-                            className="text-black"
+                            className="text-black max-md:text-xl"
                             style={{
                               fontFamily: "Petrona",
                               fontWeight: 600,
@@ -484,12 +526,12 @@ function PropertyDetail() {
                             {unitTypeData.unitType}
                           </h3>
 
-                          <div className="flex items-center gap-2">
-                            <svg className="w-6 h-6 text-green-600 fill-current" viewBox="0 0 20 20">
+                          <div className="flex items-center gap-1 md:gap-2">
+                            <svg className="w-4 h-4 md:w-6 md:h-6 text-green-600 fill-current" viewBox="0 0 20 20">
                               <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                             </svg>
                             <span
-                              className="text-green-600 font-medium"
+                              className="text-green-600 font-medium max-md:text-sm"
                               style={{ fontFamily: "Petrona", fontWeight: 600, fontSize: "18px" }}
                             >
                               4.5
@@ -498,7 +540,7 @@ function PropertyDetail() {
                         </div>
 
                         <p
-                          className="text-gray-600 mb-4"
+                          className="text-gray-600 mb-2 md:mb-4 max-md:text-xs"
                           style={{ fontFamily: "Petrona", fontSize: "14px" }}
                         >
                           {rep?.standardGuests || 2} guests • {rep?.compositionRooms?.length || 1} bedroom
@@ -516,19 +558,20 @@ function PropertyDetail() {
                         </p>
                       </div>
 
-                      <div className="flex flex-col gap-4">
+                      <div className="flex flex-col gap-2 md:gap-4">
                         {/* Pricing Display */}
                         <div>
                           {hasPrice ? (
                             <>
                               <span
-                                className="text-gray-500 block mb-1"
+                                className="text-gray-500 block mb-1 max-md:text-xs"
                                 style={{ fontFamily: "Petrona", fontSize: "12px" }}
                               >
                                 Total for {unitPricing.pricing.nights} nights
                               </span>
-                              <div className="flex items-baseline gap-2">
+                              <div className="flex items-baseline gap-1 md:gap-2">
                                 <span
+                                  className="max-md:text-xl"
                                   style={{
                                     color: "#4A4A4A",
                                     fontFamily: "Petrona",
@@ -539,7 +582,7 @@ function PropertyDetail() {
                                   $ {Math.round(unitPricing.pricing.price).toLocaleString()}
                                 </span>
                                 <span
-                                  className="text-gray-500"
+                                  className="text-gray-500 max-md:text-xs"
                                   style={{ fontFamily: "Petrona", fontSize: "14px" }}
                                 >
                                   ($ {Math.round(unitPricing.pricing.pricePerNight).toLocaleString()}/night)
@@ -547,21 +590,22 @@ function PropertyDetail() {
                               </div>
                             </>
                           ) : priceError ? (
-                            <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-                              <p className="text-red-800 text-sm" style={{ fontFamily: "Petrona" }}>
+                            <div className="p-2 md:p-3 bg-red-50 border border-red-200 rounded-lg">
+                              <p className="text-red-800 text-xs md:text-sm" style={{ fontFamily: "Petrona" }}>
                                 {priceError}
                               </p>
                             </div>
                           ) : (
                             <>
                               <span
-                                className="text-gray-500 block mb-1"
+                                className="text-gray-500 block mb-1 max-md:text-xs"
                                 style={{ fontFamily: "Petrona", fontSize: "12px" }}
                               >
                                 from
                               </span>
                               <div className="flex items-baseline">
                                 <span
+                                  className="max-md:text-xl"
                                   style={{
                                     color: "#4A4A4A",
                                     fontFamily: "Petrona",
@@ -572,7 +616,7 @@ function PropertyDetail() {
                                   $ 70
                                 </span>
                                 <span
-                                  className="text-gray-500"
+                                  className="text-gray-500 max-md:text-xs"
                                   style={{ fontFamily: "Petrona", fontSize: "12px", marginLeft: "2px" }}
                                 >
                                   per night
@@ -586,7 +630,7 @@ function PropertyDetail() {
                         {hasPrice ? (
                           <Link
                             to={`/booking-details/${unitPricing.unit._id}?checkIn=${checkIn}&checkOut=${checkOut}&guests=${guests}`}
-                            className="bg-orange-500 text-white px-8 py-3 rounded-full hover:bg-orange-600 no-underline font-medium text-center"
+                            className="bg-orange-500 text-white px-6 md:px-8 py-2 md:py-3 rounded-full hover:bg-orange-600 no-underline font-medium text-center max-md:text-sm"
                             style={{ fontFamily: "Petrona", fontSize: "16px" }}
                           >
                             Book now
@@ -594,7 +638,7 @@ function PropertyDetail() {
                         ) : (
                           <button
                             disabled
-                            className="bg-gray-400 text-white px-8 py-3 rounded-full cursor-not-allowed font-medium"
+                            className="bg-gray-400 text-white px-6 md:px-8 py-2 md:py-3 rounded-full cursor-not-allowed font-medium max-md:text-sm"
                             style={{ fontFamily: "Petrona", fontSize: "16px" }}
                           >
                             {searchPerformed ? 'Not Available' : 'Search to Book'}
