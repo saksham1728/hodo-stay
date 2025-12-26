@@ -215,7 +215,8 @@ const OurProperties = () => {
                   onClick={() => navigate(`/property/${property.id}`)}
                 >
                   <div>
-                    <div className="flex items-start justify-between">
+                    {/* Desktop Layout - side by side */}
+                    <div className="hidden md:flex items-start justify-between">
                       <div className="pr-2">
                         <h3
                           className="text-black mb-2"
@@ -270,6 +271,65 @@ const OurProperties = () => {
                           Exceptional
                         </span>
                       </div>
+                    </div>
+
+                    {/* Mobile Layout - stacked: title, rating, location */}
+                    <div className="md:hidden">
+                      {/* Title - Full width */}
+                      <h3
+                        className="text-black mb-3"
+                        style={{
+                          fontFamily: 'Petrona',
+                          fontWeight: 600,
+                          fontSize: '26px',
+                          lineHeight: '100%',
+                          letterSpacing: '-2.2%'
+                        }}
+                      >
+                        {property.title}
+                      </h3>
+
+                      {/* Rating - Below title */}
+                      <div className="flex items-center gap-2 mb-3">
+                        <div 
+                          className="px-2 py-1 rounded"
+                          style={{ backgroundColor: '#0B8043' }}
+                        >
+                          <span
+                            className="text-white"
+                            style={{
+                              fontFamily: 'Petrona',
+                              fontWeight: 600,
+                              fontSize: '16px'
+                            }}
+                          >
+                            9.8
+                          </span>
+                        </div>
+                        <span
+                          className="text-gray-700"
+                          style={{
+                            fontFamily: 'Petrona',
+                            fontWeight: 500,
+                            fontSize: '14px'
+                          }}
+                        >
+                          Exceptional
+                        </span>
+                      </div>
+
+                      {/* Location - Below rating */}
+                      <p
+                        className="text-gray-600 mb-4"
+                        style={{
+                          fontFamily: 'Petrona',
+                          fontWeight: 400,
+                          fontSize: '13px',
+                          lineHeight: '140%'
+                        }}
+                      >
+                        {property.address}
+                      </p>
                     </div>
 
                     {/* Amenities badges - hidden on mobile */}

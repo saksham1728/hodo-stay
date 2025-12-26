@@ -125,7 +125,7 @@ const Properties = () => {
       rating: 4.5,
       amenities: building.amenities?.slice(0, 3) || ["WiFi", "Air-conditioning", "Free Parking on Premises"],
       description: building.description || "Modern apartments with all amenities",
-      price: 70,
+      price: 7000,
       images: images
     };
   };
@@ -201,7 +201,8 @@ const Properties = () => {
               {properties.map((property) => (
               <div
                 key={property.id}
-                className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden"
+                className="rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden"
+                style={{ backgroundColor: '#FAF2E8' }}
               >
                 {/* 60:40 layout on md+, stacked on mobile */}
                 <div className="flex flex-col md:flex-row">
@@ -216,50 +217,122 @@ const Properties = () => {
                     className="w-full md:w-2/5 p-4 md:p-6 flex flex-col justify-between"
                   >
                     <div>
-                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3 gap-2 sm:gap-0">
-                        <div className="flex-1">
+                      {/* Desktop Layout - side by side */}
+                      <div className="hidden md:flex items-start justify-between">
+                        <div className="pr-2">
                           <h3
-                            className="text-black mb-1"
+                            className="text-black mb-2"
                             style={{
                               fontFamily: "Petrona",
                               fontWeight: 600,
-                              fontSize: "30px",
+                              fontSize: "26px",
                               lineHeight: "100%",
                               letterSpacing: "-2.2%",
                             }}
                           >
                             {property.title}
                           </h3>
-                        </div>
-
-                        <div className="flex items-center gap-2 self-start sm:self-auto">
-                          <svg className="w-6 h-6 text-green-600 fill-current" viewBox="0 0 20 20">
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                          </svg>
-                          <span
-                            className="text-green-600 font-medium"
+                          <p
+                            className="text-gray-600 mb-4"
                             style={{
                               fontFamily: "Petrona",
-                              fontWeight: 600,
-                              fontSize: "18px"
+                              fontWeight: 400,
+                              fontSize: "13px",
+                              lineHeight: "140%",
                             }}
                           >
-                            {property.rating}
+                            {property.location}
+                          </p>
+                        </div>
+
+                        {/* Rating - Green box with "9.8" and "Exceptional" */}
+                        <div className="flex items-center gap-2">
+                          <div 
+                            className="px-2 py-1 rounded"
+                            style={{ backgroundColor: '#0B8043' }}
+                          >
+                            <span
+                              className="text-white"
+                              style={{
+                                fontFamily: 'Petrona',
+                                fontWeight: 600,
+                                fontSize: '16px'
+                              }}
+                            >
+                              9.8
+                            </span>
+                          </div>
+                          <span
+                            className="text-gray-700"
+                            style={{
+                              fontFamily: 'Petrona',
+                              fontWeight: 500,
+                              fontSize: '14px'
+                            }}
+                          >
+                            Exceptional
                           </span>
                         </div>
                       </div>
 
-                      <p
-                        className="text-gray-600 mb-4"
-                        style={{
-                          fontFamily: "Petrona",
-                          fontWeight: 400,
-                          fontSize: "14px",
-                          lineHeight: "140%",
-                        }}
-                      >
-                        {property.location}
-                      </p>
+                      {/* Mobile Layout - stacked: title, rating, location */}
+                      <div className="md:hidden">
+                        {/* Title - Full width */}
+                        <h3
+                          className="text-black mb-3"
+                          style={{
+                            fontFamily: "Petrona",
+                            fontWeight: 600,
+                            fontSize: "26px",
+                            lineHeight: "100%",
+                            letterSpacing: "-2.2%",
+                          }}
+                        >
+                          {property.title}
+                        </h3>
+
+                        {/* Rating - Below title */}
+                        <div className="flex items-center gap-2 mb-3">
+                          <div 
+                            className="px-2 py-1 rounded"
+                            style={{ backgroundColor: '#0B8043' }}
+                          >
+                            <span
+                              className="text-white"
+                              style={{
+                                fontFamily: 'Petrona',
+                                fontWeight: 600,
+                                fontSize: '16px'
+                              }}
+                            >
+                              9.8
+                            </span>
+                          </div>
+                          <span
+                            className="text-gray-700"
+                            style={{
+                              fontFamily: 'Petrona',
+                              fontWeight: 500,
+                              fontSize: '14px'
+                            }}
+                          >
+                            Exceptional
+                          </span>
+                        </div>
+
+                        {/* Location - Below rating */}
+                        <p
+                          className="text-gray-600 mb-4"
+                          style={{
+                            fontFamily: "Petrona",
+                            fontWeight: 400,
+                            fontSize: "13px",
+                            lineHeight: "140%",
+                          }}
+                        >
+                          {property.location}
+                        </p>
+                      </div>
 
                       {/* Amenities - hidden on mobile */}
                       <div className="hidden md:flex flex-wrap gap-2 mb-4">
@@ -297,9 +370,10 @@ const Properties = () => {
                       </p>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-0">
-                      <div className="flex flex-col">
-                        <span
+                    {/* Price & action */}
+                    <div className="flex items-center justify-between mt-4">
+                      <div>
+                        <div
                           className="text-gray-500 mb-1"
                           style={{
                             fontFamily: "Petrona",
@@ -308,7 +382,7 @@ const Properties = () => {
                           }}
                         >
                           from
-                        </span>
+                        </div>
                         <div className="flex items-baseline">
                           <span
                             style={{
@@ -320,7 +394,7 @@ const Properties = () => {
                               letterSpacing: "-2.2%",
                             }}
                           >
-                            Rs. {property.price.toLocaleString()}
+                            ₹ {property.price.toLocaleString()}
                           </span>
                           <span
                             className="text-gray-500"
@@ -331,21 +405,26 @@ const Properties = () => {
                               marginLeft: "2px"
                             }}
                           >
-                            per night
+                            / night
                           </span>
+                        </div>
+                        <div className="text-green-600 text-xs mt-1" style={{ fontFamily: 'Petrona' }}>
+                          Incl. taxes
                         </div>
                       </div>
 
-                      <span
-                        className="text-gray-600 hover:text-gray-800 transition-colors self-start sm:self-auto underline underline-offset-2"
-                        style={{
-                          fontFamily: "Petrona",
-                          fontWeight: 400,
-                          fontSize: "14px",
-                        }}
-                      >
-                        View rooms
-                      </span>
+                      <div className="flex flex-col items-end gap-2">
+                        <span
+                          className="text-gray-700 hover:text-gray-900 transition-colors underline underline-offset-2"
+                          style={{
+                            fontFamily: "Petrona",
+                            fontWeight: 500,
+                            fontSize: "14px",
+                          }}
+                        >
+                          View rooms
+                        </span>
+                      </div>
                     </div>
                   </Link>
                 </div>

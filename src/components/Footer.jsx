@@ -180,19 +180,17 @@ const FAQSection = () => {
               </div>
             </div>
 
-            {/* Policy Links - Centered Below Everything with Border */}
-            <div className="border-t border-white/30 pt-3 mt-10">
-              <div className="flex gap-3 justify-center">
-                <a href="#" className="text-white/70 text-xs hover:text-white transition-colors">
-                  Terms & Conditions
-                </a>
-                <a href="#" className="text-white/70 text-xs hover:text-white transition-colors">
-                  Privacy Policy
-                </a>
-                <a href="#" className="text-white/70 text-xs hover:text-white transition-colors">
-                  Refund Policy
-                </a>
-              </div>
+            {/* Policy Links - Centered Below Everything */}
+            <div className="flex gap-3 justify-center mt-10">
+              <a href="#" className="text-white/70 text-xs hover:text-white transition-colors">
+                Terms & Conditions
+              </a>
+              <a href="#" className="text-white/70 text-xs hover:text-white transition-colors">
+                Privacy Policy
+              </a>
+              <a href="#" className="text-white/70 text-xs hover:text-white transition-colors">
+                Refund Policy
+              </a>
             </div>
           </div>
 
@@ -204,7 +202,7 @@ const FAQSection = () => {
                 <img
                   src="/hodo-white-logo.png"
                   alt="Hodo Logo"
-                  className="h-32 w-auto -ml-10"
+                  className="h-28 w-auto object-contain -ml-10"
                 />
               </div>
               <div className="flex gap-3 justify-end items-center">
@@ -235,13 +233,13 @@ const FAQSection = () => {
               </div>
             </div>
 
-            {/* Row 3: Tagline - Full Width */}
-            <div className="text-center">
-              <div className="text-white text-2xl font-medium leading-tight mb-4">
+            {/* Row 3: Tagline - Full Width aligned with content */}
+            <div className="w-full">
+              <div className="text-white text-2xl font-medium leading-tight mb-2 text-left">
                 Redefining Stays, beyond hotels
               </div>
-              <div className="border-t border-white/30 pt-3 mt-10">
-                <div className="flex gap-3 justify-center">
+              <div className="border-t border-white/30 pt-6 mt-8">
+                <div className="flex justify-between items-center w-full">
                   <a href="#" className="text-white/70 text-xs hover:text-white transition-colors">
                     Terms & Conditions
                   </a>

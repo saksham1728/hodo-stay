@@ -432,6 +432,16 @@ const BookingDetails = () => {
           {/* Centered Compact White Box */}
           <div className="absolute inset-0 flex items-center justify-center p-4">
             <div className="bg-white rounded-xl shadow-lg p-3 w-full max-w-sm">
+              {/* Property Name and Type */}
+              <div className="mb-2">
+                <h3 className="font-semibold text-sm text-gray-900">
+                  {unit?.buildingId?.name || 'Loading...'} - {unit?.unitType || ''}
+                </h3>
+              </div>
+              
+              {/* Underline */}
+              <hr className="border-gray-300 mb-2" />
+              
               {/* Check-in and Check-out */}
               <div className="flex justify-between items-center mb-2">
                 <div className="flex-1">
@@ -620,32 +630,6 @@ const BookingDetails = () => {
                 )}
               </div>
 
-              {/* Coupon Section - Compact */}
-              <div className="p-3 bg-gray-50 rounded-lg">
-                <p className="text-sm text-gray-600 mb-2">Got a coupon?</p>
-                <div className="flex gap-2">
-                  <input 
-                    type="text"
-                    placeholder="Enter coupon code"
-                    value={couponCode}
-                    onChange={(e) => setCouponCode(e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded text-sm"
-                  />
-                  <button 
-                    onClick={handleApplyCoupon}
-                    disabled={couponLoading || !couponCode.trim()}
-                    className="px-4 py-2 bg-orange-500 text-white rounded text-sm hover:opacity-95 disabled:opacity-50"
-                  >
-                    {couponLoading ? '...' : 'Apply'}
-                  </button>
-                </div>
-                {appliedCoupon && (
-                  <p className="text-green-600 text-xs mt-2">
-                    ✓ {appliedCoupon.description} applied!
-                  </p>
-                )}
-              </div>
-
               {/* Close Button - Compact */}
               <button
                 onClick={() => setShowPricingDetails(false)}
@@ -753,6 +737,57 @@ const BookingDetails = () => {
                     />
                   </div>
                 </div>
+              </div>
+
+              {/* Coupon Code Section - Mobile Only */}
+              <div className="lg:hidden lg:rounded-2xl lg:p-6 p-0 lg:shadow-sm" style={{ backgroundColor: '#FAF2E8', boxShadow: '0px 4px 4px 0px rgba(0,0,0,0.25)' }} 
+                   data-mobile-transparent="true">
+                <h3 
+                  className="text-gray-900 mb-4"
+                  style={{
+                    fontFamily: 'Petrona',
+                    fontWeight: 400,
+                    fontSize: '24px',
+                    lineHeight: '130%',
+                    letterSpacing: '-1%'
+                  }}
+                >
+                  Promo Code
+                </h3>
+                
+                <div className="flex gap-2">
+                  <input 
+                    type="text"
+                    placeholder="Enter coupon code"
+                    value={couponCode}
+                    onChange={(e) => setCouponCode(e.target.value)}
+                    className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                    style={{
+                      fontFamily: 'Work Sans',
+                      fontWeight: 400,
+                      fontSize: '16px',
+                      background: 'white'
+                    }}
+                  />
+                  <button 
+                    onClick={handleApplyCoupon}
+                    disabled={couponLoading || !couponCode.trim()}
+                    className="px-6 py-3 text-white rounded-lg hover:opacity-95 disabled:opacity-50"
+                    style={{
+                      background: '#DE754B',
+                      fontFamily: 'Work Sans',
+                      fontWeight: 500,
+                      fontSize: '16px'
+                    }}
+                  >
+                    {couponLoading ? '...' : 'Apply'}
+                  </button>
+                </div>
+                {appliedCoupon && (
+                  <p className="text-green-600 text-sm mt-3" style={{ fontFamily: 'Work Sans' }}>
+                    ✓ {appliedCoupon.description} applied!
+                  </p>
+                )}
               </div>
 
               {/* Additional Amenities */}

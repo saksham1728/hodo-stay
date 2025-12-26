@@ -77,7 +77,7 @@ const FooterSimple = () => {
               <img
                 src="/hodo-white-logo.png"
                 alt="Hodo Logo"
-                className="h-32 w-auto -ml-10"
+                className="h-28 w-auto object-contain -ml-10"
               />
             </div>
             <div className="flex gap-3 justify-end items-center">
@@ -108,13 +108,13 @@ const FooterSimple = () => {
             </div>
           </div>
 
-          {/* Row 3: Tagline - Full Width */}
-          <div className="text-center">
-            <div className="text-white text-2xl font-medium leading-tight mb-4">
+          {/* Row 3: Tagline - Full Width aligned with content */}
+          <div className="w-full">
+            <div className="text-white text-2xl font-medium leading-tight mb-2 text-left">
               Redefining Stays, beyond hotels
             </div>
-            <div className="border-t border-white/30 pt-3 mt-10">
-              <div className="flex gap-3 justify-center">
+            <div className="border-t border-white/30 pt-6 mt-12">
+              <div className="flex justify-between items-center w-full">
                 <a href="#" className="text-white/70 text-xs hover:text-white transition-colors">
                   Terms & Conditions
                 </a>
