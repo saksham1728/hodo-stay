@@ -235,10 +235,15 @@ const FAQSection = () => {
 
             {/* Row 3: Tagline - Full Width aligned with content */}
             <div className="w-full">
-              <div className="text-white text-2xl font-medium leading-tight mb-2 text-left">
+              <div className="text-white font-medium text-left" style={{ 
+                fontSize: '6.4vw',
+                lineHeight: '1.4',
+                whiteSpace: 'nowrap',
+                width: '100%'
+              }}>
                 Redefining Stays, beyond hotels
               </div>
-              <div className="border-t border-white/30 pt-6 mt-8">
+              <div className="border-t border-white/30 pt-3 mt-3">
                 <div className="flex justify-between items-center w-full">
                   <a href="#" className="text-white/70 text-xs hover:text-white transition-colors">
                     Terms & Conditions
