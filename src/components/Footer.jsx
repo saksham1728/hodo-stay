@@ -320,7 +320,7 @@ const Footer = () => {
         className="transition-all duration-300"
         style={{
           background: isDarkMode
-            ? "linear-gradient(180deg, #9CA3AF 0%, #6B7280 15%, #4B5563 30%, #374151 45%, #1F2937 60%, #111827 75%, #000000 100%)"
+            ? "linear-gradient(180deg, #000000 0%, #1a2421 25%, #2D3A36 50%, #1a2421 75%, #000000 100%)"
             : "linear-gradient(180deg, #FFF7F0 0%, #506C60 50%, #2D3A36 75%, #000000 100%)",
         }}
       >
@@ -383,7 +383,7 @@ const Footer = () => {
                 <div 
                   className="w-96 rounded-2xl p-5 opacity-75 flex flex-col transition-colors duration-300"
                   style={{ 
-                    backgroundColor: isDarkMode ? '#374151' : '#F6F0E7',
+                    backgroundColor: isDarkMode ? '#1a2421' : '#F6F0E7',
                     boxShadow: '0px 4px 4px 0px #00000040',
                     minHeight: '280px',
                     maxHeight: '280px'
@@ -422,7 +422,7 @@ const Footer = () => {
                 <div 
                   className="w-[420px] rounded-2xl p-6 transform scale-105 z-10 flex flex-col transition-colors duration-300"
                   style={{ 
-                    backgroundColor: isDarkMode ? '#1F2937' : '#F6F0E7',
+                    backgroundColor: isDarkMode ? '#2D3A36' : '#F6F0E7',
                     boxShadow: '0px 4px 4px 0px #00000040',
                     minHeight: '280px',
                     maxHeight: '280px'
@@ -461,7 +461,7 @@ const Footer = () => {
                 <div 
                   className="w-96 rounded-2xl p-5 opacity-75 flex flex-col transition-colors duration-300"
                   style={{ 
-                    backgroundColor: isDarkMode ? '#374151' : '#F6F0E7',
+                    backgroundColor: isDarkMode ? '#1a2421' : '#F6F0E7',
                     boxShadow: '0px 4px 4px 0px #00000040',
                     minHeight: '280px',
                     maxHeight: '280px'
@@ -517,7 +517,7 @@ const Footer = () => {
                   style={{ 
                     minWidth: 'calc(100vw - 32px)',
                     minHeight: '280px',
-                    backgroundColor: isDarkMode ? '#374151' : '#F6F0E7',
+                    backgroundColor: isDarkMode ? '#1a2421' : '#F6F0E7',
                     boxShadow: '0px 4px 4px 0px #00000040'
                   }}
                 >

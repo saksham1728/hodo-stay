@@ -81,7 +81,7 @@ const HodoBlogs = () => {
   return (
     <section 
       className="py-12 px-4 md:px-8 transition-colors duration-300" 
-      style={{ backgroundColor: isDarkMode ? '#111827' : '#2D3A36' }}
+      style={{ backgroundColor: isDarkMode ? '#1a2421' : '#2D3A36' }}
     >
       <div className="max-w-7xl mx-auto">
         {/* Mobile: Stack vertically, Desktop: Side by side */}
@@ -176,7 +176,7 @@ const HodoBlogs = () => {
                     width: window.innerWidth < 768 ? '280px' : '304px',
                     height: window.innerWidth < 768 ? '360px' : '385px',
                     scrollSnapAlign: 'center',
-                    backgroundColor: isDarkMode ? '#1F2937' : '#FAF2E8'
+                    backgroundColor: isDarkMode ? '#2D3A36' : '#FAF2E8'
                   }}
                 >
                   {/* Image */}
@@ -194,7 +194,7 @@ const HodoBlogs = () => {
                   {/* Content */}
                   <div 
                     className="p-6 md:p-8 h-full flex flex-col justify-between transition-colors duration-300" 
-                    style={{ backgroundColor: isDarkMode ? '#1F2937' : '#FAF2E8' }}
+                    style={{ backgroundColor: isDarkMode ? '#2D3A36' : '#FAF2E8' }}
                   >
                     <div>
                       <h3
