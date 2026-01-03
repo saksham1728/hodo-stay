@@ -4,8 +4,11 @@ import HomeHeader from '../components/HomeHeader'
 import OurProperties from '../components/OurProperties'
 import HodoBlogs from '../components/HodoBlogs'
 import Footer from '../components/Footer'
+import { useTheme } from '../context/ThemeContext'
 
 const Home = () => {
+  const { isDarkMode } = useTheme()
+  
   return (
     <div className="relative">
       {/* Hero Section with Video Background */}
@@ -26,7 +29,9 @@ const Home = () => {
         <div 
           className="absolute inset-0"
           style={{ 
-            background: 'linear-gradient(0deg, rgba(217, 217, 217, 0.148) 0%, rgba(0, 0, 0, 0.592) 87.5%)',
+            background: isDarkMode 
+              ? 'linear-gradient(0deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.9) 87.5%)'
+              : 'linear-gradient(0deg, rgba(217, 217, 217, 0.148) 0%, rgba(0, 0, 0, 0.592) 87.5%)',
             boxShadow: '0px 4px 4px 0px #00000040'
           }}
         ></div>

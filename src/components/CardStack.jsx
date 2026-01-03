@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from 'react'
+import { useTheme } from '../context/ThemeContext'
 
 const CardStack = () => {
   const [activeCard, setActiveCard] = useState(0)
   const [isMobile, setIsMobile] = useState(false)
+  const { isDarkMode } = useTheme()
 
   // Touch state for swipe detection (shared for card & content)
   const touchStartX = useRef(0)
@@ -125,13 +127,13 @@ const CardStack = () => {
 
   return (
     <section
-      className="pt-8 pb-20 px-8 min-h-screen flex items-center max-md:py-12 max-md:px-4"
-      style={{ backgroundColor: '#FFF7F0' }}
+      className="pt-8 pb-20 px-8 min-h-screen flex items-center max-md:py-12 max-md:px-4 transition-colors duration-300"
+      style={{ backgroundColor: isDarkMode ? '#0f0f0f' : '#FFF7F0' }}
     >
       <div className="max-w-7xl mx-auto w-full">
         <div className="mb-12 md:mb-16">
           <h2
-            className="text-black mb-4 text-3xl md:text-5xl"
+            className={`mb-4 text-3xl md:text-5xl transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-black'}`}
             style={{
               fontFamily: 'Petrona',
               fontWeight: 400,
@@ -208,14 +210,14 @@ const CardStack = () => {
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
-              className="rounded-3xl relative mx-auto"
+              className="rounded-3xl relative mx-auto transition-colors duration-300"
               style={{
                 width: isMobile ? 'min(90vw, 350px)' : '613px',
                 height: isMobile ? 'auto' : '367px',
                 minHeight: isMobile ? '300px' : '367px',
                 padding: isMobile ? '24px 20px' : '38px 40px',
-                boxShadow: '0px 4px 4px 0px #0000001A',
-                background: '#FAF2E8',
+                boxShadow: isDarkMode ? '0px 4px 20px 0px rgba(0, 0, 0, 0.5)' : '0px 4px 4px 0px #0000001A',
+                background: isDarkMode ? '#1a1a1a' : '#FAF2E8',
                 overflowY: isMobile ? 'auto' : 'visible', // allow vertical scroll on mobile
                 WebkitOverflowScrolling: 'touch'
               }}
@@ -244,11 +246,11 @@ const CardStack = () => {
               )}
 
               <div className="text-center px-8 md:px-16 h-full flex flex-col justify-center py-4">
-                <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6">
+                <h3 className={`text-2xl md:text-3xl font-bold mb-4 md:mb-6 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   {cards[activeCard].title}
                 </h3>
                 <p
-                  className="text-gray-700 mb-6 md:mb-8 text-sm md:text-base leading-relaxed"
+                  className={`mb-6 md:mb-8 text-sm md:text-base leading-relaxed transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
                   style={{
                     fontFamily: 'Work Sans',
                     fontWeight: 400,
@@ -270,7 +272,11 @@ const CardStack = () => {
                   key={index}
                   onClick={() => setActiveCard(index)}
                   aria-label={`Go to card ${index + 1}`}
-                  className={`w-3 h-3 rounded-full transition-colors ${index === activeCard ? 'bg-gray-800' : 'bg-gray-300'}`}
+                  className={`w-3 h-3 rounded-full transition-colors ${
+                    index === activeCard 
+                      ? (isDarkMode ? 'bg-white' : 'bg-gray-800')
+                      : (isDarkMode ? 'bg-gray-600' : 'bg-gray-300')
+                  }`}
                 />
               ))}
             </div>

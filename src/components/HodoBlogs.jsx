@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect } from 'react'
+import { useTheme } from '../context/ThemeContext'
 
 const HodoBlogs = () => {
   const scrollContainerRef = useRef(null)
   const [activeIndex, setActiveIndex] = useState(0)
+  const { isDarkMode } = useTheme()
 
   const blogs = [
     {
@@ -77,7 +79,10 @@ const HodoBlogs = () => {
   }
 
   return (
-    <section className="py-12 px-4 md:px-8" style={{ backgroundColor: '#2D3A36' }}>
+    <section 
+      className="py-12 px-4 md:px-8 transition-colors duration-300" 
+      style={{ backgroundColor: isDarkMode ? '#111827' : '#2D3A36' }}
+    >
       <div className="max-w-7xl mx-auto">
         {/* Mobile: Stack vertically, Desktop: Side by side */}
         <div className="flex flex-col md:grid md:grid-cols-12 gap-8 md:items-start">
@@ -171,7 +176,7 @@ const HodoBlogs = () => {
                     width: window.innerWidth < 768 ? '280px' : '304px',
                     height: window.innerWidth < 768 ? '360px' : '385px',
                     scrollSnapAlign: 'center',
-                    backgroundColor: '#FAF2E8'
+                    backgroundColor: isDarkMode ? '#1F2937' : '#FAF2E8'
                   }}
                 >
                   {/* Image */}
@@ -187,10 +192,13 @@ const HodoBlogs = () => {
                   </div>
 
                   {/* Content */}
-                  <div className="p-6 md:p-8 h-full flex flex-col justify-between" style={{ backgroundColor: '#FAF2E8' }}>
+                  <div 
+                    className="p-6 md:p-8 h-full flex flex-col justify-between transition-colors duration-300" 
+                    style={{ backgroundColor: isDarkMode ? '#1F2937' : '#FAF2E8' }}
+                  >
                     <div>
                       <h3
-                        className="mb-3 text-center"
+                        className={`mb-3 text-center transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-black'}`}
                         style={{
                           fontFamily: 'Petrona, serif',
                           fontWeight: 400,
@@ -203,7 +211,7 @@ const HodoBlogs = () => {
                       </h3>
 
                       <p
-                        className="text-gray-600 text-center"
+                        className={`text-center transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}
                         style={{
                           fontFamily: 'Work Sans, sans-serif',
                           fontWeight: 400,

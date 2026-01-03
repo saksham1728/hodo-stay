@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useBuildings } from '../hooks/useBuildings'
+import { useTheme } from '../context/ThemeContext'
 
 /**
  * Simple ImageCarousel: arrows on desktop, swipe on mobile, dots indicator.
@@ -102,6 +103,7 @@ const ImageCarousel = ({ images }) => {
 const OurProperties = () => {
   const navigate = useNavigate()
   const [isMobile, setIsMobile] = useState(false)
+  const { isDarkMode } = useTheme()
   
   // Fetch real buildings from API
   const { buildings, loading, error } = useBuildings()
@@ -144,12 +146,15 @@ const OurProperties = () => {
   }, [])
 
   return (
-    <section className="py-20 px-8 max-md:py-12 max-md:px-4" style={{ backgroundColor: '#FFF7F0' }}>
+    <section 
+      className="py-20 px-8 max-md:py-12 max-md:px-4 transition-colors duration-300" 
+      style={{ backgroundColor: isDarkMode ? '#0f0f0f' : '#FFF7F0' }}
+    >
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <h2
-            className="text-black"
+            className={`transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-black'}`}
             style={{
               fontFamily: 'Petrona',
               fontWeight: 400,
@@ -162,7 +167,7 @@ const OurProperties = () => {
           </h2>
           <Link
             to="/properties"
-            className="text-gray-600 hover:text-gray-800 transition-colors underline mr-2"
+            className={`transition-colors underline mr-2 ${isDarkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-800'}`}
             style={{
               fontFamily: 'Petrona',
               fontWeight: 400,
@@ -200,8 +205,8 @@ const OurProperties = () => {
             {properties.map((property) => (
             <div
               key={property.id}
-              className="rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden"
-              style={{ backgroundColor: '#FAF2E8' }}
+              className="rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden"
+              style={{ backgroundColor: isDarkMode ? '#1a1a1a' : '#FAF2E8' }}
             >
               <div className="flex flex-col md:flex-row">
                 {/* Left: Image carousel (60%) */}
@@ -219,7 +224,7 @@ const OurProperties = () => {
                     <div className="hidden md:flex items-start justify-between">
                       <div className="pr-2">
                         <h3
-                          className="text-black mb-2"
+                          className={`mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-black'}`}
                           style={{
                             fontFamily: 'Petrona',
                             fontWeight: 600,
@@ -231,7 +236,7 @@ const OurProperties = () => {
                           {property.title}
                         </h3>
                         <p
-                          className="text-gray-600 mb-4"
+                          className={`mb-4 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
                           style={{
                             fontFamily: 'Petrona',
                             fontWeight: 400,
@@ -277,7 +282,7 @@ const OurProperties = () => {
                     <div className="md:hidden">
                       {/* Title - Full width */}
                       <h3
-                        className="text-black mb-3"
+                        className={`mb-3 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-black'}`}
                         style={{
                           fontFamily: 'Petrona',
                           fontWeight: 600,
@@ -307,7 +312,7 @@ const OurProperties = () => {
                           </span>
                         </div>
                         <span
-                          className="text-gray-700"
+                          className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
                           style={{
                             fontFamily: 'Petrona',
                             fontWeight: 500,
@@ -320,7 +325,7 @@ const OurProperties = () => {
 
                       {/* Location - Below rating */}
                       <p
-                        className="text-gray-600 mb-4"
+                        className={`mb-4 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
                         style={{
                           fontFamily: 'Petrona',
                           fontWeight: 400,
@@ -374,9 +379,9 @@ const OurProperties = () => {
 
                     {/* Description - hidden on mobile */}
                     <p
-                      className="hidden md:block mb-6"
+                      className="hidden md:block mb-6 transition-colors duration-300"
                       style={{
-                        color: '#8B8B8B',
+                        color: isDarkMode ? '#9CA3AF' : '#8B8B8B',
                         fontFamily: 'Petrona',
                         fontWeight: 400,
                         fontSize: '18px',
@@ -392,7 +397,7 @@ const OurProperties = () => {
                   <div className="flex items-center justify-between mt-4">
                     <div>
                       <div
-                        className="text-gray-500 mb-1"
+                        className={`mb-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}
                         style={{
                           fontFamily: 'Petrona',
                           fontWeight: 400,
@@ -403,8 +408,9 @@ const OurProperties = () => {
                       </div>
                       <div className="flex items-baseline">
                         <span
+                          className="transition-colors duration-300"
                           style={{
-                            color: '#4A4A4A',
+                            color: isDarkMode ? '#E5E7EB' : '#4A4A4A',
                             fontFamily: 'Petrona',
                             fontWeight: 600,
                             fontSize: '30px',
@@ -415,7 +421,7 @@ const OurProperties = () => {
                           ₹ {property.price.toLocaleString()}
                         </span>
                         <span
-                          className="text-gray-500"
+                          className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}
                           style={{
                             fontFamily: 'Petrona',
                             fontWeight: 400,
@@ -434,7 +440,7 @@ const OurProperties = () => {
                     <div className="flex flex-col items-end gap-2">
                       <Link
                         to={`/property/${property.id}`}
-                        className="text-gray-700 hover:text-gray-900 transition-colors underline underline-offset-2"
+                        className={`transition-colors underline underline-offset-2 ${isDarkMode ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-gray-900'}`}
                         style={{
                           fontFamily: 'Petrona',
                           fontWeight: 500,

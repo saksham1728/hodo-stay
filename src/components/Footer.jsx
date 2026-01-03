@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from "react";
+import { useTheme } from '../context/ThemeContext'
 
 const FAQSection = () => {
   const [openFAQ, setOpenFAQ] = useState(null);
+  const { isDarkMode } = useTheme()
 
   const faqs = [
     {
@@ -35,13 +37,7 @@ const FAQSection = () => {
   };
 
   return (
-    <div
-      className="py-16 px-8 text-white max-md:py-8 max-md:px-4"
-      style={{
-        background:
-          "linear-gradient(180deg, #506C60 0%, #2D3A36 50.54%, #000000 100%)",
-      }}
-    >
+    <div className="py-16 px-8 text-white max-md:py-8 max-md:px-4">
       <div className="max-w-7xl mx-auto">
         <h2
           className="text-white m-0 mb-12 max-md:text-3xl max-md:mb-8"
@@ -240,7 +236,7 @@ const FAQSection = () => {
                 lineHeight: '1.4',
                 whiteSpace: 'nowrap',
                 width: '100%'
-              }}>
+              }}>no 
                 Redefining Stays, beyond hotels
               </div>
               <div className="border-t border-white/30 pt-3 mt-3">
@@ -267,6 +263,7 @@ const FAQSection = () => {
 const Footer = () => {
   const [activeReview, setActiveReview] = useState(0);
   const reviewsRef = useRef(null);
+  const { isDarkMode } = useTheme();
 
   const reviews = [
     {
@@ -318,26 +315,30 @@ const Footer = () => {
 
   return (
     <div>
-      {/* Reviews Section */}
+      {/* Combined Reviews + FAQ Section with Single Gradient */}
       <div
-        className="py-16 px-8 text-gray-800 relative max-md:py-8 max-md:px-4"
+        className="transition-all duration-300"
         style={{
-          background: "linear-gradient(180deg, #FFF7F0 0%, #506C60 100%)",
+          background: isDarkMode
+            ? "linear-gradient(180deg, #9CA3AF 0%, #6B7280 15%, #4B5563 30%, #374151 45%, #1F2937 60%, #111827 75%, #000000 100%)"
+            : "linear-gradient(180deg, #FFF7F0 0%, #506C60 50%, #2D3A36 75%, #000000 100%)",
         }}
       >
-        <div className="max-w-7xl mx-auto">
-          <h2
-            className="text-gray-800 m-0 mb-12 max-md:text-3xl max-md:mb-8"
-            style={{
-              fontFamily: "Petrona",
-              fontWeight: 400,
-              fontSize: window.innerWidth < 768 ? '36px' : '48px',
-              lineHeight: "150%",
-              letterSpacing: "-2.2%",
-            }}
-          >
-            What our Guests say
-          </h2>
+        {/* Reviews Section */}
+        <div className="py-16 px-8 text-gray-800 relative max-md:py-8 max-md:px-4">
+          <div className="max-w-7xl mx-auto">
+            <h2
+              className={`m-0 mb-12 max-md:text-3xl max-md:mb-8 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}
+              style={{
+                fontFamily: "Petrona",
+                fontWeight: 400,
+                fontSize: window.innerWidth < 768 ? '36px' : '48px',
+                lineHeight: "150%",
+                letterSpacing: "-2.2%",
+              }}
+            >
+              What our Guests say
+            </h2>
 
           {/* Desktop Layout - 3 cards side by side (NO ROTATION) */}
           <div className="hidden md:flex justify-center mb-12 relative">
@@ -380,9 +381,9 @@ const Footer = () => {
               <div className="flex items-center justify-center gap-6 px-16">
                 {/* Left card - Previous review */}
                 <div 
-                  className="w-96 rounded-2xl p-5 opacity-75 flex flex-col"
+                  className="w-96 rounded-2xl p-5 opacity-75 flex flex-col transition-colors duration-300"
                   style={{ 
-                    backgroundColor: '#F6F0E7',
+                    backgroundColor: isDarkMode ? '#374151' : '#F6F0E7',
                     boxShadow: '0px 4px 4px 0px #00000040',
                     minHeight: '280px',
                     maxHeight: '280px'
@@ -394,8 +395,8 @@ const Footer = () => {
                         {reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].name.charAt(0)}
                       </div>
                       <div>
-                        <div className="font-semibold text-gray-900 text-base mb-1">{reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].name}</div>
-                        <div className="flex items-center gap-2 text-gray-600 text-sm">
+                        <div className={`font-semibold text-base mb-1 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].name}</div>
+                        <div className={`flex items-center gap-2 text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                           <img 
                             src={`https://flagcdn.com/w20/${reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].countryCode.toLowerCase()}.png`}
                             alt={reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].country}
@@ -409,19 +410,19 @@ const Footer = () => {
                       <div className="text-pink-500 text-sm flex">
                         {"★".repeat(reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].rating)}
                       </div>
-                      <span className="text-gray-700 font-medium text-sm">{reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].rating}/5</span>
+                      <span className={`font-medium text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].rating}/5</span>
                     </div>
                   </div>
-                  <p className="text-gray-700 text-sm leading-relaxed">
+                  <p className={`text-sm leading-relaxed transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                     {reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].text}
                   </p>
                 </div>
 
                 {/* Center card - Active review (highlighted) */}
                 <div 
-                  className="w-[420px] rounded-2xl p-6 transform scale-105 z-10 flex flex-col"
+                  className="w-[420px] rounded-2xl p-6 transform scale-105 z-10 flex flex-col transition-colors duration-300"
                   style={{ 
-                    backgroundColor: '#F6F0E7',
+                    backgroundColor: isDarkMode ? '#1F2937' : '#F6F0E7',
                     boxShadow: '0px 4px 4px 0px #00000040',
                     minHeight: '280px',
                     maxHeight: '280px'
@@ -433,8 +434,8 @@ const Footer = () => {
                         {reviews[activeReview].name.charAt(0)}
                       </div>
                       <div>
-                        <div className="font-bold text-gray-900 text-lg mb-1">{reviews[activeReview].name}</div>
-                        <div className="flex items-center gap-2 text-gray-700 text-base">
+                        <div className={`font-bold text-lg mb-1 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{reviews[activeReview].name}</div>
+                        <div className={`flex items-center gap-2 text-base transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                           <img 
                             src={`https://flagcdn.com/w20/${reviews[activeReview].countryCode.toLowerCase()}.png`}
                             alt={reviews[activeReview].country}
@@ -448,19 +449,19 @@ const Footer = () => {
                       <div className="text-pink-500 text-base flex">
                         {"★".repeat(reviews[activeReview].rating)}
                       </div>
-                      <span className="text-gray-800 font-semibold text-base">{reviews[activeReview].rating}/5</span>
+                      <span className={`font-semibold text-base transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{reviews[activeReview].rating}/5</span>
                     </div>
                   </div>
-                  <p className="text-gray-800 text-base leading-relaxed">
+                  <p className={`text-base leading-relaxed transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-800'}`}>
                     {reviews[activeReview].text}
                   </p>
                 </div>
 
                 {/* Right card - Next review */}
                 <div 
-                  className="w-96 rounded-2xl p-5 opacity-75 flex flex-col"
+                  className="w-96 rounded-2xl p-5 opacity-75 flex flex-col transition-colors duration-300"
                   style={{ 
-                    backgroundColor: '#F6F0E7',
+                    backgroundColor: isDarkMode ? '#374151' : '#F6F0E7',
                     boxShadow: '0px 4px 4px 0px #00000040',
                     minHeight: '280px',
                     maxHeight: '280px'
@@ -472,8 +473,8 @@ const Footer = () => {
                         {reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].name.charAt(0)}
                       </div>
                       <div>
-                        <div className="font-semibold text-gray-900 text-base mb-1">{reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].name}</div>
-                        <div className="flex items-center gap-2 text-gray-600 text-sm">
+                        <div className={`font-semibold text-base mb-1 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].name}</div>
+                        <div className={`flex items-center gap-2 text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                           <img 
                             src={`https://flagcdn.com/w20/${reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].countryCode.toLowerCase()}.png`}
                             alt={reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].country}
@@ -487,10 +488,10 @@ const Footer = () => {
                       <div className="text-pink-500 text-sm flex">
                         {"★".repeat(reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].rating)}
                       </div>
-                      <span className="text-gray-700 font-medium text-sm">{reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].rating}/5</span>
+                      <span className={`font-medium text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].rating}/5</span>
                     </div>
                   </div>
-                  <p className="text-gray-700 text-sm leading-relaxed">
+                  <p className={`text-sm leading-relaxed transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                     {reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].text}
                   </p>
                 </div>
@@ -512,11 +513,11 @@ const Footer = () => {
               {reviews.map((review) => (
                 <div 
                   key={review.id}
-                  className="rounded-2xl p-8 flex-shrink-0 w-full snap-start"
+                  className="rounded-2xl p-8 flex-shrink-0 w-full snap-start transition-colors duration-300"
                   style={{ 
                     minWidth: 'calc(100vw - 32px)',
                     minHeight: '280px',
-                    backgroundColor: '#F6F0E7',
+                    backgroundColor: isDarkMode ? '#374151' : '#F6F0E7',
                     boxShadow: '0px 4px 4px 0px #00000040'
                   }}
                 >
@@ -526,8 +527,8 @@ const Footer = () => {
                         {review.name.charAt(0)}
                       </div>
                       <div>
-                        <div className="font-bold text-gray-900 text-lg mb-1">{review.name}</div>
-                        <div className="flex items-center gap-2 text-gray-700 text-base">
+                        <div className={`font-bold text-lg mb-1 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{review.name}</div>
+                        <div className={`flex items-center gap-2 text-base transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                           <img 
                             src={`https://flagcdn.com/w20/${review.countryCode.toLowerCase()}.png`}
                             alt={review.country}
@@ -541,11 +542,11 @@ const Footer = () => {
                       <div className="text-pink-500 text-base flex">
                         {"★".repeat(review.rating)}
                       </div>
-                      <span className="text-gray-800 font-semibold text-base">{review.rating}/5</span>
+                      <span className={`font-semibold text-base transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>{review.rating}/5</span>
                     </div>
                   </div>
                   
-                  <p className="text-gray-800 text-base leading-relaxed">
+                  <p className={`text-base leading-relaxed transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-800'}`}>
                     {review.text}
                   </p>
                 </div>
@@ -559,17 +560,20 @@ const Footer = () => {
               <span
                 key={index}
                 className={`w-3 h-3 rounded-full cursor-pointer transition-colors duration-300 ${
-                  index === activeReview ? "bg-emerald-800" : "bg-gray-400"
+                  index === activeReview 
+                    ? (isDarkMode ? "bg-white" : "bg-emerald-800")
+                    : (isDarkMode ? "bg-gray-600" : "bg-gray-400")
                 }`}
                 onClick={() => setActiveReview(index)}
               ></span>
             ))}
           </div>
+          </div>
         </div>
-      </div>
 
-      {/* FAQ and Footer Section */}
-      <FAQSection />
+        {/* FAQ and Footer Section - No separate background, continues the gradient */}
+        <FAQSection />
+      </div>
     </div>
   );
 };
