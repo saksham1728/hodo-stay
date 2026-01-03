@@ -236,7 +236,7 @@ const FAQSection = () => {
                 lineHeight: '1.4',
                 whiteSpace: 'nowrap',
                 width: '100%'
-              }}>no 
+              }}>
                 Redefining Stays, beyond hotels
               </div>
               <div className="border-t border-white/30 pt-3 mt-3">
