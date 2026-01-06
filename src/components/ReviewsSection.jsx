@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from "react";
+import { useTheme } from "../context/ThemeContext";
 
 const ReviewsSection = () => {
   const [activeReview, setActiveReview] = useState(0);
   const reviewsRef = useRef(null);
+  const { isDarkMode } = useTheme();
 
   const reviews = [
     {
@@ -56,12 +58,14 @@ const ReviewsSection = () => {
     <div
       className="py-16 px-8 text-gray-800 relative max-md:py-8 max-md:px-4"
       style={{
-        background: "linear-gradient(180deg, #FFF7F0 0%, #506C60 100%)",
+        background: isDarkMode 
+          ? "linear-gradient(180deg, #0f0f0f 0%, #1a2421 50%, #2d4a3e 100%)"
+          : "linear-gradient(180deg, #FFF7F0 0%, #506C60 100%)",
       }}
     >
       <div className="max-w-7xl mx-auto">
         <h2
-          className="text-gray-800 m-0 mb-12 max-md:text-3xl max-md:mb-8"
+          className={`m-0 mb-12 max-md:text-3xl max-md:mb-8 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}
           style={{
             fontFamily: "Petrona",
             fontWeight: 400,
@@ -116,7 +120,7 @@ const ReviewsSection = () => {
               <div 
                 className="w-96 rounded-2xl p-5 opacity-75 flex flex-col"
                 style={{ 
-                  backgroundColor: '#F6F0E7',
+                  backgroundColor: isDarkMode ? '#2d4a3e' : '#F6F0E7',
                   boxShadow: '0px 4px 4px 0px #00000040',
                   minHeight: '280px',
                   maxHeight: '280px'
@@ -128,8 +132,8 @@ const ReviewsSection = () => {
                       {reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].name.charAt(0)}
                     </div>
                     <div>
-                      <div className="font-semibold text-gray-900 text-base mb-1">{reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].name}</div>
-                      <div className="flex items-center gap-2 text-gray-600 text-sm">
+                      <div className={`font-semibold text-base mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].name}</div>
+                      <div className={`flex items-center gap-2 text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                         <img 
                           src={`https://flagcdn.com/w20/${reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].countryCode.toLowerCase()}.png`}
                           alt={reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].country}
@@ -143,10 +147,10 @@ const ReviewsSection = () => {
                     <div className="text-pink-500 text-sm flex">
                       {"★".repeat(reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].rating)}
                     </div>
-                    <span className="text-gray-700 font-medium text-sm">{reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].rating}/5</span>
+                    <span className={`font-medium text-sm ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>{reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].rating}/5</span>
                   </div>
                 </div>
-                <p className="text-gray-700 text-sm leading-relaxed">
+                <p className={`text-sm leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   {reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].text}
                 </p>
               </div>
@@ -155,7 +159,7 @@ const ReviewsSection = () => {
               <div 
                 className="w-[420px] rounded-2xl p-6 transform scale-105 z-10 flex flex-col"
                 style={{ 
-                  backgroundColor: '#F6F0E7',
+                  backgroundColor: isDarkMode ? '#2d4a3e' : '#F6F0E7',
                   boxShadow: '0px 4px 4px 0px #00000040',
                   minHeight: '280px',
                   maxHeight: '280px'
@@ -167,8 +171,8 @@ const ReviewsSection = () => {
                       {reviews[activeReview].name.charAt(0)}
                     </div>
                     <div>
-                      <div className="font-bold text-gray-900 text-lg mb-1">{reviews[activeReview].name}</div>
-                      <div className="flex items-center gap-2 text-gray-700 text-base">
+                      <div className={`font-bold text-lg mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{reviews[activeReview].name}</div>
+                      <div className={`flex items-center gap-2 text-base ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                         <img 
                           src={`https://flagcdn.com/w20/${reviews[activeReview].countryCode.toLowerCase()}.png`}
                           alt={reviews[activeReview].country}
@@ -182,10 +186,10 @@ const ReviewsSection = () => {
                     <div className="text-pink-500 text-base flex">
                       {"★".repeat(reviews[activeReview].rating)}
                     </div>
-                    <span className="text-gray-800 font-semibold text-base">{reviews[activeReview].rating}/5</span>
+                    <span className={`font-semibold text-base ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>{reviews[activeReview].rating}/5</span>
                   </div>
                 </div>
-                <p className="text-gray-800 text-base leading-relaxed">
+                <p className={`text-base leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-800'}`}>
                   {reviews[activeReview].text}
                 </p>
               </div>
@@ -194,7 +198,7 @@ const ReviewsSection = () => {
               <div 
                 className="w-96 rounded-2xl p-5 opacity-75 flex flex-col"
                 style={{ 
-                  backgroundColor: '#F6F0E7',
+                  backgroundColor: isDarkMode ? '#2d4a3e' : '#F6F0E7',
                   boxShadow: '0px 4px 4px 0px #00000040',
                   minHeight: '280px',
                   maxHeight: '280px'
@@ -206,8 +210,8 @@ const ReviewsSection = () => {
                       {reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].name.charAt(0)}
                     </div>
                     <div>
-                      <div className="font-semibold text-gray-900 text-base mb-1">{reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].name}</div>
-                      <div className="flex items-center gap-2 text-gray-600 text-sm">
+                      <div className={`font-semibold text-base mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].name}</div>
+                      <div className={`flex items-center gap-2 text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                         <img 
                           src={`https://flagcdn.com/w20/${reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].countryCode.toLowerCase()}.png`}
                           alt={reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].country}
@@ -221,10 +225,10 @@ const ReviewsSection = () => {
                     <div className="text-pink-500 text-sm flex">
                       {"★".repeat(reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].rating)}
                     </div>
-                    <span className="text-gray-700 font-medium text-sm">{reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].rating}/5</span>
+                    <span className={`font-medium text-sm ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>{reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].rating}/5</span>
                   </div>
                 </div>
-                <p className="text-gray-700 text-sm leading-relaxed">
+                <p className={`text-sm leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   {reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].text}
                 </p>
               </div>
@@ -250,7 +254,7 @@ const ReviewsSection = () => {
                 style={{ 
                   minWidth: 'calc(100vw - 32px)',
                   minHeight: '280px',
-                  backgroundColor: '#F6F0E7',
+                  backgroundColor: isDarkMode ? '#2d4a3e' : '#F6F0E7',
                   boxShadow: '0px 4px 4px 0px #00000040'
                 }}
               >
@@ -260,8 +264,8 @@ const ReviewsSection = () => {
                       {review.name.charAt(0)}
                     </div>
                     <div>
-                      <div className="font-bold text-gray-900 text-lg mb-1">{review.name}</div>
-                      <div className="flex items-center gap-2 text-gray-700 text-base">
+                      <div className={`font-bold text-lg mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{review.name}</div>
+                      <div className={`flex items-center gap-2 text-base ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                         <img 
                           src={`https://flagcdn.com/w20/${review.countryCode.toLowerCase()}.png`}
                           alt={review.country}
@@ -275,11 +279,11 @@ const ReviewsSection = () => {
                     <div className="text-pink-500 text-base flex">
                       {"★".repeat(review.rating)}
                     </div>
-                    <span className="text-gray-800 font-semibold text-base">{review.rating}/5</span>
+                    <span className={`font-semibold text-base ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>{review.rating}/5</span>
                   </div>
                 </div>
                 
-                <p className="text-gray-800 text-base leading-relaxed">
+                <p className={`text-base leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-800'}`}>
                   {review.text}
                 </p>
               </div>

@@ -1,10 +1,15 @@
+import { useTheme } from "../context/ThemeContext";
+
 const FooterSimple = () => {
+  const { isDarkMode } = useTheme();
+  
   return (
     <div
       className="py-16 px-8 text-white max-md:py-8 max-md:px-4"
       style={{
-        background:
-          "linear-gradient(180deg, #506C60 0%, #2D3A36 50.54%, #000000 100%)",
+        background: isDarkMode
+          ? "linear-gradient(180deg, #2d4a3e 0%, #1a2421 50%, #0f0f0f 100%)"
+          : "linear-gradient(180deg, #506C60 0%, #2D3A36 50.54%, #000000 100%)",
       }}
     >
       <div className="max-w-7xl mx-auto">

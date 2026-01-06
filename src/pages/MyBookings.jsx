@@ -3,10 +3,12 @@ import { useSearchParams, Link } from 'react-router-dom'
 import Header2 from '../components/Header2'
 import Footer2 from '../components/Footer2'
 import { bookingService } from '../api/bookings/bookingService'
+import { useTheme } from '../context/ThemeContext'
 
 const MyBookings = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const tokenParam = searchParams.get('token')
+  const { isDarkMode } = useTheme()
   
   const [email, setEmail] = useState('')
   const [bookings, setBookings] = useState([])
@@ -146,13 +148,13 @@ const MyBookings = () => {
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#FFF7F0' }}>
+    <div className="min-h-screen transition-colors duration-300" style={{ backgroundColor: isDarkMode ? '#0f0f0f' : '#FFF7F0' }}>
       <Header2 />
 
       {/* Header Section */}
       <div 
-        className="py-16 px-8 text-white"
-        style={{ backgroundColor: '#2D3A36' }}
+        className="py-16 px-8 text-white transition-colors duration-300"
+        style={{ backgroundColor: isDarkMode ? '#1a2421' : '#2D3A36' }}
       >
         <div className="max-w-7xl mx-auto">
           <h1 className="text-white mb-4" style={headingStyle}>
@@ -178,7 +180,7 @@ const MyBookings = () => {
           
           {/* Access Request Form - Only show if no token */}
           {!tokenParam && (
-            <div className="bg-white rounded-2xl p-6 shadow-sm mb-8">
+            <div className={`rounded-2xl p-6 shadow-sm mb-8 transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}>
               <h3 
                 className="text-gray-900 mb-4"
                 style={{
@@ -281,7 +283,7 @@ const MyBookings = () => {
               {bookings.map((booking) => (
                 <div
                   key={booking._id}
-                  className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow"
+                  className={`rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}
                 >
                   <div className="flex gap-6 items-start">
                     {/* Property Image */}
@@ -397,7 +399,7 @@ const MyBookings = () => {
           {/* No Bookings Found */}
           {!loading && bookings.length === 0 && tokenParam && (
             <div className="text-center py-12">
-              <div className="bg-white rounded-2xl p-8 shadow-sm max-w-md mx-auto">
+              <div className={`rounded-2xl p-8 shadow-sm max-w-md mx-auto transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}>
                 <svg 
                   className="w-16 h-16 text-gray-400 mx-auto mb-4" 
                   fill="none" 
@@ -433,7 +435,7 @@ const MyBookings = () => {
       {/* Cancel Booking Modal */}
       {showCancelModal && cancellingBooking && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-6 max-w-md w-full">
+          <div className={`rounded-2xl p-6 max-w-md w-full transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}>
             <h3 className="text-xl font-semibold text-gray-900 mb-4">
               Cancel Booking
             </h3>

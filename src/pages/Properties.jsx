@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import FooterSimple from "../components/FooterSimple";
 import HomeHeader from "../components/HomeHeader";
 import { useBuildings } from "../hooks/useBuildings";
+import { useTheme } from "../context/ThemeContext";
 
 /**
  * ImageCarousel used on the listing page.
@@ -104,6 +105,7 @@ const ImageCarousel = ({ images }) => {
 const Properties = () => {
   // Use the buildings hook to fetch data from API
   const { buildings: apiBuildings, loading, error } = useBuildings();
+  const { isDarkMode } = useTheme();
   
   // Clean function to format buildings for Properties page display
   const formatBuildingForDisplay = (building) => {
@@ -143,7 +145,7 @@ const Properties = () => {
   }, []);
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#FFF7F0" }}>
+    <div className="min-h-screen transition-colors duration-300" style={{ backgroundColor: isDarkMode ? "#0f0f0f" : "#FFF7F0" }}>
       <div className="sticky top-0 z-50">
         <HomeHeader />
       </div>
@@ -152,7 +154,7 @@ const Properties = () => {
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-center mb-8">
             <h2
-              className="text-black"
+              className={`transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-black'}`}
               style={{
                 fontFamily: "Petrona",
                 fontWeight: 400,
@@ -201,8 +203,8 @@ const Properties = () => {
               {properties.map((property) => (
               <div
                 key={property.id}
-                className="rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden"
-                style={{ backgroundColor: '#FAF2E8' }}
+                className="rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden"
+                style={{ backgroundColor: isDarkMode ? '#1a1a1a' : '#FAF2E8' }}
               >
                 {/* 60:40 layout on md+, stacked on mobile */}
                 <div className="flex flex-col md:flex-row">
@@ -221,7 +223,7 @@ const Properties = () => {
                       <div className="hidden md:flex items-start justify-between">
                         <div className="pr-2">
                           <h3
-                            className="text-black mb-2"
+                            className={`mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-black'}`}
                             style={{
                               fontFamily: "Petrona",
                               fontWeight: 600,
@@ -233,7 +235,7 @@ const Properties = () => {
                             {property.title}
                           </h3>
                           <p
-                            className="text-gray-600 mb-4"
+                            className={`mb-4 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
                             style={{
                               fontFamily: "Petrona",
                               fontWeight: 400,
@@ -263,7 +265,7 @@ const Properties = () => {
                             </span>
                           </div>
                           <span
-                            className="text-gray-700"
+                            className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
                             style={{
                               fontFamily: 'Petrona',
                               fontWeight: 500,
@@ -279,7 +281,7 @@ const Properties = () => {
                       <div className="md:hidden">
                         {/* Title - Full width */}
                         <h3
-                          className="text-black mb-3"
+                          className={`mb-3 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-black'}`}
                           style={{
                             fontFamily: "Petrona",
                             fontWeight: 600,
@@ -309,7 +311,7 @@ const Properties = () => {
                             </span>
                           </div>
                           <span
-                            className="text-gray-700"
+                            className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
                             style={{
                               fontFamily: 'Petrona',
                               fontWeight: 500,
@@ -322,7 +324,7 @@ const Properties = () => {
 
                         {/* Location - Below rating */}
                         <p
-                          className="text-gray-600 mb-4"
+                          className={`mb-4 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
                           style={{
                             fontFamily: "Petrona",
                             fontWeight: 400,
@@ -374,7 +376,7 @@ const Properties = () => {
                     <div className="flex items-center justify-between mt-4">
                       <div>
                         <div
-                          className="text-gray-500 mb-1"
+                          className={`mb-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}
                           style={{
                             fontFamily: "Petrona",
                             fontWeight: 400,
@@ -385,8 +387,9 @@ const Properties = () => {
                         </div>
                         <div className="flex items-baseline">
                           <span
+                            className="transition-colors duration-300"
                             style={{
-                              color: "#4A4A4A",
+                              color: isDarkMode ? '#E5E7EB' : '#4A4A4A',
                               fontFamily: "Petrona",
                               fontWeight: 600,
                               fontSize: "30px",
@@ -397,7 +400,7 @@ const Properties = () => {
                             ₹ {property.price.toLocaleString()}
                           </span>
                           <span
-                            className="text-gray-500"
+                            className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}
                             style={{
                               fontFamily: "Petrona",
                               fontWeight: 400,
@@ -415,7 +418,7 @@ const Properties = () => {
 
                       <div className="flex flex-col items-end gap-2">
                         <span
-                          className="text-gray-700 hover:text-gray-900 transition-colors underline underline-offset-2"
+                          className={`transition-colors underline underline-offset-2 ${isDarkMode ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-gray-900'}`}
                           style={{
                             fontFamily: "Petrona",
                             fontWeight: 500,

@@ -5,9 +5,11 @@ import FooterSimple from "../components/FooterSimple";
 import ReviewsSection from "../components/ReviewsSection";
 import HomeHeader from "../components/HomeHeader";
 import DateRangePicker from "../components/DateRangePicker";
+import { useTheme } from "../context/ThemeContext";
 
 function PropertyDetail() {
   const { id } = useParams();
+  const { isDarkMode } = useTheme();
   const [building, setBuilding] = useState(null);
   const [unitTypes, setUnitTypes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -186,7 +188,7 @@ function PropertyDetail() {
 
   if (loading) {
     return (
-      <div className="min-h-screen" style={{ backgroundColor: '#FFF7F0' }}>
+      <div className="min-h-screen transition-colors duration-300" style={{ backgroundColor: isDarkMode ? '#0f0f0f' : '#FFF7F0' }}>
         <HomeHeader />
         <div className="flex justify-center items-center py-20">
           <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-orange-500"></div>
@@ -199,11 +201,11 @@ function PropertyDetail() {
 
   if (error || !building) {
     return (
-      <div className="min-h-screen" style={{ backgroundColor: '#FFF7F0' }}>
+      <div className="min-h-screen transition-colors duration-300" style={{ backgroundColor: isDarkMode ? '#0f0f0f' : '#FFF7F0' }}>
         <HomeHeader />
         <div className="text-center py-20 px-4">
-          <h1 className="text-3xl font-bold text-gray-800 mb-4">Property Not Found</h1>
-          <p className="text-gray-600 mb-8">{error || "Unable to load property details"}</p>
+          <h1 className={`text-3xl font-bold mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Property Not Found</h1>
+          <p className={`mb-8 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>{error || "Unable to load property details"}</p>
           <Link 
             to="/properties" 
             className="bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 transition-colors inline-block no-underline"
@@ -223,7 +225,7 @@ function PropertyDetail() {
     : "Bangalore, Karnataka, India";
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#FFF7F0' }}>
+    <div className="min-h-screen transition-colors duration-300" style={{ backgroundColor: isDarkMode ? '#0f0f0f' : '#FFF7F0' }}>
       <HomeHeader />
       
       {/* Hero Image Grid - EXACTLY 5 images */}
@@ -271,7 +273,7 @@ function PropertyDetail() {
       </div>
 
       {/* Navigation - Simple sticky */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-30 px-8 max-md:px-4">
+      <div className={`border-b sticky top-0 z-30 px-8 max-md:px-4 transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'bg-white border-gray-200'}`} style={{ backgroundColor: isDarkMode ? '#1a2421' : 'white' }}>
         <div className="max-w-7xl mx-auto">
           <nav className="flex gap-8 max-md:gap-4 overflow-x-auto">
             {[
@@ -286,8 +288,8 @@ function PropertyDetail() {
                 onClick={() => scrollToSection(item.ref)}
                 className={`py-4 px-2 border-b-2 transition-colors whitespace-nowrap ${
                   activeSection === item.id
-                    ? 'border-blue-600 text-blue-600 font-semibold'
-                    : 'border-transparent text-gray-600 hover:text-gray-900'
+                    ? 'border-orange-600 text-orange-600 font-semibold'
+                    : `border-transparent transition-colors duration-300 ${isDarkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900'}`
                 }`}
                 style={{ fontFamily: 'Petrona', fontSize: '16px' }}
               >
@@ -305,7 +307,7 @@ function PropertyDetail() {
         {/* Overview Section */}
         <section ref={overviewRef} className="mb-16">
           <h1 
-            className="text-gray-900 mb-3 max-md:text-3xl"
+            className={`mb-3 max-md:text-3xl transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
             style={{ fontFamily: 'Petrona', fontSize: '48px', fontWeight: 600 }}
           >
             {building.name}
@@ -315,13 +317,13 @@ function PropertyDetail() {
             <div className="bg-green-700 text-white px-2 py-1 rounded font-bold text-sm">
               9.8
             </div>
-            <span className="text-gray-900 font-semibold" style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
+            <span className={`font-semibold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`} style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
               Exceptional
             </span>
           </div>
           
           <p 
-            className="text-gray-600 mb-6"
+            className={`mb-6 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}
             style={{ fontFamily: 'Petrona', fontSize: '16px' }}
           >
             {location}
@@ -337,7 +339,7 @@ function PropertyDetail() {
                     <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    <span className="text-gray-700" style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
+                    <span className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`} style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
                       {amenityName}
                     </span>
                   </div>
@@ -350,13 +352,13 @@ function PropertyDetail() {
         {/* About Section */}
         <section ref={aboutRef} className="mb-16">
           <h2 
-            className="text-gray-900 mb-6 max-md:text-2xl"
+            className={`mb-6 max-md:text-2xl transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
             style={{ fontFamily: 'Petrona', fontSize: '36px', fontWeight: 600 }}
           >
             About this property
           </h2>
           <p 
-            className="text-gray-700"
+            className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
             style={{ fontFamily: 'Petrona', fontSize: '16px', lineHeight: '160%' }}
           >
             {building.description || `Experience comfort and luxury at ${building.name}. Located in ${building.location?.city || 'Bangalore'}, this property offers modern amenities and exceptional service for both short and long stays.`}
@@ -365,15 +367,15 @@ function PropertyDetail() {
 
         {/* Search Section - Before Rooms */}
         <section className="mb-12 relative">
-          <div className="bg-white rounded-2xl shadow-md p-6 border border-gray-200">
-            <h3 className="text-gray-900 mb-6" style={{ fontFamily: 'Petrona', fontSize: '24px', fontWeight: 600 }}>
+          <div className={`rounded-2xl shadow-md p-6 border transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'bg-white border-gray-200'}`} style={{ backgroundColor: isDarkMode ? '#1a2421' : 'white' }}>
+            <h3 className={`mb-6 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`} style={{ fontFamily: 'Petrona', fontSize: '24px', fontWeight: 600 }}>
               Check Availability & Pricing
             </h3>
             
             <div className="flex flex-col md:flex-row gap-4">
               {/* Check-in Date */}
               <div className="flex-1">
-                <label className="block text-gray-700 mb-2" style={{ fontFamily: 'Petrona', fontSize: '14px', fontWeight: 500 }}>
+                <label className={`block mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-700'}`} style={{ fontFamily: 'Petrona', fontSize: '14px', fontWeight: 500 }}>
                   Check-in
                 </label>
                 <div
@@ -392,7 +394,7 @@ function PropertyDetail() {
 
               {/* Check-out Date */}
               <div className="flex-1">
-                <label className="block text-gray-700 mb-2" style={{ fontFamily: 'Petrona', fontSize: '14px', fontWeight: 500 }}>
+                <label className={`block mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-700'}`} style={{ fontFamily: 'Petrona', fontSize: '14px', fontWeight: 500 }}>
                   Check-out
                 </label>
                 <div
@@ -411,7 +413,7 @@ function PropertyDetail() {
 
               {/* Guests with +/- buttons */}
               <div className="w-full md:w-48">
-                <label className="block text-gray-700 mb-2" style={{ fontFamily: 'Petrona', fontSize: '14px', fontWeight: 500 }}>
+                <label className={`block mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-700'}`} style={{ fontFamily: 'Petrona', fontSize: '14px', fontWeight: 500 }}>
                   Guests
                 </label>
                 <div className="flex items-center border-2 border-gray-300 rounded-lg overflow-hidden bg-white">
@@ -482,7 +484,7 @@ function PropertyDetail() {
         {/* Rooms Section */}
         <section ref={roomsRef} className="mb-16">
           <h2 
-            className="text-gray-900 mb-6 max-md:text-2xl"
+            className={`mb-6 max-md:text-2xl transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
             style={{ fontFamily: 'Petrona', fontSize: '36px', fontWeight: 600 }}
           >
             Rooms
@@ -502,7 +504,8 @@ function PropertyDetail() {
               return (
                 <div
                   key={unitTypeData.unitType}
-                  className="bg-white rounded-2xl max-md:rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden"
+                  className={`rounded-2xl max-md:rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden ${isDarkMode ? '' : 'bg-white'}`}
+                  style={{ backgroundColor: isDarkMode ? '#1a2421' : 'white' }}
                 >
                   <div className="flex flex-col md:flex-row">
                     {/* Image */}
@@ -519,7 +522,7 @@ function PropertyDetail() {
                       <div>
                         <div className="flex justify-between items-start mb-2 md:mb-3">
                           <h3
-                            className="text-black max-md:text-xl"
+                            className={`max-md:text-xl transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-black'}`}
                             style={{
                               fontFamily: "Petrona",
                               fontWeight: 600,
@@ -543,7 +546,7 @@ function PropertyDetail() {
                         </div>
 
                         <p
-                          className="text-gray-600 mb-2 md:mb-4 max-md:text-xs"
+                          className={`mb-2 md:mb-4 max-md:text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}
                           style={{ fontFamily: "Petrona", fontSize: "14px" }}
                         >
                           {rep?.standardGuests || 2} guests • {rep?.compositionRooms?.length || 1} bedroom
@@ -659,26 +662,26 @@ function PropertyDetail() {
         {/* Accessibility Section */}
         <section ref={accessibilityRef} className="mb-16">
           <h2 
-            className="text-gray-900 mb-6 max-md:text-2xl"
+            className={`mb-6 max-md:text-2xl transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
             style={{ fontFamily: 'Petrona', fontSize: '36px', fontWeight: 600 }}
           >
             Accessibility
           </h2>
           <p 
-            className="text-gray-700 mb-6"
+            className={`mb-6 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
             style={{ fontFamily: 'Petrona', fontSize: '16px' }}
           >
             If you have requests for specific accessibility needs, please contact the property using the information on the reservation confirmation received after booking.
           </p>
           
-          <div className="bg-white rounded-lg p-6 border border-gray-200">
+          <div className={`rounded-lg p-6 border transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'bg-white border-gray-200'}`} style={{ backgroundColor: isDarkMode ? '#1a2421' : 'white' }}>
             <h3 
-              className="text-gray-900 mb-4"
+              className={`mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
               style={{ fontFamily: 'Petrona', fontSize: '20px', fontWeight: 600 }}
             >
               Common areas
             </h3>
-            <ul className="space-y-2 text-gray-700" style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
+            <ul className={`space-y-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`} style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
               <li>• No elevator</li>
               <li>• Well-lit path to entrance</li>
             </ul>
@@ -688,48 +691,48 @@ function PropertyDetail() {
         {/* Policies Section */}
         <section ref={policiesRef} className="mb-16">
           <h2 
-            className="text-gray-900 mb-6 max-md:text-2xl"
+            className={`mb-6 max-md:text-2xl transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
             style={{ fontFamily: 'Petrona', fontSize: '36px', fontWeight: 600 }}
           >
             Policies
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-            <div className="bg-white rounded-lg p-6 border border-gray-200">
+            <div className={`rounded-lg p-6 border transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'bg-white border-gray-200'}`} style={{ backgroundColor: isDarkMode ? '#1a2421' : 'white' }}>
               <h3 
-                className="text-gray-900 mb-4"
+                className={`mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
                 style={{ fontFamily: 'Petrona', fontSize: '20px', fontWeight: 600 }}
               >
                 Check-in
               </h3>
-              <div className="space-y-2 text-gray-700" style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
+              <div className={`space-y-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`} style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
                 <p>Check-in start time: 2:00 PM</p>
                 <p>Check-in end time: midnight</p>
                 <p>Minimum check-in age: 18</p>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg p-6 border border-gray-200">
+            <div className={`rounded-lg p-6 border transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'bg-white border-gray-200'}`} style={{ backgroundColor: isDarkMode ? '#1a2421' : 'white' }}>
               <h3 
-                className="text-gray-900 mb-4"
+                className={`mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
                 style={{ fontFamily: 'Petrona', fontSize: '20px', fontWeight: 600 }}
               >
                 Check-out
               </h3>
-              <div className="space-y-2 text-gray-700" style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
+              <div className={`space-y-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`} style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
                 <p>Check-out before noon</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-lg p-6 border border-gray-200">
+          <div className={`rounded-lg p-6 border transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'bg-white border-gray-200'}`} style={{ backgroundColor: isDarkMode ? '#1a2421' : 'white' }}>
             <h3 
-              className="text-gray-900 mb-4"
+              className={`mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
               style={{ fontFamily: 'Petrona', fontSize: '20px', fontWeight: 600 }}
             >
               Special check-in instructions
             </h3>
-            <div className="space-y-2 text-gray-700" style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
+            <div className={`space-y-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`} style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
               <p>Front desk staff will greet guests on arrival at the property.</p>
               <p>If you are planning to arrive after 6:00 PM, please contact the property in advance.</p>
             </div>

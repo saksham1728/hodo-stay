@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import Header2 from '../components/Header2'
 import Footer2 from '../components/Footer2'
 import { bookingService } from '../api/bookings/bookingService'
+import { useTheme } from '../context/ThemeContext'
 
 // Helper function to format currency
 const formatCurrency = (amount, currency = 'USD') => {
@@ -22,6 +23,7 @@ const formatCurrency = (amount, currency = 'USD') => {
 
 const BookingConfirmed = () => {
   const { bookingReference } = useParams()
+  const { isDarkMode } = useTheme()
   const [booking, setBooking] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -79,7 +81,7 @@ const BookingConfirmed = () => {
   // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen" style={{ backgroundColor: '#FFF7F0' }}>
+      <div className="min-h-screen transition-colors duration-300" style={{ backgroundColor: isDarkMode ? '#0f0f0f' : '#FFF7F0' }}>
         <Header2 />
         <div className="flex justify-center items-center py-20">
           <div className="text-center">
@@ -95,10 +97,10 @@ const BookingConfirmed = () => {
   // Error state
   if (error || !booking) {
     return (
-      <div className="min-h-screen" style={{ backgroundColor: '#FFF7F0' }}>
+      <div className="min-h-screen transition-colors duration-300" style={{ backgroundColor: isDarkMode ? '#0f0f0f' : '#FFF7F0' }}>
         <Header2 />
         <div className="max-w-2xl mx-auto px-4 py-20 text-center">
-          <div className="bg-white rounded-lg shadow-sm p-8">
+          <div className={`rounded-lg shadow-sm p-8 transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}>
             <h1 className="text-2xl font-bold mb-4">Booking Not Found</h1>
             <p className="text-gray-600 mb-6">{error || 'The booking you are looking for does not exist.'}</p>
             <Link to="/properties" className="text-blue-600 hover:underline">
@@ -161,11 +163,11 @@ const BookingConfirmed = () => {
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#FFF7F0' }}>
+    <div className="min-h-screen transition-colors duration-300" style={{ backgroundColor: isDarkMode ? '#0f0f0f' : '#FFF7F0' }}>
       <Header2 />
 
       {/* Top banner */}
-      <div className="w-full" style={{ backgroundColor: '#2D3A36', minHeight: 80 }}>
+      <div className="w-full transition-colors duration-300" style={{ backgroundColor: isDarkMode ? '#1a2421' : '#2D3A36', minHeight: 80 }}>
         <div className="max-w-7xl mx-auto flex items-center px-4 sm:px-6 py-4" style={{ minHeight: 80 }}>
           <div className="w-full">
             <h1 className="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl" style={{ ...excitedStyle, fontSize: 'inherit' }}>
@@ -184,7 +186,7 @@ const BookingConfirmed = () => {
           <div className="flex gap-4 sm:gap-6 lg:gap-8 items-start flex-col lg:flex-row">
             {/* LEFT: Booking Confirmed card */}
             <div
-              className="bg-white rounded-2xl sm:rounded-[28px] p-4 sm:p-6 lg:p-8 shadow-md w-full lg:flex-1"
+              className={`rounded-2xl sm:rounded-[28px] p-4 sm:p-6 lg:p-8 shadow-md w-full lg:flex-1 transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}
             >
               {/* Header */}
               <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
@@ -284,7 +286,7 @@ const BookingConfirmed = () => {
 
             {/* RIGHT: Payment Summary card (kept compact) */}
             <div
-              className="bg-white rounded-2xl sm:rounded-[28px] p-4 sm:p-6 lg:p-8 shadow-md w-full lg:w-auto lg:flex-shrink-0"
+              className={`rounded-2xl sm:rounded-[28px] p-4 sm:p-6 lg:p-8 shadow-md w-full lg:w-auto lg:flex-shrink-0 transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}
             >
               <h3
                 className="text-gray-900 mb-4 sm:mb-6 text-2xl sm:text-3xl lg:text-4xl"
