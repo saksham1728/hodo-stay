@@ -206,14 +206,68 @@ const Properties = () => {
                 className="rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden"
                 style={{ backgroundColor: isDarkMode ? '#1a1a1a' : '#FAF2E8' }}
               >
-                {/* 60:40 layout on md+, stacked on mobile */}
+                {/* Desktop: 60:40 layout, Mobile: New card design */}
                 <div className="flex flex-col md:flex-row">
-                  {/* Left: Image carousel (60%) */}
-                  <div className="w-full md:w-3/5 h-[400px] md:h-[450px] flex-shrink-0" style={{ minHeight: "350px" }}>
+                  {/* Desktop Left: Image carousel (60%) - Hidden on mobile */}
+                  <div className="hidden md:block w-full md:w-3/5 h-[400px] md:h-[450px] flex-shrink-0" style={{ minHeight: "350px" }}>
                     <ImageCarousel images={property.images} />
                   </div>
 
-                  {/* Right: Content (40%) */}
+                  {/* Mobile: New card design with image overlay - Hidden on desktop */}
+                  <div className="md:hidden relative h-[280px] overflow-hidden">
+                    <ImageCarousel images={property.images} />
+                    
+                    {/* Extended Stay Badge - Top Right */}
+                    <div className="absolute top-4 right-4 z-10">
+                      <div 
+                        className="px-3 py-1.5 rounded-full text-white text-xs font-medium"
+                        style={{ 
+                          backgroundColor: 'rgba(222, 117, 75, 0.9)',
+                          fontFamily: 'Petrona'
+                        }}
+                      >
+                        Extended Stay Friendly
+                      </div>
+                    </div>
+                    
+                    {/* Black gradient overlay at bottom */}
+                    <div 
+                      className="absolute bottom-0 left-0 right-0 h-32 z-10"
+                      style={{
+                        background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, transparent 100%)'
+                      }}
+                    />
+                    
+                    {/* Property name and address on image */}
+                    <div className="absolute bottom-4 left-4 right-4 z-20">
+                      <h3
+                        className="text-white mb-1"
+                        style={{
+                          fontFamily: 'Petrona',
+                          fontWeight: 600,
+                          fontSize: '24px',
+                          lineHeight: '110%',
+                          textShadow: '0 2px 8px rgba(0,0,0,0.3)'
+                        }}
+                      >
+                        {property.title}
+                      </h3>
+                      <p
+                        className="text-white/90"
+                        style={{
+                          fontFamily: 'Petrona',
+                          fontWeight: 400,
+                          fontSize: '13px',
+                          lineHeight: '140%',
+                          textShadow: '0 1px 4px rgba(0,0,0,0.3)'
+                        }}
+                      >
+                        {property.location}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Right: Content (40% on desktop, full width on mobile) */}
                   <Link 
                     to={`/property/${property.id}`}
                     className="w-full md:w-2/5 p-4 md:p-6 flex flex-col justify-between"
@@ -277,66 +331,24 @@ const Properties = () => {
                         </div>
                       </div>
 
-                      {/* Mobile Layout - stacked: title, rating, location */}
-                      <div className="md:hidden">
-                        {/* Title - Full width */}
-                        <h3
-                          className={`mb-3 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-black'}`}
+                      {/* Mobile: Rating with star - Below image */}
+                      <div className="md:hidden flex items-center gap-2 mb-3">
+                        <svg className="w-5 h-5 text-orange-500 fill-current" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                        <span
+                          className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
                           style={{
-                            fontFamily: "Petrona",
-                            fontWeight: 600,
-                            fontSize: "26px",
-                            lineHeight: "100%",
-                            letterSpacing: "-2.2%",
-                          }}
-                        >
-                          {property.title}
-                        </h3>
-
-                        {/* Rating - Below title */}
-                        <div className="flex items-center gap-2 mb-3">
-                          <div 
-                            className="px-2 py-1 rounded"
-                            style={{ backgroundColor: '#0B8043' }}
-                          >
-                            <span
-                              className="text-white"
-                              style={{
-                                fontFamily: 'Petrona',
-                                fontWeight: 600,
-                                fontSize: '16px'
-                              }}
-                            >
-                              9.8
-                            </span>
-                          </div>
-                          <span
-                            className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
-                            style={{
-                              fontFamily: 'Petrona',
-                              fontWeight: 500,
-                              fontSize: '14px'
-                            }}
-                          >
-                            Exceptional
-                          </span>
-                        </div>
-
-                        {/* Location - Below rating */}
-                        <p
-                          className={`mb-4 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
-                          style={{
-                            fontFamily: "Petrona",
+                            fontFamily: 'Petrona',
                             fontWeight: 400,
-                            fontSize: "13px",
-                            lineHeight: "140%",
+                            fontSize: '14px'
                           }}
                         >
-                          {property.location}
-                        </p>
+                          Rated <span className={`font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>4.8★</span> from 120+ verified guest reviews
+                        </span>
                       </div>
 
-                      {/* Amenities - hidden on mobile */}
+                      {/* Desktop: Amenities badges */}
                       <div className="hidden md:flex flex-wrap gap-2 mb-4">
                         {property.amenities.map((amenity, index) => (
                           <span
@@ -356,7 +368,52 @@ const Properties = () => {
                         ))}
                       </div>
 
-                      {/* Description - hidden on mobile */}
+                      {/* Mobile: Circular scrollable amenities */}
+                      <div className="md:hidden flex gap-3 mb-4 overflow-x-auto pb-2 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                        <style>{`
+                          .scrollbar-hide::-webkit-scrollbar {
+                            display: none;
+                          }
+                        `}</style>
+                        
+                        <div className="flex items-center gap-2 px-3 py-2 rounded-full whitespace-nowrap" style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#F3F4F6' }}>
+                          <svg className="w-4 h-4 flex-shrink-0" style={{ color: isDarkMode ? '#9CA3AF' : '#6B7280' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                          </svg>
+                          <span
+                            className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
+                            style={{ fontFamily: 'Petrona' }}
+                          >
+                            Fully Furnished
+                          </span>
+                        </div>
+                        
+                        <div className="flex items-center gap-2 px-3 py-2 rounded-full whitespace-nowrap" style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#F3F4F6' }}>
+                          <svg className="w-4 h-4 flex-shrink-0" style={{ color: isDarkMode ? '#9CA3AF' : '#6B7280' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                          </svg>
+                          <span
+                            className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
+                            style={{ fontFamily: 'Petrona' }}
+                          >
+                            Housekeeping Included
+                          </span>
+                        </div>
+                        
+                        <div className="flex items-center gap-2 px-3 py-2 rounded-full whitespace-nowrap" style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#F3F4F6' }}>
+                          <svg className="w-4 h-4 flex-shrink-0" style={{ color: isDarkMode ? '#9CA3AF' : '#6B7280' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" />
+                          </svg>
+                          <span
+                            className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
+                            style={{ fontFamily: 'Petrona' }}
+                          >
+                            High-Speed WiFi
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Desktop: Description */}
                       <p
                         className="hidden md:block mb-6"
                         style={{
