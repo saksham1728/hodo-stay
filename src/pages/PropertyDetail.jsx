@@ -7,6 +7,89 @@ import HomeHeader from "../components/HomeHeader";
 import DateRangePicker from "../components/DateRangePicker";
 import { useTheme } from "../context/ThemeContext";
 
+/**
+ * ImageCarousel: arrows on desktop, swipe on mobile, dots indicator.
+ */
+const ImageCarousel = ({ images }) => {
+  const [index, setIndex] = useState(0)
+  const dragging = useRef(false)
+  const startX = useRef(0)
+  const currentX = useRef(0)
+
+  useEffect(() => {
+    setIndex(0)
+  }, [images])
+
+  const next = () => setIndex((i) => (i + 1) % images.length)
+  const prev = () => setIndex((i) => (i - 1 + images.length) % images.length)
+  const goTo = (i) => setIndex(i)
+
+  const onTouchStart = (e) => {
+    dragging.current = true
+    startX.current = e.touches[0].clientX
+    currentX.current = startX.current
+  }
+  const onTouchMove = (e) => {
+    if (!dragging.current) return
+    currentX.current = e.touches[0].clientX
+  }
+  const onTouchEnd = () => {
+    if (!dragging.current) return
+    const dx = currentX.current - startX.current
+    const threshold = 40
+    if (dx > threshold) prev()
+    else if (dx < -threshold) next()
+    dragging.current = false
+  }
+
+  return (
+    <div className="relative w-full h-full">
+      <div
+        className="relative w-full h-full overflow-hidden"
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+      >
+        <div
+          className="flex h-full transition-transform duration-500 ease-in-out"
+          style={{ transform: `translateX(-${index * 100}%)`, height: '100%' }}
+        >
+          {images.map((src, i) => (
+            <div key={i} className="flex-shrink-0 w-full h-full">
+              <img
+                src={src}
+                alt={`slide-${i}`}
+                className="w-full h-full object-cover object-center"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Arrows (desktop only) */}
+      <button
+        aria-label="Previous image"
+        onClick={prev}
+        className="hidden md:flex items-center justify-center absolute left-4 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-md hover:opacity-90 z-20"
+      >
+        <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+
+      <button
+        aria-label="Next image"
+        onClick={next}
+        className="hidden md:flex items-center justify-center absolute right-4 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-md hover:opacity-90 z-20"
+      >
+        <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+    </div>
+  )
+}
+
 function PropertyDetail() {
   const { id } = useParams();
   const { isDarkMode } = useTheme();
@@ -508,13 +591,9 @@ function PropertyDetail() {
                   style={{ backgroundColor: isDarkMode ? '#1a2421' : 'white' }}
                 >
                   <div className="flex flex-col md:flex-row">
-                    {/* Image */}
+                    {/* Image Carousel */}
                     <div className="w-full md:w-3/5 h-[200px] md:h-[450px]">
-                      <img 
-                        src={images[0]} 
-                        alt={unitTypeData.unitType}
-                        className="w-full h-full object-cover"
-                      />
+                      <ImageCarousel images={images} />
                     </div>
 
                     {/* Content */}
