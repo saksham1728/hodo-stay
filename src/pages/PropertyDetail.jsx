@@ -463,10 +463,14 @@ function PropertyDetail() {
                 </label>
                 <div
                   onClick={() => setIsDatePickerOpen(true)}
-                  className="w-full px-4 py-4 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-orange-500 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500 bg-white flex items-center justify-between transition-colors"
+                  className={`w-full px-4 py-4 border-2 rounded-lg cursor-pointer hover:border-orange-500 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500 flex items-center justify-between transition-colors ${
+                    isDarkMode 
+                      ? 'bg-[#0d2419] border-gray-700' 
+                      : 'bg-white border-gray-300'
+                  }`}
                   style={{ fontFamily: 'Petrona' }}
                 >
-                  <span className={checkIn ? 'text-gray-900' : 'text-gray-400'}>
+                  <span className={checkIn ? (isDarkMode ? 'text-gray-200' : 'text-gray-900') : 'text-gray-400'}>
                     {checkIn ? formatDateDisplay(checkIn) : 'Select date'}
                   </span>
                   <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -482,10 +486,14 @@ function PropertyDetail() {
                 </label>
                 <div
                   onClick={() => setIsDatePickerOpen(true)}
-                  className="w-full px-4 py-4 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-orange-500 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500 bg-white flex items-center justify-between transition-colors"
+                  className={`w-full px-4 py-4 border-2 rounded-lg cursor-pointer hover:border-orange-500 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500 flex items-center justify-between transition-colors ${
+                    isDarkMode 
+                      ? 'bg-[#0d2419] border-gray-700' 
+                      : 'bg-white border-gray-300'
+                  }`}
                   style={{ fontFamily: 'Petrona' }}
                 >
-                  <span className={checkOut ? 'text-gray-900' : 'text-gray-400'}>
+                  <span className={checkOut ? (isDarkMode ? 'text-gray-200' : 'text-gray-900') : 'text-gray-400'}>
                     {checkOut ? formatDateDisplay(checkOut) : 'Select date'}
                   </span>
                   <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -499,20 +507,32 @@ function PropertyDetail() {
                 <label className={`block mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-700'}`} style={{ fontFamily: 'Petrona', fontSize: '14px', fontWeight: 500 }}>
                   Guests
                 </label>
-                <div className="flex items-center border-2 border-gray-300 rounded-lg overflow-hidden bg-white">
+                <div className={`flex items-center border-2 rounded-lg overflow-hidden transition-colors ${
+                  isDarkMode 
+                    ? 'bg-[#0d2419] border-gray-700' 
+                    : 'bg-white border-gray-300'
+                }`}>
                   <button
                     onClick={() => setGuests(Math.max(1, guests - 1))}
-                    className="px-4 py-4 bg-gray-50 hover:bg-gray-100 text-gray-700 font-bold transition-colors"
+                    className={`px-4 py-4 font-bold transition-colors ${
+                      isDarkMode 
+                        ? 'bg-[#1a2e24] hover:bg-[#243a2e] text-gray-200' 
+                        : 'bg-gray-50 hover:bg-gray-100 text-gray-700'
+                    }`}
                     style={{ fontFamily: 'Petrona' }}
                   >
                     −
                   </button>
-                  <div className="flex-1 text-center py-4 font-medium" style={{ fontFamily: 'Petrona' }}>
+                  <div className={`flex-1 text-center py-4 font-medium transition-colors ${isDarkMode ? 'text-gray-200' : 'text-gray-900'}`} style={{ fontFamily: 'Petrona' }}>
                     {guests}
                   </div>
                   <button
                     onClick={() => setGuests(Math.min(10, guests + 1))}
-                    className="px-4 py-4 bg-gray-50 hover:bg-gray-100 text-gray-700 font-bold transition-colors"
+                    className={`px-4 py-4 font-bold transition-colors ${
+                      isDarkMode 
+                        ? 'bg-[#1a2e24] hover:bg-[#243a2e] text-gray-200' 
+                        : 'bg-gray-50 hover:bg-gray-100 text-gray-700'
+                    }`}
                     style={{ fontFamily: 'Petrona' }}
                   >
                     +
@@ -649,16 +669,15 @@ function PropertyDetail() {
                           {hasPrice ? (
                             <>
                               <span
-                                className="text-gray-500 block mb-1 max-md:text-xs"
+                                className={`block mb-1 max-md:text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}
                                 style={{ fontFamily: "Petrona", fontSize: "12px" }}
                               >
                                 Total for {unitPricing.pricing.nights} nights
                               </span>
                               <div className="flex items-baseline gap-1 md:gap-2">
                                 <span
-                                  className="max-md:text-xl"
+                                  className={`max-md:text-xl transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-[#4A4A4A]'}`}
                                   style={{
-                                    color: "#4A4A4A",
                                     fontFamily: "Petrona",
                                     fontWeight: 600,
                                     fontSize: "30px",
@@ -667,7 +686,7 @@ function PropertyDetail() {
                                   $ {Math.round(unitPricing.pricing.price).toLocaleString()}
                                 </span>
                                 <span
-                                  className="text-gray-500 max-md:text-xs"
+                                  className={`max-md:text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}
                                   style={{ fontFamily: "Petrona", fontSize: "14px" }}
                                 >
                                   ($ {Math.round(unitPricing.pricing.pricePerNight).toLocaleString()}/night)
@@ -683,16 +702,15 @@ function PropertyDetail() {
                           ) : (
                             <>
                               <span
-                                className="text-gray-500 block mb-1 max-md:text-xs"
+                                className={`block mb-1 max-md:text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}
                                 style={{ fontFamily: "Petrona", fontSize: "12px" }}
                               >
                                 from
                               </span>
                               <div className="flex items-baseline">
                                 <span
-                                  className="max-md:text-xl"
+                                  className={`max-md:text-xl transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-[#4A4A4A]'}`}
                                   style={{
-                                    color: "#4A4A4A",
                                     fontFamily: "Petrona",
                                     fontWeight: 600,
                                     fontSize: "30px",
@@ -701,7 +719,7 @@ function PropertyDetail() {
                                   $ 70
                                 </span>
                                 <span
-                                  className="text-gray-500 max-md:text-xs"
+                                  className={`max-md:text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}
                                   style={{ fontFamily: "Petrona", fontSize: "12px", marginLeft: "2px" }}
                                 >
                                   per night

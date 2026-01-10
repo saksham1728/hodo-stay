@@ -485,7 +485,7 @@ const BookingDetails = () => {
                 
                 {/* Right Side - Price and Dropdown Arrow */}
                 <div className="flex items-center gap-2">
-                  <p className="text-lg font-bold text-gray-900">
+                  <p className={`text-lg font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     {isPricingLoading ? (
                       <span className="text-sm">Loading...</span>
                     ) : (
@@ -540,9 +540,9 @@ const BookingDetails = () => {
               <div className="p-3 bg-gray-50 rounded-lg">
                 <div className="flex justify-between items-center mb-2">
                   <div>
-                    <p className="text-xs text-gray-600">Check-in</p>
-                    <p className="text-sm font-semibold text-gray-900">{checkInFormatted.day}</p>
-                    <p className="text-xs text-gray-600">{checkInFormatted.weekday}, {unit?.checkInOut?.checkInFrom || '2pm'}</p>
+                    <p className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Check-in</p>
+                    <p className={`text-sm font-semibold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{checkInFormatted.day}</p>
+                    <p className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{checkInFormatted.weekday}, {unit?.checkInOut?.checkInFrom || '2pm'}</p>
                   </div>
                   
                   <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -550,15 +550,15 @@ const BookingDetails = () => {
                   </svg>
                   
                   <div className="text-right">
-                    <p className="text-xs text-gray-600">Check-out</p>
-                    <p className="text-sm font-semibold text-gray-900">{checkOutFormatted.day}</p>
-                    <p className="text-xs text-gray-600">{checkOutFormatted.weekday}, {unit?.checkInOut?.checkOutUntil || '11am'}</p>
+                    <p className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Check-out</p>
+                    <p className={`text-sm font-semibold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{checkOutFormatted.day}</p>
+                    <p className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{checkOutFormatted.weekday}, {unit?.checkInOut?.checkOutUntil || '11am'}</p>
                   </div>
                 </div>
                 
-                <div className="pt-2 border-t border-gray-200">
-                  <p className="text-xs text-gray-600 mb-0.5">Guests</p>
-                  <p className="text-sm font-medium text-gray-900">
+                <div className={`pt-2 border-t transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+                  <p className={`text-xs mb-0.5 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Guests</p>
+                  <p className={`text-sm font-medium transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     {guests.adults} Adult{guests.adults !== 1 ? 's' : ''}
                     {guests.children > 0 && `, ${guests.children} Child${guests.children !== 1 ? 'ren' : ''}`}
                   </p>
@@ -579,10 +579,10 @@ const BookingDetails = () => {
                 ) : (
                   <>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">
+                      <span className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                         {formatCurrency(calculatedPricing.basePrice, calculatedPricing.currency)} x {calculatedPricing.nights} Night{calculatedPricing.nights !== 1 ? 's' : ''}
                       </span>
-                      <span className="text-sm font-medium text-gray-900">
+                      <span className={`text-sm font-medium transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                         {formatCurrency(calculatedPricing.subtotal, calculatedPricing.currency)}
                       </span>
                     </div>
@@ -616,8 +616,8 @@ const BookingDetails = () => {
                     <hr className="my-2" />
                     
                     <div className="flex justify-between items-center">
-                      <span className="font-semibold text-gray-900">Total Payable</span>
-                      <span className="text-lg font-bold text-gray-900">
+                      <span className={`font-semibold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Total Payable</span>
+                      <span className={`text-lg font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                         {formatCurrency(calculatedPricing.total, calculatedPricing.currency)}
                       </span>
                     </div>
@@ -684,12 +684,15 @@ const BookingDetails = () => {
                       placeholder="First Name"
                       value={formData.firstName}
                       onChange={(e) => handleInputChange('firstName', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors duration-300 ${
+                        isDarkMode 
+                          ? 'bg-[#0d2419] border-gray-700 text-gray-200 placeholder-gray-500' 
+                          : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
+                      }`}
                       style={{
                         fontFamily: 'Work Sans',
                         fontWeight: 400,
-                        fontSize: '16px',
-                        background: 'white'
+                        fontSize: '16px'
                       }}
                     />
                   </div>
@@ -699,12 +702,15 @@ const BookingDetails = () => {
                       placeholder="Last Name"
                       value={formData.lastName}
                       onChange={(e) => handleInputChange('lastName', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors duration-300 ${
+                        isDarkMode 
+                          ? 'bg-[#0d2419] border-gray-700 text-gray-200 placeholder-gray-500' 
+                          : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
+                      }`}
                       style={{
                         fontFamily: 'Work Sans',
                         fontWeight: 400,
-                        fontSize: '16px',
-                        background: 'white'
+                        fontSize: '16px'
                       }}
                     />
                   </div>
@@ -714,12 +720,15 @@ const BookingDetails = () => {
                       placeholder="Email Address"
                       value={formData.email}
                       onChange={(e) => handleInputChange('email', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors duration-300 ${
+                        isDarkMode 
+                          ? 'bg-[#0d2419] border-gray-700 text-gray-200 placeholder-gray-500' 
+                          : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
+                      }`}
                       style={{
                         fontFamily: 'Work Sans',
                         fontWeight: 400,
-                        fontSize: '16px',
-                        background: 'white'
+                        fontSize: '16px'
                       }}
                     />
                   </div>
@@ -729,12 +738,15 @@ const BookingDetails = () => {
                       placeholder="Mobile Number"
                       value={formData.mobile}
                       onChange={(e) => handleInputChange('mobile', e.target.value)}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors duration-300 ${
+                        isDarkMode 
+                          ? 'bg-[#0d2419] border-gray-700 text-gray-200 placeholder-gray-500' 
+                          : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
+                      }`}
                       style={{
                         fontFamily: 'Work Sans',
                         fontWeight: 400,
-                        fontSize: '16px',
-                        background: 'white'
+                        fontSize: '16px'
                       }}
                     />
                   </div>
@@ -763,12 +775,15 @@ const BookingDetails = () => {
                     placeholder="Enter coupon code"
                     value={couponCode}
                     onChange={(e) => setCouponCode(e.target.value)}
-                    className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                    className={`flex-1 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors duration-300 ${
+                      isDarkMode 
+                        ? 'bg-[#0d2419] border-gray-700 text-gray-200 placeholder-gray-500' 
+                        : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
+                    }`}
                     style={{
                       fontFamily: 'Work Sans',
                       fontWeight: 400,
-                      fontSize: '16px',
-                      background: 'white'
+                      fontSize: '16px'
                     }}
                   />
                   <button 
@@ -1071,7 +1086,7 @@ const BookingDetails = () => {
                             <span className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-[#a5d6a7]' : 'text-gray-600'}`}>
                               {formatCurrency(calculatedPricing.basePrice, calculatedPricing.currency)} x {calculatedPricing.nights} Night{calculatedPricing.nights !== 1 ? 's' : ''}
                             </span>
-                            <span className={`font-medium text-sm transition-colors duration-300 ${isDarkMode ? 'text-[#e8f5e9]' : 'text-gray-900'}`}>
+                            <span className={`font-medium text-sm transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                               {formatCurrency(calculatedPricing.subtotal, calculatedPricing.currency)}
                             </span>
                           </div>
@@ -1082,7 +1097,7 @@ const BookingDetails = () => {
                               <span className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-[#a5d6a7]' : 'text-gray-600'}`}>
                                 Taxes and charges
                               </span>
-                              <span className={`font-medium text-sm transition-colors duration-300 ${isDarkMode ? 'text-[#e8f5e9]' : 'text-gray-900'}`}>
+                              <span className={`font-medium text-sm transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                                 {formatCurrency(calculatedPricing.taxes, calculatedPricing.currency)}
                               </span>
                             </div>
@@ -1108,10 +1123,10 @@ const BookingDetails = () => {
                           <hr className="my-3" style={{ borderColor: isDarkMode ? '#0d2419' : undefined }} />
                           
                           <div className="flex justify-between items-center">
-                            <span className={`font-semibold transition-colors duration-300 ${isDarkMode ? 'text-[#e8f5e9]' : 'text-gray-900'}`}>
+                            <span className={`font-semibold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                               Total Payable Amount
                             </span>
-                            <span className={`font-bold text-lg transition-colors duration-300 ${isDarkMode ? 'text-[#e8f5e9]' : 'text-gray-900'}`}>
+                            <span className={`font-bold text-lg transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                               {formatCurrency(calculatedPricing.total, calculatedPricing.currency)}
                             </span>
                           </div>
@@ -1148,7 +1163,11 @@ const BookingDetails = () => {
                           placeholder="Enter coupon code (try SAVE10)"
                           value={couponCode}
                           onChange={(e) => setCouponCode(e.target.value)}
-                          className="flex-1 px-3 py-2 border border-gray-300 rounded text-sm"
+                          className={`flex-1 px-3 py-2 border rounded text-sm transition-colors duration-300 ${
+                            isDarkMode 
+                              ? 'bg-[#0d2419] border-gray-700 text-gray-200 placeholder-gray-500' 
+                              : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
+                          }`}
                           style={{
                             fontFamily: 'Work Sans',
                             fontWeight: 400,
