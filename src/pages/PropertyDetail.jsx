@@ -629,7 +629,7 @@ function PropertyDetail() {
           </h2>
 
           {/* Search Section - Check Availability & Pricing */}
-          <div className="mb-8">
+          <div className="mb-8 relative">
             <div className={`rounded-2xl shadow-md p-6 border transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'bg-white border-gray-200'}`} style={{ backgroundColor: isDarkMode ? '#1a2421' : 'white' }}>
               <h3 className={`mb-6 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`} style={{ fontFamily: 'Petrona', fontSize: '24px', fontWeight: 600 }}>
                 Check Availability & Pricing
