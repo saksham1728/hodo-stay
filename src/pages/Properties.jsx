@@ -273,102 +273,96 @@ const Properties = () => {
                     className="w-full md:w-2/5 p-4 md:p-6 flex flex-col justify-between"
                   >
                     <div>
-                      {/* Desktop Layout - side by side */}
-                      <div className="hidden md:flex items-start justify-between">
-                        <div className="pr-2">
-                          <h3
-                            className={`mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-black'}`}
-                            style={{
-                              fontFamily: "Petrona",
-                              fontWeight: 600,
-                              fontSize: "26px",
-                              lineHeight: "100%",
-                              letterSpacing: "-2.2%",
-                            }}
-                          >
-                            {property.title}
-                          </h3>
-                          <p
-                            className={`mb-4 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
-                            style={{
-                              fontFamily: "Petrona",
-                              fontWeight: 400,
-                              fontSize: "13px",
-                              lineHeight: "140%",
-                            }}
-                          >
-                            {property.location}
-                          </p>
-                        </div>
+                      {/* Desktop Layout - Vertical stack */}
+                      <div className="hidden md:block">
+                        <h3
+                          className={`mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-black'}`}
+                          style={{
+                            fontFamily: "Petrona",
+                            fontWeight: 600,
+                            fontSize: "26px",
+                            lineHeight: "100%",
+                            letterSpacing: "-2.2%",
+                          }}
+                        >
+                          {property.title}
+                        </h3>
+                        <p
+                          className={`mb-3 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
+                          style={{
+                            fontFamily: "Petrona",
+                            fontWeight: 400,
+                            fontSize: "13px",
+                            lineHeight: "140%",
+                          }}
+                        >
+                          {property.location}
+                        </p>
 
-                        {/* Rating - Green box with "9.8" and "Exceptional" */}
-                        <div className="flex items-center gap-2">
-                          <div 
-                            className="px-2 py-1 rounded"
-                            style={{ backgroundColor: '#0B8043' }}
-                          >
-                            <span
-                              className="text-white"
-                              style={{
-                                fontFamily: 'Petrona',
-                                fontWeight: 600,
-                                fontSize: '16px'
-                              }}
-                            >
-                              9.8
-                            </span>
-                          </div>
+                        {/* Rating with star - Below location */}
+                        <div className="flex items-center gap-2 mb-4">
+                          <svg className="w-5 h-5 text-orange-500 fill-current" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
                           <span
-                            className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+                            className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
                             style={{
                               fontFamily: 'Petrona',
-                              fontWeight: 500,
+                              fontWeight: 400,
                               fontSize: '14px'
                             }}
                           >
-                            Exceptional
+                            Rated <span className={`font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>4.8★</span> from 120+ verified guest reviews
                           </span>
+                        </div>
+
+                        {/* Circular scrollable amenities */}
+                        <div className="flex gap-3 mb-4 overflow-x-auto pb-2 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                          <style>{`
+                            .scrollbar-hide::-webkit-scrollbar {
+                              display: none;
+                            }
+                          `}</style>
+                          
+                          <div className="flex items-center gap-2 px-3 py-2 rounded-full whitespace-nowrap" style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#F3F4F6' }}>
+                            <svg className="w-4 h-4 flex-shrink-0" style={{ color: isDarkMode ? '#9CA3AF' : '#6B7280' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                            </svg>
+                            <span
+                              className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
+                              style={{ fontFamily: 'Petrona' }}
+                            >
+                              Fully Furnished
+                            </span>
+                          </div>
+                          
+                          <div className="flex items-center gap-2 px-3 py-2 rounded-full whitespace-nowrap" style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#F3F4F6' }}>
+                            <svg className="w-4 h-4 flex-shrink-0" style={{ color: isDarkMode ? '#9CA3AF' : '#6B7280' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                            </svg>
+                            <span
+                              className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
+                              style={{ fontFamily: 'Petrona' }}
+                            >
+                              Housekeeping Included
+                            </span>
+                          </div>
+                          
+                          <div className="flex items-center gap-2 px-3 py-2 rounded-full whitespace-nowrap" style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#F3F4F6' }}>
+                            <svg className="w-4 h-4 flex-shrink-0" style={{ color: isDarkMode ? '#9CA3AF' : '#6B7280' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" />
+                            </svg>
+                            <span
+                              className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
+                              style={{ fontFamily: 'Petrona' }}
+                            >
+                              High-Speed WiFi
+                            </span>
+                          </div>
                         </div>
                       </div>
 
                       {/* Mobile: Rating with star - Below image */}
-                      <div className="md:hidden flex items-center gap-2 mb-3">
-                        <svg className="w-5 h-5 text-orange-500 fill-current" viewBox="0 0 20 20">
-                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                        </svg>
-                        <span
-                          className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
-                          style={{
-                            fontFamily: 'Petrona',
-                            fontWeight: 400,
-                            fontSize: '14px'
-                          }}
-                        >
-                          Rated <span className={`font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>4.8★</span> from 120+ verified guest reviews
-                        </span>
-                      </div>
-
-                      {/* Desktop: Amenities badges */}
-                      <div className="hidden md:flex flex-wrap gap-2 mb-4">
-                        {property.amenities.map((amenity, index) => (
-                          <span
-                            key={index}
-                            className="flex items-center gap-1 text-gray-600 px-2 py-1 bg-gray-50 rounded-md"
-                            style={{
-                              fontFamily: "Petrona",
-                              fontWeight: 400,
-                              fontSize: "12px",
-                            }}
-                          >
-                            {amenity === "WiFi" && "📶"}
-                            {amenity === "Air-conditioning" && "❄️"}
-                            {amenity === "Free Parking on Premises" && "🅿️"}
-                            {amenity}
-                          </span>
-                        ))}
-                      </div>
-
-                      {/* Mobile: Circular scrollable amenities */}
                       <div className="md:hidden flex gap-3 mb-4 overflow-x-auto pb-2 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                         <style>{`
                           .scrollbar-hide::-webkit-scrollbar {

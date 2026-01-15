@@ -11,8 +11,12 @@ const HomeHeader = () => {
   }
   return (
     <div 
-      style={{ backgroundColor: isDarkMode ? "#1a1a1a" : "#FFF7F0" }} 
-      className="shadow-md relative transition-colors duration-300"
+      style={{ 
+        backgroundColor: isDarkMode ? "rgba(0, 0, 0, 0.8)" : "#FFF7F0"
+      }} 
+      className={`relative transition-colors duration-300 ${
+        isDarkMode ? 'backdrop-blur-md border-b border-white/50' : 'shadow-md'
+      }`}
     >
       {/* Header */}
       <header className="px-8 max-md:px-4 py-3 md:py-3 sticky top-0 z-50">
@@ -133,8 +137,12 @@ const HomeHeader = () => {
       {/* Mobile Menu Dropdown */}
       {isMobileMenuOpen && (
         <div 
-          className="md:hidden shadow-xl transition-colors duration-300" 
-          style={{ backgroundColor: isDarkMode ? "#1a1a1a" : "#FFF7F0" }}
+          className={`md:hidden transition-colors duration-300 ${
+            isDarkMode ? 'backdrop-blur-md' : 'shadow-xl'
+          }`}
+          style={{ 
+            backgroundColor: isDarkMode ? "rgba(0, 0, 0, 0.95)" : "#FFF7F0"
+          }}
         >
           <div className="px-6 py-4 space-y-1">
             <Link 

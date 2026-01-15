@@ -16,7 +16,7 @@ const HodoBlogs = () => {
     {
       id: 2,
       title: "Top things to do in Bengaluru",
-      description: "Discover the best attractions Bangalore has to offer from your stay at Hodo Stays in HSR Layout.",
+      description: "Discover the best attractions Bangalore has to offer from your stay at Hodo.",
       image: "/blog-2.jpg"
     },
     {
@@ -89,6 +89,15 @@ const HodoBlogs = () => {
           
           {/* Left: Hero Text */}
           <div className="md:col-span-4 lg:col-span-5 text-left">
+            <p 
+              className="mb-2 text-sm md:text-base font-medium tracking-wider uppercase"
+              style={{ 
+                color: '#FF8C42',
+                fontFamily: 'Work Sans'
+              }}
+            >
+              STORIES & INSIGHTS
+            </p>
             <h2
               className="text-white mb-4 md:mb-6"
               style={{
@@ -193,29 +202,35 @@ const HodoBlogs = () => {
 
                   {/* Content */}
                   <div 
-                    className="p-6 md:p-8 h-full flex flex-col justify-between transition-colors duration-300" 
-                    style={{ backgroundColor: isDarkMode ? '#2D3A36' : '#FAF2E8' }}
+                    className="px-6 md:px-8 pt-4 md:pt-4 pb-4 md:pb-6 flex flex-col justify-between transition-colors duration-300" 
+                    style={{ 
+                      backgroundColor: isDarkMode ? '#2D3A36' : '#FAF2E8',
+                      height: window.innerWidth < 768 ? '180px' : '185px'
+                    }}
                   >
                     <div>
                       <h3
-                        className={`mb-3 text-center transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-black'}`}
+                        className={`mb-2 text-left transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-black'}`}
                         style={{
                           fontFamily: 'Petrona, serif',
                           fontWeight: 400,
-                          fontSize: window.innerWidth < 768 ? '18px' : '24px',
+                          fontSize: window.innerWidth < 768 ? '18px' : '20px',
                           lineHeight: '120%',
-                          letterSpacing: '-0.8%'
+                          letterSpacing: '-0.8%',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap'
                         }}
                       >
                         {blog.title}
                       </h3>
 
                       <p
-                        className={`text-center transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}
+                        className={`text-left mb-3 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}
                         style={{
                           fontFamily: 'Work Sans, sans-serif',
                           fontWeight: 400,
-                          fontSize: window.innerWidth < 768 ? '13px' : '15px',
+                          fontSize: window.innerWidth < 768 ? '13px' : '14px',
                           lineHeight: '150%',
                           letterSpacing: '-0.3%'
                         }}
@@ -223,6 +238,33 @@ const HodoBlogs = () => {
                         {blog.description}
                       </p>
                     </div>
+
+                    {/* Read More CTA */}
+                    <button
+                      className={`flex items-center gap-2 text-left transition-colors duration-200 ${
+                        isDarkMode ? 'text-orange-400 hover:text-orange-300' : 'text-emerald-700 hover:text-emerald-600'
+                      }`}
+                      style={{
+                        fontFamily: 'Work Sans, sans-serif',
+                        fontWeight: 500,
+                        fontSize: '14px'
+                      }}
+                    >
+                      Read more
+                      <svg 
+                        className="w-4 h-4" 
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path 
+                          strokeLinecap="round" 
+                          strokeLinejoin="round" 
+                          strokeWidth={2} 
+                          d="M9 5l7 7-7 7" 
+                        />
+                      </svg>
+                    </button>
                   </div>
                 </div>
               ))}

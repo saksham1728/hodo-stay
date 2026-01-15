@@ -326,6 +326,15 @@ const Footer = () => {
         {/* Reviews Section */}
         <div className="py-16 px-8 text-gray-800 relative max-md:py-8 max-md:px-4">
           <div className="max-w-7xl mx-auto">
+            <p 
+              className="mb-2 text-sm md:text-base font-medium tracking-wider uppercase"
+              style={{ 
+                color: isDarkMode ? '#FF8C42' : '#0B8043',
+                fontFamily: 'Work Sans'
+              }}
+            >
+              GUEST EXPERIENCES
+            </p>
             <h2
               className={`m-0 mb-12 max-md:text-3xl max-md:mb-8 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}
               style={{

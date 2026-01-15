@@ -10,7 +10,7 @@ const Home = () => {
   const { isDarkMode } = useTheme()
   
   return (
-    <div className="relative">
+    <div className="relative" style={{ backgroundColor: isDarkMode ? '#000000' : 'transparent' }}>
       {/* Hero Section with Video Background */}
       <div className="relative h-screen overflow-hidden">
         {/* Background Video */}

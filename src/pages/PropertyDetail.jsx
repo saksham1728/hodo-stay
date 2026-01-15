@@ -10,7 +10,7 @@ import { useTheme } from "../context/ThemeContext";
 /**
  * ImageCarousel: arrows on desktop, swipe on mobile, dots indicator.
  */
-const ImageCarousel = ({ images }) => {
+const ImageCarousel = ({ images, onViewPhotos }) => {
   const [index, setIndex] = useState(0)
   const dragging = useRef(false)
   const startX = useRef(0)
@@ -22,7 +22,6 @@ const ImageCarousel = ({ images }) => {
 
   const next = () => setIndex((i) => (i + 1) % images.length)
   const prev = () => setIndex((i) => (i - 1 + images.length) % images.length)
-  const goTo = (i) => setIndex(i)
 
   const onTouchStart = (e) => {
     dragging.current = true
@@ -66,6 +65,18 @@ const ImageCarousel = ({ images }) => {
         </div>
       </div>
 
+      {/* View Photos Button */}
+      <button
+        onClick={onViewPhotos}
+        className="absolute bottom-4 right-4 bg-white text-gray-800 px-4 py-2 rounded-lg shadow-lg hover:bg-gray-100 transition-colors z-20 flex items-center gap-2"
+        style={{ fontFamily: 'Petrona', fontSize: '14px', fontWeight: 500 }}
+      >
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        View Photos
+      </button>
+
       {/* Arrows (desktop only) */}
       <button
         aria-label="Previous image"
@@ -90,6 +101,164 @@ const ImageCarousel = ({ images }) => {
   )
 }
 
+/**
+ * PhotoGallery Modal Component
+ */
+const PhotoGallery = ({ images, isOpen, onClose, initialIndex = 0 }) => {
+  const [currentIndex, setCurrentIndex] = useState(initialIndex)
+  const gridRef = useRef(null)
+
+  useEffect(() => {
+    setCurrentIndex(initialIndex)
+  }, [initialIndex, isOpen])
+
+  // Lock body scroll when gallery is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [isOpen])
+
+  useEffect(() => {
+    if (!isOpen) return
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose()
+      if (e.key === 'ArrowLeft') setCurrentIndex((i) => (i - 1 + images.length) % images.length)
+      if (e.key === 'ArrowRight') setCurrentIndex((i) => (i + 1) % images.length)
+      if (e.key === 'ArrowUp' && gridRef.current) {
+        e.preventDefault()
+        gridRef.current.scrollBy({ top: -200, behavior: 'smooth' })
+      }
+      if (e.key === 'ArrowDown' && gridRef.current) {
+        e.preventDefault()
+        gridRef.current.scrollBy({ top: 200, behavior: 'smooth' })
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen, onClose, images.length])
+
+  if (!isOpen) return null
+
+  return (
+    <div className="fixed inset-0 bg-black z-50 flex flex-col">
+      {/* Header */}
+      <div className="flex items-center justify-between p-4 bg-black/90">
+        <div className="text-white" style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
+          {currentIndex + 1} / {images.length}
+        </div>
+        <button
+          onClick={onClose}
+          className="text-white hover:text-gray-300 transition-colors"
+          aria-label="Close gallery"
+        >
+          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Desktop Layout: Large image + Grid */}
+      <div className="hidden md:flex flex-1 overflow-hidden">
+        {/* Large Image */}
+        <div className="flex-1 flex items-center justify-center p-8 relative">
+          <img
+            src={images[currentIndex]}
+            alt={`Photo ${currentIndex + 1}`}
+            className="max-w-full max-h-full object-contain"
+          />
+          
+          {/* Navigation Arrows */}
+          <button
+            onClick={() => setCurrentIndex((i) => (i - 1 + images.length) % images.length)}
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-colors"
+            aria-label="Previous"
+          >
+            <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <button
+            onClick={() => setCurrentIndex((i) => (i + 1) % images.length)}
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-colors"
+            aria-label="Next"
+          >
+            <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Grid */}
+        <div
+          ref={gridRef}
+          className="w-80 bg-black/50 p-4 overflow-y-auto scrollbar-hide"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        >
+          <style>{`
+            .scrollbar-hide::-webkit-scrollbar {
+              display: none;
+            }
+          `}</style>
+          <div className="grid grid-cols-2 gap-3">
+            {images.map((img, idx) => (
+              <button
+                key={idx}
+                onClick={() => setCurrentIndex(idx)}
+                className={`relative aspect-square rounded-lg overflow-hidden ${
+                  idx === currentIndex ? 'ring-4 ring-white' : 'opacity-70 hover:opacity-100'
+                } transition-all`}
+              >
+                <img
+                  src={img}
+                  alt={`Thumbnail ${idx + 1}`}
+                  className="w-full h-full object-cover"
+                />
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Layout: Full screen swipeable */}
+      <div className="md:hidden flex-1 flex items-center justify-center relative">
+        <img
+          src={images[currentIndex]}
+          alt={`Photo ${currentIndex + 1}`}
+          className="max-w-full max-h-full object-contain"
+        />
+        
+        {/* Navigation Arrows */}
+        <button
+          onClick={() => setCurrentIndex((i) => (i - 1 + images.length) % images.length)}
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-white/90 rounded-full flex items-center justify-center"
+          aria-label="Previous"
+        >
+          <svg className="w-5 h-5 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <button
+          onClick={() => setCurrentIndex((i) => (i + 1) % images.length)}
+          className="absolute right-4 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-white/90 rounded-full flex items-center justify-center"
+          aria-label="Next"
+        >
+          <svg className="w-5 h-5 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  )
+}
+
 function PropertyDetail() {
   const { id } = useParams();
   const { isDarkMode } = useTheme();
@@ -109,8 +278,12 @@ function PropertyDetail() {
   const [searchError, setSearchError] = useState('');
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   
+  // Photo gallery state
+  const [galleryOpen, setGalleryOpen] = useState(false);
+  const [galleryImages, setGalleryImages] = useState([]);
+  const [galleryInitialIndex, setGalleryInitialIndex] = useState(0);
+  
   const overviewRef = useRef(null);
-  const aboutRef = useRef(null);
   const roomsRef = useRef(null);
   const accessibilityRef = useRef(null);
   const policiesRef = useRef(null);
@@ -146,7 +319,6 @@ function PropertyDetail() {
     const handleScroll = () => {
       const sections = [
         { ref: overviewRef, name: 'overview' },
-        { ref: aboutRef, name: 'about' },
         { ref: roomsRef, name: 'rooms' },
         { ref: accessibilityRef, name: 'accessibility' },
         { ref: policiesRef, name: 'policies' }
@@ -361,7 +533,6 @@ function PropertyDetail() {
           <nav className="flex gap-8 max-md:gap-4 overflow-x-auto">
             {[
               { name: 'Overview', ref: overviewRef, id: 'overview' },
-              { name: 'About', ref: aboutRef, id: 'about' },
               { name: 'Rooms', ref: roomsRef, id: 'rooms' },
               { name: 'Accessibility', ref: accessibilityRef, id: 'accessibility' },
               { name: 'Policies', ref: policiesRef, id: 'policies' }
@@ -411,6 +582,22 @@ function PropertyDetail() {
           >
             {location}
           </p>
+
+          {/* About this property */}
+          <div className="mb-6">
+            <h2 
+              className={`mb-4 max-md:text-2xl transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
+              style={{ fontFamily: 'Petrona', fontSize: '28px', fontWeight: 600 }}
+            >
+              About this property
+            </h2>
+            <p 
+              className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+              style={{ fontFamily: 'Petrona', fontSize: '16px', lineHeight: '160%' }}
+            >
+              {building.description || `Experience comfort and luxury at ${building.name}. Located in ${building.location?.city || 'Bangalore'}, this property offers modern amenities and exceptional service for both short and long stays.`}
+            </p>
+          </div>
           
           {/* Amenities */}
           {building.amenities && building.amenities.length > 0 && (
@@ -432,158 +619,6 @@ function PropertyDetail() {
           )}
         </section>
 
-        {/* About Section */}
-        <section ref={aboutRef} className="mb-16">
-          <h2 
-            className={`mb-6 max-md:text-2xl transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
-            style={{ fontFamily: 'Petrona', fontSize: '36px', fontWeight: 600 }}
-          >
-            About this property
-          </h2>
-          <p 
-            className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
-            style={{ fontFamily: 'Petrona', fontSize: '16px', lineHeight: '160%' }}
-          >
-            {building.description || `Experience comfort and luxury at ${building.name}. Located in ${building.location?.city || 'Bangalore'}, this property offers modern amenities and exceptional service for both short and long stays.`}
-          </p>
-        </section>
-
-        {/* Search Section - Before Rooms */}
-        <section className="mb-12 relative">
-          <div className={`rounded-2xl shadow-md p-6 border transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'bg-white border-gray-200'}`} style={{ backgroundColor: isDarkMode ? '#1a2421' : 'white' }}>
-            <h3 className={`mb-6 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`} style={{ fontFamily: 'Petrona', fontSize: '24px', fontWeight: 600 }}>
-              Check Availability & Pricing
-            </h3>
-            
-            <div className="flex flex-col md:flex-row gap-4">
-              {/* Check-in Date */}
-              <div className="flex-1">
-                <label className={`block mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-700'}`} style={{ fontFamily: 'Petrona', fontSize: '14px', fontWeight: 500 }}>
-                  Check-in
-                </label>
-                <div
-                  onClick={() => setIsDatePickerOpen(true)}
-                  className={`w-full px-4 py-4 border-2 rounded-lg cursor-pointer hover:border-orange-500 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500 flex items-center justify-between transition-colors ${
-                    isDarkMode 
-                      ? 'bg-[#0d2419] border-gray-700' 
-                      : 'bg-white border-gray-300'
-                  }`}
-                  style={{ fontFamily: 'Petrona' }}
-                >
-                  <span className={checkIn ? (isDarkMode ? 'text-gray-200' : 'text-gray-900') : 'text-gray-400'}>
-                    {checkIn ? formatDateDisplay(checkIn) : 'Select date'}
-                  </span>
-                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                </div>
-              </div>
-
-              {/* Check-out Date */}
-              <div className="flex-1">
-                <label className={`block mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-700'}`} style={{ fontFamily: 'Petrona', fontSize: '14px', fontWeight: 500 }}>
-                  Check-out
-                </label>
-                <div
-                  onClick={() => setIsDatePickerOpen(true)}
-                  className={`w-full px-4 py-4 border-2 rounded-lg cursor-pointer hover:border-orange-500 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500 flex items-center justify-between transition-colors ${
-                    isDarkMode 
-                      ? 'bg-[#0d2419] border-gray-700' 
-                      : 'bg-white border-gray-300'
-                  }`}
-                  style={{ fontFamily: 'Petrona' }}
-                >
-                  <span className={checkOut ? (isDarkMode ? 'text-gray-200' : 'text-gray-900') : 'text-gray-400'}>
-                    {checkOut ? formatDateDisplay(checkOut) : 'Select date'}
-                  </span>
-                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                </div>
-              </div>
-
-              {/* Guests with +/- buttons */}
-              <div className="w-full md:w-48">
-                <label className={`block mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-700'}`} style={{ fontFamily: 'Petrona', fontSize: '14px', fontWeight: 500 }}>
-                  Guests
-                </label>
-                <div className={`flex items-center border-2 rounded-lg overflow-hidden transition-colors ${
-                  isDarkMode 
-                    ? 'bg-[#0d2419] border-gray-700' 
-                    : 'bg-white border-gray-300'
-                }`}>
-                  <button
-                    onClick={() => setGuests(Math.max(1, guests - 1))}
-                    className={`px-4 py-4 font-bold transition-colors ${
-                      isDarkMode 
-                        ? 'bg-[#1a2e24] hover:bg-[#243a2e] text-gray-200' 
-                        : 'bg-gray-50 hover:bg-gray-100 text-gray-700'
-                    }`}
-                    style={{ fontFamily: 'Petrona' }}
-                  >
-                    −
-                  </button>
-                  <div className={`flex-1 text-center py-4 font-medium transition-colors ${isDarkMode ? 'text-gray-200' : 'text-gray-900'}`} style={{ fontFamily: 'Petrona' }}>
-                    {guests}
-                  </div>
-                  <button
-                    onClick={() => setGuests(Math.min(10, guests + 1))}
-                    className={`px-4 py-4 font-bold transition-colors ${
-                      isDarkMode 
-                        ? 'bg-[#1a2e24] hover:bg-[#243a2e] text-gray-200' 
-                        : 'bg-gray-50 hover:bg-gray-100 text-gray-700'
-                    }`}
-                    style={{ fontFamily: 'Petrona' }}
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-
-              {/* Search Button */}
-              <div className="flex items-end">
-                <button
-                  onClick={handleSearch}
-                  disabled={searchLoading || !checkIn || !checkOut || !guests}
-                  className="w-full md:w-auto bg-orange-600 text-white px-8 py-4 rounded-lg hover:bg-orange-700 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-colors whitespace-nowrap"
-                  style={{ fontFamily: 'Petrona', fontSize: '16px', fontWeight: 500 }}
-                >
-                  {searchLoading ? (
-                    <>
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                      Searching...
-                    </>
-                  ) : (
-                    <>
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                      </svg>
-                      Search
-                    </>
-                  )}
-                </button>
-              </div>
-            </div>
-
-            {searchError && (
-              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-                <p className="text-red-800" style={{ fontFamily: 'Petrona', fontSize: '14px' }}>
-                  {searchError}
-                </p>
-              </div>
-            )}
-
-            {/* Date Range Picker Dropdown */}
-            <DateRangePicker
-              isOpen={isDatePickerOpen}
-              onClose={() => setIsDatePickerOpen(false)}
-              checkIn={checkIn}
-              checkOut={checkOut}
-              onDateChange={handleDateChange}
-            />
-          </div>
-        </section>
-
         {/* Rooms Section */}
         <section ref={roomsRef} className="mb-16">
           <h2 
@@ -592,6 +627,135 @@ function PropertyDetail() {
           >
             Rooms
           </h2>
+
+          {/* Search Section - Check Availability & Pricing */}
+          <div className="mb-8">
+            <div className={`rounded-2xl shadow-md p-6 border transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'bg-white border-gray-200'}`} style={{ backgroundColor: isDarkMode ? '#1a2421' : 'white' }}>
+              <h3 className={`mb-6 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`} style={{ fontFamily: 'Petrona', fontSize: '24px', fontWeight: 600 }}>
+                Check Availability & Pricing
+              </h3>
+              
+              <div className="flex flex-col md:flex-row gap-4">
+                {/* Check-in Date */}
+                <div className="flex-1">
+                  <label className={`block mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-700'}`} style={{ fontFamily: 'Petrona', fontSize: '14px', fontWeight: 500 }}>
+                    Check-in
+                  </label>
+                  <div
+                    onClick={() => setIsDatePickerOpen(true)}
+                    className={`w-full px-4 py-4 border-2 rounded-lg cursor-pointer hover:border-orange-500 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500 flex items-center justify-between transition-colors ${
+                      isDarkMode 
+                        ? 'bg-[#0d2419] border-gray-700' 
+                        : 'bg-white border-gray-300'
+                    }`}
+                    style={{ fontFamily: 'Petrona' }}
+                  >
+                    <span className={checkIn ? (isDarkMode ? 'text-gray-200' : 'text-gray-900') : 'text-gray-400'}>
+                      {checkIn ? formatDateDisplay(checkIn) : 'Select date'}
+                    </span>
+                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                </div>
+
+                {/* Check-out Date */}
+                <div className="flex-1">
+                  <label className={`block mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-700'}`} style={{ fontFamily: 'Petrona', fontSize: '14px', fontWeight: 500 }}>
+                    Check-out
+                  </label>
+                  <div
+                    onClick={() => setIsDatePickerOpen(true)}
+                    className={`w-full px-4 py-4 border-2 rounded-lg cursor-pointer hover:border-orange-500 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500 flex items-center justify-between transition-colors ${
+                      isDarkMode 
+                        ? 'bg-[#0d2419] border-gray-700' 
+                        : 'bg-white border-gray-300'
+                    }`}
+                    style={{ fontFamily: 'Petrona' }}
+                  >
+                    <span className={checkOut ? (isDarkMode ? 'text-gray-200' : 'text-gray-900') : 'text-gray-400'}>
+                      {checkOut ? formatDateDisplay(checkOut) : 'Select date'}
+                    </span>
+                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                </div>
+
+                {/* Guests with +/- buttons */}
+                <div className="w-full md:w-48">
+                  <label className={`block mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-700'}`} style={{ fontFamily: 'Petrona', fontSize: '14px', fontWeight: 500 }}>
+                    Guests
+                  </label>
+                  <div className={`flex items-center border-2 rounded-lg overflow-hidden transition-colors ${
+                    isDarkMode 
+                      ? 'bg-[#0d2419] border-gray-700' 
+                      : 'bg-white border-gray-300'
+                  }`}>
+                    <button
+                      onClick={() => setGuests(Math.max(1, guests - 1))}
+                      className="px-4 py-4 font-bold bg-orange-500 hover:bg-orange-600 text-white transition-colors"
+                      style={{ fontFamily: 'Petrona' }}
+                    >
+                      −
+                    </button>
+                    <div className={`flex-1 text-center py-4 font-medium transition-colors ${isDarkMode ? 'text-gray-200' : 'text-gray-900'}`} style={{ fontFamily: 'Petrona' }}>
+                      {guests}
+                    </div>
+                    <button
+                      onClick={() => setGuests(Math.min(10, guests + 1))}
+                      className="px-4 py-4 font-bold bg-orange-500 hover:bg-orange-600 text-white transition-colors"
+                      style={{ fontFamily: 'Petrona' }}
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+
+                {/* Search Button */}
+                <div className="flex items-end">
+                  <button
+                    onClick={handleSearch}
+                    disabled={searchLoading || !checkIn || !checkOut || !guests}
+                    className="w-full md:w-auto bg-orange-600 text-white px-8 py-4 rounded-lg hover:bg-orange-700 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-colors whitespace-nowrap"
+                    style={{ fontFamily: 'Petrona', fontSize: '16px', fontWeight: 500 }}
+                  >
+                    {searchLoading ? (
+                      <>
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                        Searching...
+                      </>
+                    ) : (
+                      <>
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                        Search
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {searchError && (
+                <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-red-800" style={{ fontFamily: 'Petrona', fontSize: '14px' }}>
+                    {searchError}
+                  </p>
+                </div>
+              )}
+
+              {/* Date Range Picker Dropdown */}
+              <DateRangePicker
+                isOpen={isDatePickerOpen}
+                onClose={() => setIsDatePickerOpen(false)}
+                checkIn={checkIn}
+                checkOut={checkOut}
+                onDateChange={handleDateChange}
+              />
+            </div>
+          </div>
+
           <div className="space-y-6 max-md:space-y-4">
             {unitTypes.map((unitTypeData) => {
               const rep = unitTypeData.representativeUnit;
@@ -613,7 +777,14 @@ function PropertyDetail() {
                   <div className="flex flex-col md:flex-row">
                     {/* Image Carousel */}
                     <div className="w-full md:w-3/5 h-[200px] md:h-[450px]">
-                      <ImageCarousel images={images} />
+                      <ImageCarousel 
+                        images={images} 
+                        onViewPhotos={() => {
+                          setGalleryImages(images);
+                          setGalleryInitialIndex(0);
+                          setGalleryOpen(true);
+                        }}
+                      />
                     </div>
 
                     {/* Content */}
@@ -630,18 +801,6 @@ function PropertyDetail() {
                           >
                             {unitTypeData.unitType}
                           </h3>
-
-                          <div className="flex items-center gap-1 md:gap-2">
-                            <svg className="w-4 h-4 md:w-6 md:h-6 text-green-600 fill-current" viewBox="0 0 20 20">
-                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
-                            <span
-                              className="text-green-600 font-medium max-md:text-sm"
-                              style={{ fontFamily: "Petrona", fontWeight: 600, fontSize: "18px" }}
-                            >
-                              4.5
-                            </span>
-                          </div>
                         </div>
 
                         <p
@@ -840,6 +999,14 @@ function PropertyDetail() {
 
       <ReviewsSection />
       <FooterSimple />
+
+      {/* Photo Gallery Modal */}
+      <PhotoGallery
+        images={galleryImages}
+        isOpen={galleryOpen}
+        onClose={() => setGalleryOpen(false)}
+        initialIndex={galleryInitialIndex}
+      />
     </div>
   );
 }
