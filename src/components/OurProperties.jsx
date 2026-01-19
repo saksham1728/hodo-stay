@@ -157,11 +157,11 @@ const OurProperties = () => {
             <p 
               className="mb-2 text-sm md:text-base font-medium tracking-wider uppercase"
               style={{ 
-                color: isDarkMode ? '#FF8C42' : '#0B8043',
+                color: '#DE754B',
                 fontFamily: 'Work Sans'
               }}
             >
-              EXPLORE STAYS
+              Explore Properties
             </p>
             <h2
               className={`transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-black'}`}

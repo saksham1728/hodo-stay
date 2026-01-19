@@ -135,11 +135,11 @@ const CardStack = () => {
           <p 
             className="mb-2 text-sm md:text-base font-medium tracking-wider uppercase"
             style={{ 
-              color: isDarkMode ? '#FF8C42' : '#0B8043',
+              color: '#DE754B',
               fontFamily: 'Work Sans'
             }}
           >
-            WHY CHOOSE US
+            Flexible Stays
           </p>
           <h2
             className={`mb-4 text-3xl md:text-5xl transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-black'}`}

@@ -92,11 +92,11 @@ const HodoBlogs = () => {
             <p 
               className="mb-2 text-sm md:text-base font-medium tracking-wider uppercase"
               style={{ 
-                color: '#FF8C42',
+                color: '#DE754B',
                 fontFamily: 'Work Sans'
               }}
             >
-              STORIES & INSIGHTS
+              Insights
             </p>
             <h2
               className="text-white mb-4 md:mb-6"
