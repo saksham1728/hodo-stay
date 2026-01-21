@@ -12,10 +12,11 @@ const HomeHeader = () => {
   return (
     <div 
       style={{ 
-        backgroundColor: isDarkMode ? "rgba(0, 0, 0, 0.8)" : "#FFF7F0"
+        backgroundColor: isDarkMode ? "rgba(0, 0, 0, 0.8)" : "#FFF7F0",
+        borderBottom: isDarkMode ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid rgba(0, 0, 0, 0.1)"
       }} 
       className={`relative transition-colors duration-300 ${
-        isDarkMode ? 'backdrop-blur-md border-b border-white/50' : 'shadow-md'
+        isDarkMode ? 'backdrop-blur-md' : 'shadow-sm'
       }`}
     >
       {/* Header */}

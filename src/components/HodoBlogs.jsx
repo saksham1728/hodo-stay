@@ -123,17 +123,6 @@ const HodoBlogs = () => {
             >
               Dive into our world! Explore travel tips, local insights, and the latest updates from Hodo Stays.
             </p>
-
-            <button
-              className="text-white underline hover:text-white/80 transition-colors inline-block"
-              style={{
-                fontFamily: 'Petrona',
-                fontWeight: 500,
-                fontSize: '14px'
-              }}
-            >
-              View more
-            </button>
           </div>
 
           {/* Right: Carousel */}

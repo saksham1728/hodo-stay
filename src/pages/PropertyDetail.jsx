@@ -68,13 +68,19 @@ const ImageCarousel = ({ images, onViewPhotos }) => {
       {/* View Photos Button */}
       <button
         onClick={onViewPhotos}
-        className="absolute bottom-4 right-4 bg-white text-gray-800 px-4 py-2 rounded-lg shadow-lg hover:bg-gray-100 transition-colors z-20 flex items-center gap-2"
-        style={{ fontFamily: 'Petrona', fontSize: '14px', fontWeight: 500 }}
+        className="absolute bottom-4 right-4 text-white px-4 py-2 rounded-lg hover:bg-black/40 transition-colors z-20 flex items-center gap-2"
+        style={{ 
+          fontFamily: 'Petrona', 
+          fontSize: '14px', 
+          fontWeight: 500,
+          backgroundColor: 'rgba(0, 0, 0, 0.3)',
+          backdropFilter: 'blur(4px)'
+        }}
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
         </svg>
-        View Photos
+        View all photos
       </button>
 
       {/* Arrows (desktop only) */}
@@ -259,6 +265,295 @@ const PhotoGallery = ({ images, isOpen, onClose, initialIndex = 0 }) => {
   )
 }
 
+/**
+ * Amenities Modal Component
+ */
+const AmenitiesModal = ({ amenities, isOpen, onClose, isDarkMode }) => {
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [isOpen])
+
+  useEffect(() => {
+    if (!isOpen) return
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose()
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen, onClose])
+
+  if (!isOpen) return null
+
+  // Fallback amenities list
+  const fallbackAmenities = [
+    'Internet', 'Parking', 'Shuttle', 'Breakfast', 'Food and drink', 'Pool', 
+    'Pets', 'Things to do', 'Family friendly', 'Accessibility', 'Spa', 
+    'Fitness center', 'Business center', 'Reception services', 'Cleaning services'
+  ];
+  
+  const displayAmenities = amenities.length > 0 ? amenities : fallbackAmenities;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      {/* Backdrop */}
+      <div 
+        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+        onClick={onClose}
+      />
+      
+      {/* Modal - Compact size matching screenshot */}
+      <div className={`relative w-full max-w-md rounded-2xl shadow-2xl overflow-hidden transition-colors duration-300 ${isDarkMode ? 'bg-[#1a1a1a]' : 'bg-white'}`}
+        style={{ maxHeight: '600px' }}
+      >
+        {/* Header */}
+        <div className={`px-6 py-4 border-b transition-colors duration-300 ${isDarkMode ? 'bg-[#1a1a1a] border-gray-700' : 'bg-white border-gray-200'}`}>
+          <div className="flex items-center justify-between">
+            <h2 className={`text-xl font-semibold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`} style={{ fontFamily: 'Petrona' }}>
+              All property amenities
+            </h2>
+            <button
+              onClick={onClose}
+              className={`p-1.5 rounded-full transition-colors duration-300 ${isDarkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`}
+              aria-label="Close"
+            >
+              <svg className={`w-5 h-5 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        
+        {/* Content - Scrollable */}
+        <div className="px-6 py-4 overflow-y-auto" style={{ maxHeight: '500px' }}>
+          <div className="space-y-6">
+            {/* Group amenities by category */}
+            <div className="space-y-3">
+              {displayAmenities.map((amenity, index) => {
+                const amenityName = typeof amenity === 'string' ? amenity : amenity.amenityID || '';
+                return (
+                  <div key={index}>
+                    <div className="flex items-start gap-3 py-2">
+                      {getAmenityIcon(amenityName, isDarkMode)}
+                      <div className="flex-1">
+                        <h3 className={`font-medium transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`} style={{ fontFamily: 'Petrona', fontSize: '15px' }}>
+                          {amenityName}
+                        </h3>
+                        {/* Add description for some amenities */}
+                        {amenityName.toLowerCase().includes('internet') && (
+                          <div className={`mt-1 space-y-0.5 text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                            <p>Available in all rooms: Free WiFi</p>
+                            <p>In-room WiFi speed: 25+ Mbps</p>
+                            <p>Available in some public areas: Free WiFi</p>
+                          </div>
+                        )}
+                        {amenityName.toLowerCase().includes('parking') && (
+                          <p className={`mt-1 text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                            Free self parking on site
+                          </p>
+                        )}
+                        {amenityName.toLowerCase().includes('shuttle') && (
+                          <div className={`mt-1 space-y-0.5 text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                            <p>24-hour roundtrip airport shuttle (surcharge)</p>
+                            <p>Guests must contact the property 24 hours prior to arrival for details</p>
+                          </div>
+                        )}
+                        {amenityName.toLowerCase().includes('breakfast') && (
+                          <div className={`mt-1 space-y-0.5 text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                            <p>Continental breakfast included</p>
+                            <p>Served daily from 7:00 AM - 11:00 AM</p>
+                            <p>Not available to kids staying free</p>
+                          </div>
+                        )}
+                        {amenityName.toLowerCase().includes('pool') && (
+                          <p className={`mt-1 text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                            1 outdoor pool on site
+                          </p>
+                        )}
+                        {amenityName.toLowerCase().includes('pets') && (
+                          <p className={`mt-1 text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                            No pets or service animals
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    {index < displayAmenities.length - 1 && (
+                      <hr className={`transition-colors duration-300 ${isDarkMode ? 'border-gray-800' : 'border-gray-200'}`} />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Helper function to get appropriate icon for each amenity
+const getAmenityIcon = (amenityName, isDarkMode) => {
+  const name = amenityName.toLowerCase();
+  const iconColor = isDarkMode ? 'text-gray-400' : 'text-gray-700';
+  
+  // WiFi / Internet
+  if (name.includes('wifi') || name.includes('internet')) {
+    return (
+      <svg className={`w-6 h-6 flex-shrink-0 ${iconColor}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" />
+      </svg>
+    );
+  }
+  
+  // Air Conditioning / AC
+  if (name.includes('air') || name.includes('ac') || name.includes('conditioning')) {
+    return (
+      <svg className={`w-6 h-6 flex-shrink-0 ${iconColor}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+      </svg>
+    );
+  }
+  
+  // Kitchen
+  if (name.includes('kitchen')) {
+    return (
+      <svg className={`w-6 h-6 flex-shrink-0 ${iconColor}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+      </svg>
+    );
+  }
+  
+  // Parking
+  if (name.includes('parking')) {
+    return (
+      <svg className={`w-6 h-6 flex-shrink-0 ${iconColor}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+      </svg>
+    );
+  }
+  
+  // Washing Machine / Laundry / Cleaning
+  if (name.includes('wash') || name.includes('laundry') || name.includes('cleaning')) {
+    return (
+      <svg className={`w-6 h-6 flex-shrink-0 ${iconColor}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+      </svg>
+    );
+  }
+  
+  // TV / Television
+  if (name.includes('tv') || name.includes('television')) {
+    return (
+      <svg className={`w-6 h-6 flex-shrink-0 ${iconColor}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+      </svg>
+    );
+  }
+  
+  // Pool / Swimming
+  if (name.includes('pool') || name.includes('swim')) {
+    return (
+      <svg className={`w-6 h-6 flex-shrink-0 ${iconColor}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5" />
+      </svg>
+    );
+  }
+  
+  // Gym / Fitness
+  if (name.includes('gym') || name.includes('fitness')) {
+    return (
+      <svg className={`w-6 h-6 flex-shrink-0 ${iconColor}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+      </svg>
+    );
+  }
+  
+  // Restaurant / Dining / Food
+  if (name.includes('restaurant') || name.includes('dining') || name.includes('food') || name.includes('drink')) {
+    return (
+      <svg className={`w-6 h-6 flex-shrink-0 ${iconColor}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+      </svg>
+    );
+  }
+  
+  // Shuttle / Transportation
+  if (name.includes('shuttle') || name.includes('transport')) {
+    return (
+      <svg className={`w-6 h-6 flex-shrink-0 ${iconColor}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+      </svg>
+    );
+  }
+  
+  // Breakfast
+  if (name.includes('breakfast')) {
+    return (
+      <svg className={`w-6 h-6 flex-shrink-0 ${iconColor}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+      </svg>
+    );
+  }
+  
+  // Pets
+  if (name.includes('pet')) {
+    return (
+      <svg className={`w-6 h-6 flex-shrink-0 ${iconColor}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+      </svg>
+    );
+  }
+  
+  // Spa / Wellness
+  if (name.includes('spa') || name.includes('wellness')) {
+    return (
+      <svg className={`w-6 h-6 flex-shrink-0 ${iconColor}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+      </svg>
+    );
+  }
+  
+  // Business Center / Reception / Services
+  if (name.includes('business') || name.includes('reception') || name.includes('service')) {
+    return (
+      <svg className={`w-6 h-6 flex-shrink-0 ${iconColor}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+      </svg>
+    );
+  }
+  
+  // Family Friendly / Things to do / Activities
+  if (name.includes('family') || name.includes('things') || name.includes('activities')) {
+    return (
+      <svg className={`w-6 h-6 flex-shrink-0 ${iconColor}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+      </svg>
+    );
+  }
+  
+  // Accessibility
+  if (name.includes('accessibility') || name.includes('accessible')) {
+    return (
+      <svg className={`w-6 h-6 flex-shrink-0 ${iconColor}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    );
+  }
+  
+  // Default checkmark icon
+  return (
+    <svg className={`w-6 h-6 flex-shrink-0 ${iconColor}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+    </svg>
+  );
+}
+
 function PropertyDetail() {
   const { id } = useParams();
   const { isDarkMode } = useTheme();
@@ -282,6 +577,9 @@ function PropertyDetail() {
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [galleryImages, setGalleryImages] = useState([]);
   const [galleryInitialIndex, setGalleryInitialIndex] = useState(0);
+  
+  // Amenities modal state
+  const [showAmenitiesModal, setShowAmenitiesModal] = useState(false);
   
   const overviewRef = useRef(null);
   const roomsRef = useRef(null);
@@ -568,12 +866,22 @@ function PropertyDetail() {
           </h1>
           
           <div className="flex items-center gap-4 mb-4">
-            <div className="bg-green-700 text-white px-2 py-1 rounded font-bold text-sm">
-              9.8
+            {/* Rating with star - Same style as property cards */}
+            <div className="flex items-center gap-2">
+              <svg className="w-5 h-5 text-orange-500 fill-current" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+              <span
+                className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
+                style={{
+                  fontFamily: 'Petrona',
+                  fontWeight: 400,
+                  fontSize: '14px'
+                }}
+              >
+                <span className={`font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>4.8</span> from 120+ verified guest reviews
+              </span>
             </div>
-            <span className={`font-semibold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`} style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
-              Exceptional
-            </span>
           </div>
           
           <p 
@@ -592,31 +900,41 @@ function PropertyDetail() {
               About this property
             </h2>
             <p 
-              className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+              className={`mb-6 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
               style={{ fontFamily: 'Petrona', fontSize: '16px', lineHeight: '160%' }}
             >
               {building.description || `Experience comfort and luxury at ${building.name}. Located in ${building.location?.city || 'Bangalore'}, this property offers modern amenities and exceptional service for both short and long stays.`}
             </p>
-          </div>
-          
-          {/* Amenities */}
-          {building.amenities && building.amenities.length > 0 && (
-            <div className="grid grid-cols-2 gap-4 max-md:grid-cols-1 mt-6">
-              {building.amenities.slice(0, 6).map((amenity, index) => {
+            
+            {/* Amenities Grid - Simple 2-column layout with icons */}
+            <div className="grid grid-cols-2 gap-x-8 gap-y-4 max-md:grid-cols-1 mb-6">
+              {(building.amenities && building.amenities.length > 0 ? building.amenities : ['WiFi', 'Air Conditioning', 'Kitchen', 'Parking', 'Washing Machine', 'TV']).slice(0, 6).map((amenity, index) => {
                 const amenityName = typeof amenity === 'string' ? amenity : amenity.amenityID || '';
                 return (
                   <div key={index} className="flex items-center gap-3">
-                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`} style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
+                    {getAmenityIcon(amenityName, isDarkMode)}
+                    <span className={`transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`} style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
                       {amenityName}
                     </span>
                   </div>
                 );
               })}
             </div>
-          )}
+            
+            {/* See all amenities link - Always show with arrow */}
+            <button
+              onClick={() => setShowAmenitiesModal(true)}
+              className={`flex items-center gap-2 text-base font-medium transition-colors duration-300 ${
+                isDarkMode ? 'text-[#DE754B] hover:text-[#ff9d6b]' : 'text-[#0B8043] hover:text-[#0a6d38]'
+              }`}
+              style={{ fontFamily: 'Petrona' }}
+            >
+              See all amenities
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
         </section>
 
         {/* Rooms Section */}
@@ -630,7 +948,7 @@ function PropertyDetail() {
 
           {/* Search Section - Check Availability & Pricing */}
           <div className="mb-8 relative">
-            <div className={`rounded-2xl shadow-md p-6 border transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'bg-white border-gray-200'}`} style={{ backgroundColor: isDarkMode ? '#1a2421' : 'white' }}>
+            <div className={`rounded-2xl shadow-md p-6 border transition-colors duration-300 ${isDarkMode ? 'bg-[#1a1a1a] border-[#333333]' : 'bg-white border-gray-200'}`}>
               <h3 className={`mb-6 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`} style={{ fontFamily: 'Petrona', fontSize: '24px', fontWeight: 600 }}>
                 Check Availability & Pricing
               </h3>
@@ -645,7 +963,7 @@ function PropertyDetail() {
                     onClick={() => setIsDatePickerOpen(true)}
                     className={`w-full px-4 py-4 border-2 rounded-lg cursor-pointer hover:border-orange-500 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500 flex items-center justify-between transition-colors ${
                       isDarkMode 
-                        ? 'bg-[#0d2419] border-gray-700' 
+                        ? 'bg-black border-[#333333]' 
                         : 'bg-white border-gray-300'
                     }`}
                     style={{ fontFamily: 'Petrona' }}
@@ -668,7 +986,7 @@ function PropertyDetail() {
                     onClick={() => setIsDatePickerOpen(true)}
                     className={`w-full px-4 py-4 border-2 rounded-lg cursor-pointer hover:border-orange-500 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500 flex items-center justify-between transition-colors ${
                       isDarkMode 
-                        ? 'bg-[#0d2419] border-gray-700' 
+                        ? 'bg-black border-[#333333]' 
                         : 'bg-white border-gray-300'
                     }`}
                     style={{ fontFamily: 'Petrona' }}
@@ -689,12 +1007,16 @@ function PropertyDetail() {
                   </label>
                   <div className={`flex items-center border-2 rounded-lg overflow-hidden transition-colors ${
                     isDarkMode 
-                      ? 'bg-[#0d2419] border-gray-700' 
+                      ? 'bg-black border-[#333333]' 
                       : 'bg-white border-gray-300'
                   }`}>
                     <button
                       onClick={() => setGuests(Math.max(1, guests - 1))}
-                      className="px-4 py-4 font-bold bg-orange-500 hover:bg-orange-600 text-white transition-colors"
+                      className={`px-4 py-4 font-bold text-white transition-colors ${
+                        isDarkMode 
+                          ? 'bg-black hover:bg-orange-500' 
+                          : 'bg-orange-500 hover:bg-orange-600'
+                      }`}
                       style={{ fontFamily: 'Petrona' }}
                     >
                       −
@@ -704,7 +1026,11 @@ function PropertyDetail() {
                     </div>
                     <button
                       onClick={() => setGuests(Math.min(10, guests + 1))}
-                      className="px-4 py-4 font-bold bg-orange-500 hover:bg-orange-600 text-white transition-colors"
+                      className={`px-4 py-4 font-bold text-white transition-colors ${
+                        isDarkMode 
+                          ? 'bg-black hover:bg-orange-500' 
+                          : 'bg-orange-500 hover:bg-orange-600'
+                      }`}
                       style={{ fontFamily: 'Petrona' }}
                     >
                       +
@@ -756,7 +1082,7 @@ function PropertyDetail() {
             </div>
           </div>
 
-          <div className="space-y-6 max-md:space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-md:gap-4">
             {unitTypes.map((unitTypeData) => {
               const rep = unitTypeData.representativeUnit;
               const images = rep?.images?.length > 0 
@@ -772,136 +1098,223 @@ function PropertyDetail() {
                 <div
                   key={unitTypeData.unitType}
                   className={`rounded-2xl max-md:rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden ${isDarkMode ? '' : 'bg-white'}`}
-                  style={{ backgroundColor: isDarkMode ? '#1a2421' : 'white' }}
+                  style={{ backgroundColor: isDarkMode ? '#1a1a1a' : 'white' }}
                 >
-                  <div className="flex flex-col md:flex-row">
-                    {/* Image Carousel */}
-                    <div className="w-full md:w-3/5 h-[200px] md:h-[450px]">
-                      <ImageCarousel 
-                        images={images} 
-                        onViewPhotos={() => {
-                          setGalleryImages(images);
-                          setGalleryInitialIndex(0);
-                          setGalleryOpen(true);
+                  {/* Mobile-style card layout */}
+                  <div className="relative h-[280px] overflow-hidden">
+                    <ImageCarousel 
+                      images={images} 
+                      onViewPhotos={() => {
+                        setGalleryImages(images);
+                        setGalleryInitialIndex(0);
+                        setGalleryOpen(true);
+                      }}
+                    />
+                    
+                    {/* Black gradient overlay at bottom */}
+                    <div 
+                      className="absolute bottom-0 left-0 right-0 h-32 z-10 pointer-events-none"
+                      style={{
+                        background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, transparent 100%)'
+                      }}
+                    />
+                    
+                    {/* Unit type name and guest info on image */}
+                    <div className="absolute bottom-4 left-4 right-4 z-20 pointer-events-none">
+                      <h3
+                        className="text-white mb-1"
+                        style={{
+                          fontFamily: 'Petrona',
+                          fontWeight: 600,
+                          fontSize: '24px',
+                          lineHeight: '110%',
+                          textShadow: '0 2px 8px rgba(0,0,0,0.3)'
                         }}
-                      />
+                      >
+                        {unitTypeData.unitType}
+                      </h3>
+                      <p
+                        className="text-white/90"
+                        style={{
+                          fontFamily: 'Petrona',
+                          fontWeight: 400,
+                          fontSize: '13px',
+                          lineHeight: '140%',
+                          textShadow: '0 1px 4px rgba(0,0,0,0.3)'
+                        }}
+                      >
+                        {rep?.standardGuests || 2} guests • {rep?.compositionRooms?.length || 1} bedroom
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Content below image */}
+                  <div className="p-4">
+                    {/* Rating with star */}
+                    <div className="flex items-center gap-2 mb-3">
+                      <svg className="w-5 h-5 text-orange-500 fill-current" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                      <span
+                        className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
+                        style={{
+                          fontFamily: 'Petrona',
+                          fontWeight: 400,
+                          fontSize: '14px'
+                        }}
+                      >
+                        Rated <span className={`font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>4.8★</span> from 120+ reviews
+                      </span>
                     </div>
 
-                    {/* Content */}
-                    <div className="w-full md:w-2/5 p-3 md:p-6 flex flex-col justify-between">
+                    {/* Circular scrollable amenities */}
+                    <div className="flex gap-2 mb-4 overflow-x-auto pb-2 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                      <style>{`
+                        .scrollbar-hide::-webkit-scrollbar {
+                          display: none;
+                        }
+                      `}</style>
+                      
+                      <div className="flex items-center gap-2 px-3 py-2 rounded-full whitespace-nowrap" style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#F3F4F6' }}>
+                        <svg className="w-4 h-4 flex-shrink-0" style={{ color: isDarkMode ? '#9CA3AF' : '#6B7280' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>
+                        <span
+                          className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
+                          style={{ fontFamily: 'Petrona' }}
+                        >
+                          Fully Furnished
+                        </span>
+                      </div>
+                      
+                      <div className="flex items-center gap-2 px-3 py-2 rounded-full whitespace-nowrap" style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#F3F4F6' }}>
+                        <svg className="w-4 h-4 flex-shrink-0" style={{ color: isDarkMode ? '#9CA3AF' : '#6B7280' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                        </svg>
+                        <span
+                          className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
+                          style={{ fontFamily: 'Petrona' }}
+                        >
+                          Housekeeping
+                        </span>
+                      </div>
+                      
+                      <div className="flex items-center gap-2 px-3 py-2 rounded-full whitespace-nowrap" style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#F3F4F6' }}>
+                        <svg className="w-4 h-4 flex-shrink-0" style={{ color: isDarkMode ? '#9CA3AF' : '#6B7280' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" />
+                        </svg>
+                        <span
+                          className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
+                          style={{ fontFamily: 'Petrona' }}
+                        >
+                          WiFi
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Price & action */}
+                    <div className="flex flex-col gap-3 mt-4">
                       <div>
-                        <div className="flex justify-between items-start mb-2 md:mb-3">
-                          <h3
-                            className={`max-md:text-xl transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-black'}`}
-                            style={{
-                              fontFamily: "Petrona",
-                              fontWeight: 600,
-                              fontSize: "30px",
-                            }}
-                          >
-                            {unitTypeData.unitType}
-                          </h3>
-                        </div>
-
-                        <p
-                          className={`mb-2 md:mb-4 max-md:text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}
-                          style={{ fontFamily: "Petrona", fontSize: "14px" }}
-                        >
-                          {rep?.standardGuests || 2} guests • {rep?.compositionRooms?.length || 1} bedroom
-                        </p>
-
-                        <p
-                          className="hidden md:block mb-6"
-                          style={{
-                            color: "#8B8B8B",
-                            fontFamily: "Petrona",
-                            fontSize: "18px",
-                          }}
-                        >
-                          Comfortable, thoughtfully designed spaces for short & long stays.
-                        </p>
+                        {hasPrice ? (
+                          <>
+                            <div
+                              className={`mb-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}
+                              style={{
+                                fontFamily: 'Petrona',
+                                fontWeight: 400,
+                                fontSize: '12px'
+                              }}
+                            >
+                              Total for {unitPricing.pricing.nights} nights
+                            </div>
+                            <div className="flex items-baseline">
+                              <span
+                                className="transition-colors duration-300"
+                                style={{
+                                  color: isDarkMode ? '#E5E7EB' : '#4A4A4A',
+                                  fontFamily: 'Petrona',
+                                  fontWeight: 600,
+                                  fontSize: '28px',
+                                  lineHeight: '100%',
+                                  letterSpacing: '-2.2%'
+                                }}
+                              >
+                                $ {Math.round(unitPricing.pricing.price).toLocaleString()}
+                              </span>
+                            </div>
+                            <div
+                              className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}
+                              style={{
+                                fontFamily: 'Petrona',
+                                fontWeight: 400,
+                                fontSize: '11px'
+                              }}
+                            >
+                              $ {Math.round(unitPricing.pricing.pricePerNight).toLocaleString()}/night
+                            </div>
+                          </>
+                        ) : priceError ? (
+                          <div className="p-2 bg-red-50 border border-red-200 rounded-lg">
+                            <p className="text-red-800 text-xs" style={{ fontFamily: 'Petrona' }}>
+                              {priceError}
+                            </p>
+                          </div>
+                        ) : (
+                          <>
+                            <div
+                              className={`mb-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}
+                              style={{
+                                fontFamily: 'Petrona',
+                                fontWeight: 400,
+                                fontSize: '12px'
+                              }}
+                            >
+                              from
+                            </div>
+                            <div className="flex items-baseline">
+                              <span
+                                className="transition-colors duration-300"
+                                style={{
+                                  color: isDarkMode ? '#E5E7EB' : '#4A4A4A',
+                                  fontFamily: 'Petrona',
+                                  fontWeight: 600,
+                                  fontSize: '28px',
+                                  lineHeight: '100%',
+                                  letterSpacing: '-2.2%'
+                                }}
+                              >
+                                $ 70
+                              </span>
+                              <span
+                                className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}
+                                style={{
+                                  fontFamily: 'Petrona',
+                                  fontWeight: 400,
+                                  fontSize: '12px',
+                                  marginLeft: '4px'
+                                }}
+                              >
+                                / night
+                              </span>
+                            </div>
+                          </>
+                        )}
                       </div>
 
-                      <div className="flex flex-col gap-2 md:gap-4">
-                        {/* Pricing Display */}
-                        <div>
-                          {hasPrice ? (
-                            <>
-                              <span
-                                className={`block mb-1 max-md:text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}
-                                style={{ fontFamily: "Petrona", fontSize: "12px" }}
-                              >
-                                Total for {unitPricing.pricing.nights} nights
-                              </span>
-                              <div className="flex items-baseline gap-1 md:gap-2">
-                                <span
-                                  className={`max-md:text-xl transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-[#4A4A4A]'}`}
-                                  style={{
-                                    fontFamily: "Petrona",
-                                    fontWeight: 600,
-                                    fontSize: "30px",
-                                  }}
-                                >
-                                  $ {Math.round(unitPricing.pricing.price).toLocaleString()}
-                                </span>
-                                <span
-                                  className={`max-md:text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}
-                                  style={{ fontFamily: "Petrona", fontSize: "14px" }}
-                                >
-                                  ($ {Math.round(unitPricing.pricing.pricePerNight).toLocaleString()}/night)
-                                </span>
-                              </div>
-                            </>
-                          ) : priceError ? (
-                            <div className="p-2 md:p-3 bg-red-50 border border-red-200 rounded-lg">
-                              <p className="text-red-800 text-xs md:text-sm" style={{ fontFamily: "Petrona" }}>
-                                {priceError}
-                              </p>
-                            </div>
-                          ) : (
-                            <>
-                              <span
-                                className={`block mb-1 max-md:text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}
-                                style={{ fontFamily: "Petrona", fontSize: "12px" }}
-                              >
-                                from
-                              </span>
-                              <div className="flex items-baseline">
-                                <span
-                                  className={`max-md:text-xl transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-[#4A4A4A]'}`}
-                                  style={{
-                                    fontFamily: "Petrona",
-                                    fontWeight: 600,
-                                    fontSize: "30px",
-                                  }}
-                                >
-                                  $ 70
-                                </span>
-                                <span
-                                  className={`max-md:text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}
-                                  style={{ fontFamily: "Petrona", fontSize: "12px", marginLeft: "2px" }}
-                                >
-                                  per night
-                                </span>
-                              </div>
-                            </>
-                          )}
-                        </div>
-
-                        {/* Book Now Button */}
+                      <div>
                         {hasPrice ? (
                           <Link
                             to={`/booking-details/${unitPricing.unit._id}?checkIn=${checkIn}&checkOut=${checkOut}&guests=${guests}`}
-                            className="bg-orange-500 text-white px-6 md:px-8 py-2 md:py-3 rounded-full hover:bg-orange-600 no-underline font-medium text-center max-md:text-sm"
-                            style={{ fontFamily: "Petrona", fontSize: "16px" }}
+                            className="block w-full bg-orange-500 text-white px-4 py-2.5 rounded-full hover:bg-orange-600 no-underline font-medium text-center"
+                            style={{ fontFamily: 'Petrona', fontSize: '14px' }}
                           >
                             Book now
                           </Link>
                         ) : (
                           <button
                             disabled
-                            className="bg-gray-400 text-white px-6 md:px-8 py-2 md:py-3 rounded-full cursor-not-allowed font-medium max-md:text-sm"
-                            style={{ fontFamily: "Petrona", fontSize: "16px" }}
+                            className="w-full bg-gray-400 text-white px-4 py-2.5 rounded-full cursor-not-allowed font-medium"
+                            style={{ fontFamily: 'Petrona', fontSize: '14px' }}
                           >
                             {searchPerformed ? 'Not Available' : 'Search to Book'}
                           </button>
@@ -930,7 +1343,7 @@ function PropertyDetail() {
             If you have requests for specific accessibility needs, please contact the property using the information on the reservation confirmation received after booking.
           </p>
           
-          <div className={`rounded-lg p-6 border transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'bg-white border-gray-200'}`} style={{ backgroundColor: isDarkMode ? '#1a2421' : 'white' }}>
+          <div className={`rounded-lg p-6 border transition-colors duration-300 ${isDarkMode ? 'bg-[#1a1a1a] border-[#333333]' : 'bg-white border-gray-200'}`}>
             <h3 
               className={`mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
               style={{ fontFamily: 'Petrona', fontSize: '20px', fontWeight: 600 }}
@@ -954,7 +1367,7 @@ function PropertyDetail() {
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-            <div className={`rounded-lg p-6 border transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'bg-white border-gray-200'}`} style={{ backgroundColor: isDarkMode ? '#1a2421' : 'white' }}>
+            <div className={`rounded-lg p-6 border transition-colors duration-300 ${isDarkMode ? 'bg-[#1a1a1a] border-[#333333]' : 'bg-white border-gray-200'}`}>
               <h3 
                 className={`mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
                 style={{ fontFamily: 'Petrona', fontSize: '20px', fontWeight: 600 }}
@@ -968,7 +1381,7 @@ function PropertyDetail() {
               </div>
             </div>
 
-            <div className={`rounded-lg p-6 border transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'bg-white border-gray-200'}`} style={{ backgroundColor: isDarkMode ? '#1a2421' : 'white' }}>
+            <div className={`rounded-lg p-6 border transition-colors duration-300 ${isDarkMode ? 'bg-[#1a1a1a] border-[#333333]' : 'bg-white border-gray-200'}`}>
               <h3 
                 className={`mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
                 style={{ fontFamily: 'Petrona', fontSize: '20px', fontWeight: 600 }}
@@ -981,7 +1394,7 @@ function PropertyDetail() {
             </div>
           </div>
 
-          <div className={`rounded-lg p-6 border transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'bg-white border-gray-200'}`} style={{ backgroundColor: isDarkMode ? '#1a2421' : 'white' }}>
+          <div className={`rounded-lg p-6 border transition-colors duration-300 ${isDarkMode ? 'bg-[#1a1a1a] border-[#333333]' : 'bg-white border-gray-200'}`}>
             <h3 
               className={`mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
               style={{ fontFamily: 'Petrona', fontSize: '20px', fontWeight: 600 }}
@@ -1006,6 +1419,14 @@ function PropertyDetail() {
         isOpen={galleryOpen}
         onClose={() => setGalleryOpen(false)}
         initialIndex={galleryInitialIndex}
+      />
+      
+      {/* Amenities Modal */}
+      <AmenitiesModal
+        amenities={building?.amenities || []}
+        isOpen={showAmenitiesModal}
+        onClose={() => setShowAmenitiesModal(false)}
+        isDarkMode={isDarkMode}
       />
     </div>
   );

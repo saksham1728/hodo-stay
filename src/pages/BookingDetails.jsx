@@ -653,7 +653,7 @@ const BookingDetails = () => {
             <div className="lg:col-span-2 space-y-6">
               
               {/* Guest Information - FIRST */}
-              <div className={`lg:rounded-2xl lg:p-6 p-0 lg:shadow-sm transition-colors duration-300`} style={{ backgroundColor: isDarkMode ? '#1a1a1a' : '#FAF2E8', boxShadow: '0px 4px 4px 0px rgba(0,0,0,0.25)' }} 
+              <div className={`lg:rounded-2xl lg:p-6 p-0 lg:shadow-sm transition-colors duration-300`} style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#FAF2E8', boxShadow: '0px 4px 4px 0px rgba(0,0,0,0.25)' }} 
                    data-mobile-transparent="true">
                 <style>{`
                   @media (max-width: 1023px) {
@@ -686,7 +686,7 @@ const BookingDetails = () => {
                       onChange={(e) => handleInputChange('firstName', e.target.value)}
                       className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:border-orange-500 hover:border-orange-500 transition-all duration-300 ${
                         isDarkMode 
-                          ? 'bg-[#2a2a2a] border-gray-700 text-white placeholder-gray-500' 
+                          ? 'bg-black border-[#333333] text-white placeholder-gray-500' 
                           : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
                       }`}
                       style={{
@@ -704,7 +704,7 @@ const BookingDetails = () => {
                       onChange={(e) => handleInputChange('lastName', e.target.value)}
                       className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:border-orange-500 hover:border-orange-500 transition-all duration-300 ${
                         isDarkMode 
-                          ? 'bg-[#2a2a2a] border-gray-700 text-white placeholder-gray-500' 
+                          ? 'bg-black border-[#333333] text-white placeholder-gray-500' 
                           : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
                       }`}
                       style={{
@@ -722,7 +722,7 @@ const BookingDetails = () => {
                       onChange={(e) => handleInputChange('email', e.target.value)}
                       className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:border-orange-500 hover:border-orange-500 transition-all duration-300 ${
                         isDarkMode 
-                          ? 'bg-[#2a2a2a] border-gray-700 text-white placeholder-gray-500' 
+                          ? 'bg-black border-[#333333] text-white placeholder-gray-500' 
                           : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
                       }`}
                       style={{
@@ -740,7 +740,7 @@ const BookingDetails = () => {
                       onChange={(e) => handleInputChange('mobile', e.target.value)}
                       className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:border-orange-500 hover:border-orange-500 transition-all duration-300 ${
                         isDarkMode 
-                          ? 'bg-[#2a2a2a] border-gray-700 text-white placeholder-gray-500' 
+                          ? 'bg-black border-[#333333] text-white placeholder-gray-500' 
                           : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
                       }`}
                       style={{
@@ -754,7 +754,7 @@ const BookingDetails = () => {
               </div>
 
               {/* Coupon Code Section - Mobile Only */}
-              <div className={`lg:hidden lg:rounded-2xl lg:p-6 p-0 lg:shadow-sm transition-colors duration-300`} style={{ backgroundColor: isDarkMode ? '#1a1a1a' : '#FAF2E8', boxShadow: '0px 4px 4px 0px rgba(0,0,0,0.25)' }} 
+              <div className={`lg:hidden lg:rounded-2xl lg:p-6 p-0 lg:shadow-sm transition-colors duration-300`} style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#FAF2E8', boxShadow: '0px 4px 4px 0px rgba(0,0,0,0.25)' }} 
                    data-mobile-transparent="true">
                 <h3 
                   className={`mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
@@ -777,7 +777,7 @@ const BookingDetails = () => {
                     onChange={(e) => setCouponCode(e.target.value)}
                     className={`flex-1 px-4 py-3 border-2 rounded-lg focus:outline-none focus:border-orange-500 hover:border-orange-500 transition-all duration-300 ${
                       isDarkMode 
-                        ? 'bg-[#2a2a2a] border-gray-700 text-white placeholder-gray-500' 
+                        ? 'bg-black border-[#333333] text-white placeholder-gray-500' 
                         : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
                     }`}
                     style={{
@@ -808,7 +808,7 @@ const BookingDetails = () => {
               </div>
 
               {/* Additional Amenities */}
-              <div className={`lg:rounded-2xl lg:p-6 p-0 lg:shadow-sm transition-colors duration-300`} style={{ backgroundColor: isDarkMode ? '#1a1a1a' : '#FAF2E8', boxShadow: '0px 4px 4px 0px rgba(0,0,0,0.25)' }} 
+              <div className={`lg:rounded-2xl lg:p-6 p-0 lg:shadow-sm transition-colors duration-300`} style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#FAF2E8', boxShadow: '0px 4px 4px 0px rgba(0,0,0,0.25)' }} 
                    data-mobile-transparent="true">
                 <h3 
                   className={`mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
@@ -871,7 +871,7 @@ const BookingDetails = () => {
               </div>
 
               {/* Payment Information */}
-              <div className={`lg:rounded-2xl lg:p-6 p-0 lg:shadow-sm transition-colors duration-300`} style={{ backgroundColor: isDarkMode ? '#1a1a1a' : '#FAF2E8', boxShadow: '0px 4px 4px 0px rgba(0,0,0,0.25)' }} 
+              <div className={`lg:rounded-2xl lg:p-6 p-0 lg:shadow-sm transition-colors duration-300`} style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#FAF2E8', boxShadow: '0px 4px 4px 0px rgba(0,0,0,0.25)' }} 
                    data-mobile-transparent="true">
                 <h3 
                   className={`mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
@@ -932,7 +932,7 @@ const BookingDetails = () => {
               </div>
 
               {/* Terms and Conditions */}
-              <div className={`lg:rounded-2xl lg:p-6 p-0 lg:shadow-sm transition-colors duration-300`} style={{ backgroundColor: isDarkMode ? '#1a1a1a' : '#FAF2E8', boxShadow: '0px 4px 4px 0px rgba(0,0,0,0.25)' }} 
+              <div className={`lg:rounded-2xl lg:p-6 p-0 lg:shadow-sm transition-colors duration-300`} style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#FAF2E8', boxShadow: '0px 4px 4px 0px rgba(0,0,0,0.25)' }} 
                    data-mobile-transparent="true">
                 <label className="flex items-start gap-3">
                   <input 
@@ -1008,7 +1008,7 @@ const BookingDetails = () => {
                 </div>
                 
                 <h3 
-                  className={`mb-3 transition-colors duration-300 ${isDarkMode ? 'text-[#DE754B]' : 'text-gray-900'}`}
+                  className={`mb-3 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
                   style={{
                     fontFamily: 'Petrona',
                     fontWeight: 500,
@@ -1026,11 +1026,11 @@ const BookingDetails = () => {
                     {/* Date Summary */}
                     <div className={`flex items-center justify-between mb-4 p-3 rounded-lg transition-colors duration-300`} style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#f9fafb' }}>
                       <div>
-                        <p className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-[#DE754B]' : 'text-gray-600'}`}>Check-in</p>
+                        <p className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-600'}`}>Check-in</p>
                         <p className={`font-semibold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                           {checkInFormatted.day}
                         </p>
-                        <p className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-[#DE754B]' : 'text-gray-600'}`}>
+                        <p className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                           {checkInFormatted.weekday}, {unit?.checkInOut?.checkInFrom || '2pm'}
                         </p>
                       </div>
@@ -1042,18 +1042,18 @@ const BookingDetails = () => {
                       </div>
                       
                       <div className="text-right">
-                        <p className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-[#DE754B]' : 'text-gray-600'}`}>Check-out</p>
+                        <p className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-600'}`}>Check-out</p>
                         <p className={`font-semibold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                           {checkOutFormatted.day}
                         </p>
-                        <p className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-[#DE754B]' : 'text-gray-600'}`}>
+                        <p className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                           {checkOutFormatted.weekday}, {unit?.checkInOut?.checkOutUntil || '11am'}
                         </p>
                       </div>
                     </div>
 
                     <div className={`mb-6 p-3 rounded-lg transition-colors duration-300`} style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#f9fafb' }}>
-                      <p className={`text-xs mb-1 transition-colors duration-300 ${isDarkMode ? 'text-[#DE754B]' : 'text-gray-600'}`}>Selected Guests:</p>
+                      <p className={`text-xs mb-1 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-600'}`}>Selected Guests:</p>
                       <p className={`font-medium transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                         {guests.adults} Adult{guests.adults !== 1 ? 's' : ''}
                         {guests.children > 0 && `, ${guests.children} Child${guests.children !== 1 ? 'ren' : ''}`}
@@ -1083,7 +1083,7 @@ const BookingDetails = () => {
                       ) : (
                         <>
                           <div className="flex justify-between items-center">
-                            <span className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-[#DE754B]' : 'text-gray-600'}`}>
+                            <span className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-600'}`}>
                               {formatCurrency(calculatedPricing.basePrice, calculatedPricing.currency)} x {calculatedPricing.nights} Night{calculatedPricing.nights !== 1 ? 's' : ''}
                             </span>
                             <span className={`font-medium text-sm transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
@@ -1094,7 +1094,7 @@ const BookingDetails = () => {
                           {/* Tax line hidden for now */}
                           {calculatedPricing.taxes > 0 && (
                             <div className="flex justify-between items-center">
-                              <span className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-[#DE754B]' : 'text-gray-600'}`}>
+                              <span className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-600'}`}>
                                 Taxes and charges
                               </span>
                               <span className={`font-medium text-sm transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
@@ -1105,7 +1105,7 @@ const BookingDetails = () => {
                           
                           {appliedCoupon && (
                             <div className="flex justify-between items-center">
-                              <span className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-[#DE754B]' : 'text-gray-600'}`}>
+                              <span className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-600'}`}>
                                 Coupon ({appliedCoupon.code})
                                 <button 
                                   onClick={removeCoupon}
@@ -1153,7 +1153,7 @@ const BookingDetails = () => {
                     {/* Coupon Section */}
                     <div className={`mt-6 p-3 rounded-lg transition-colors duration-300`} style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#f9fafb' }}>
                       <div className="flex items-center gap-2 mb-2">
-                        <span className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-[#DE754B]' : 'text-gray-600'}`}>
+                        <span className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-600'}`}>
                           Got a coupon?
                         </span>
                       </div>
@@ -1165,7 +1165,7 @@ const BookingDetails = () => {
                           onChange={(e) => setCouponCode(e.target.value)}
                           className={`flex-1 px-3 py-2 border-2 rounded text-sm focus:outline-none focus:border-orange-500 hover:border-orange-500 transition-all duration-300 ${
                             isDarkMode 
-                              ? 'bg-[#2a2a2a] border-gray-700 text-white placeholder-gray-500' 
+                              ? 'bg-black border-[#333333] text-white placeholder-gray-500' 
                               : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
                           }`}
                           style={{

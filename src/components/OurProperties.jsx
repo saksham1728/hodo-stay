@@ -151,42 +151,40 @@ const OurProperties = () => {
       style={{ backgroundColor: isDarkMode ? '#0f0f0f' : '#FFF7F0' }}
     >
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <p 
-              className="mb-2 text-sm md:text-base font-medium tracking-wider uppercase"
-              style={{ 
-                color: '#DE754B',
-                fontFamily: 'Work Sans'
-              }}
-            >
-              Explore Properties
-            </p>
-            <h2
-              className={`transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-black'}`}
-              style={{
-                fontFamily: 'Petrona',
-                fontWeight: 400,
-                fontSize: isMobile ? '36px' : '48px',
-                lineHeight: '150%',
-                letterSpacing: '-2.2%'
-              }}
-            >
-              Our Properties
-            </h2>
-          </div>
-          <Link
-            to="/properties"
-            className={`transition-colors underline mr-2 ${isDarkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-800'}`}
+        {/* Header - Desktop center, Mobile left */}
+        <div className="text-left md:text-center mb-12 md:mb-16">
+          <p 
+            className="mb-2 text-sm md:text-base font-medium tracking-wider uppercase"
+            style={{ 
+              color: '#DE754B',
+              fontFamily: 'Work Sans'
+            }}
+          >
+            Explore Properties
+          </p>
+          <h2
+            className={`mb-4 text-3xl md:text-5xl transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-black'}`}
             style={{
               fontFamily: 'Petrona',
               fontWeight: 400,
-              fontSize: '14px'
+              fontSize: isMobile ? '36px' : '48px',
+              lineHeight: '150%',
+              letterSpacing: '-2.2%'
             }}
           >
-            View all
-          </Link>
+            Urban stays designed for flexible living
+          </h2>
+          <p
+            className={`md:mx-auto max-w-3xl text-base md:text-lg transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+            style={{
+              fontFamily: 'Work Sans',
+              fontWeight: 400,
+              lineHeight: '150%',
+              letterSpacing: '-0.5%'
+            }}
+          >
+            Handpicked apartments in prime locations, ready for your next extended stay.
+          </p>
         </div>
 
         {/* Loading State */}

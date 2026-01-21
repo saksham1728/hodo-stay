@@ -2,73 +2,8 @@ import { useState, useEffect, useRef } from 'react'
 import { useTheme } from '../context/ThemeContext'
 
 const CardStack = () => {
-  const [activeCard, setActiveCard] = useState(0)
   const [isMobile, setIsMobile] = useState(false)
   const { isDarkMode } = useTheme()
-
-  // Touch state for swipe detection (shared for card & content)
-  const touchStartX = useRef(0)
-  const touchStartY = useRef(0)
-  const touchEndX = useRef(0)
-  const touchEndY = useRef(0)
-  const isSwiping = useRef(false)
-
-  const cards = [
-    {
-      id: 1,
-      title: "Eco-Friendly Design",
-      description:
-        "Built with sustainable materials and energy-efficient systems, our aparthotel offers a green stay without compromising comfort. Embrace eco-conscious living with modern, thoughtful design.",
-      image: "/card-1.png",
-      background: "#202624",
-      angle: 0
-    },
-    {
-      id: 2,
-      title: "Modern Amenities",
-      description:
-        "Experience luxury with our state-of-the-art facilities including high-speed WiFi, smart home controls, and premium appliances designed for the modern traveler.",
-      image: "/card-2.png",
-      background: "#333C3A",
-      angle: -3
-    },
-    {
-      id: 3,
-      title: "Prime Locations",
-      description:
-        "Strategically located in the heart of Bangalore's most vibrant neighborhoods, offering easy access to business districts, entertainment, and cultural attractions.",
-      image: "/card-3.png",
-      background: "#46534F",
-      angle: -6
-    },
-    {
-      id: 4,
-      title: "Flexible Stays",
-      description:
-        "Whether you're here for a night or a month, our flexible booking options and personalized services adapt to your unique travel needs and preferences.",
-      image: "/card-4.png",
-      background: "#5A6A65",
-      angle: -9
-    },
-    {
-      id: 5,
-      title: "Community Spaces",
-      description:
-        "Connect with fellow travelers in our thoughtfully designed common areas, co-working spaces, and rooftop gardens that foster meaningful interactions.",
-      image: "/card-5.png",
-      background: "#6D807A",
-      angle: -12
-    },
-    {
-      id: 6,
-      title: "Wellness Focus",
-      description:
-        "Prioritize your well-being with our fitness centers, meditation spaces, and wellness programs designed to keep you balanced during your stay.",
-      image: "/card-6.png",
-      background: "#809790",
-      angle: -15
-    }
-  ]
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768)
@@ -77,61 +12,14 @@ const CardStack = () => {
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
-  const nextCard = () => {
-    setActiveCard((prev) => (prev + 1) % cards.length)
-  }
-
-  const prevCard = () => {
-    setActiveCard((prev) => (prev - 1 + cards.length) % cards.length)
-  }
-
-  // Generic touch handlers for swipe detection
-  const handleTouchStart = (e) => {
-    const t = e.touches[0]
-    touchStartX.current = t.clientX
-    touchStartY.current = t.clientY
-    touchEndX.current = t.clientX
-    touchEndY.current = t.clientY
-    isSwiping.current = true
-  }
-
-  const handleTouchMove = (e) => {
-    if (!isSwiping.current) return
-    const t = e.touches[0]
-    touchEndX.current = t.clientX
-    touchEndY.current = t.clientY
-  }
-
-  const handleTouchEnd = () => {
-    if (!isSwiping.current) return
-    const dx = touchEndX.current - touchStartX.current
-    const dy = touchEndY.current - touchStartY.current
-    const absDx = Math.abs(dx)
-    const absDy = Math.abs(dy)
-    const threshold = 40 // swipe threshold in px
-
-    // horizontal swipe dominant => change card
-    if (absDx > threshold && absDx > absDy) {
-      if (dx < 0) nextCard()
-      else prevCard()
-    }
-    // otherwise do nothing (allow vertical scroll)
-    isSwiping.current = false
-  }
-
-  // Refs to attach touch handlers (card stack & content panel)
-  const cardStackRef = useRef(null)
-  const contentPanelRef = useRef(null)
-
-  // Attach passive touch events through React handlers on elements; we already have handle* functions.
-
   return (
     <section
       className="pt-8 pb-20 px-8 min-h-screen flex items-center max-md:py-12 max-md:px-4 transition-colors duration-300"
       style={{ backgroundColor: isDarkMode ? '#0f0f0f' : '#FFF7F0' }}
     >
       <div className="max-w-7xl mx-auto w-full">
-        <div className="mb-12 md:mb-16">
+        {/* Centered Header - Desktop center, Mobile left */}
+        <div className="mb-12 md:mb-16 text-left md:text-center">
           <p 
             className="mb-2 text-sm md:text-base font-medium tracking-wider uppercase"
             style={{ 
@@ -151,144 +39,101 @@ const CardStack = () => {
               letterSpacing: '-2.2%'
             }}
           >
-            Experience the Hodo difference
+            Built for Longer, Smarter Stays
           </h2>
-        </div>
-
-        <div className="flex items-center justify-center gap-16 max-lg:flex-col max-lg:gap-12 max-lg:items-center sm:pr-4">
-          {/* Card Stack */}
-          <div
-            ref={cardStackRef}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-            className="relative flex-shrink-0 mx-auto mr-14 lg:mr-25 md:mr-20"
+          <p
+            className={`md:mx-auto max-w-3xl text-base md:text-lg transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
             style={{
-              width: isMobile ? '280px' : '400px',
-              height: isMobile ? '350px' : '500px'
+              fontFamily: 'Work Sans',
+              fontWeight: 400,
+              lineHeight: '150%',
+              letterSpacing: '-0.5%'
             }}
           >
-            {cards.map((card, index) => {
-              const stackIndex = (index - activeCard + cards.length) % cards.length
-              const isVisible = stackIndex < 6
-              // isMobile already available
+            Hotels are built for nights. We're built for weeks and months.
+          </p>
+        </div>
 
-              return (
-                <div
-                  key={card.id}
-                  className="absolute transition-all duration-700 ease-in-out cursor-pointer"
-                  style={{
-                    width: isMobile ? '200px' : '285.78px',
-                    height: isMobile ? '280px' : '392.65px',
-                    borderRadius: '6.97px',
-                    backgroundColor: card.background,
-                    transform: `rotate(${card.angle - stackIndex * 3}deg) translateX(${stackIndex * (isMobile ? 8 : 15)}px) translateY(${stackIndex * (isMobile ? 4 : 8)}px)`,
-                    zIndex: cards.length - stackIndex,
-                    opacity: isVisible ? 1 : 0,
-                    left: '50%',
-                    top: '50%',
-                    marginLeft: isMobile ? '-100px' : '-142.89px',
-                    marginTop: isMobile ? '-140px' : '-196.325px'
-                  }}
-                  onClick={() => setActiveCard(index)}
-                >
-                  <div className={`${isMobile ? 'p-4' : 'p-6'} h-full flex flex-col`}>
-                    <div className="flex-1 mb-4">
-                      <img
-                        src={card.image}
-                        alt={card.title}
-                        className={`w-full ${isMobile ? 'h-32' : 'h-48'} object-cover rounded mb-4`}
-                      />
-                    </div>
-                    <div className="text-center">
-                      <h3 className={`text-white ${isMobile ? 'text-base' : 'text-xl'} font-semibold mb-2`}>
-                        {card.title}
-                      </h3>
-                    </div>
-                  </div>
-                </div>
-              )
-            })}
+        {/* Grid Layout for USPs */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+          {/* USP Card 1 */}
+          <div className={`p-6 rounded-lg transition-colors duration-300 ${isDarkMode ? 'bg-[#1a1a1a]' : 'bg-white'}`}>
+            <h3 
+              className={`text-xl md:text-2xl font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
+              style={{ fontFamily: 'Petrona', lineHeight: '130%' }}
+            >
+              Flexible & Smart Check-ins
+            </h3>
           </div>
 
-          {/* Content Panel with Dots Below */}
-          <div className="flex-shrink-0 w-full max-w-2xl flex flex-col items-center">
-            <div
-              ref={contentPanelRef}
-              // attach swipe handlers here as well so swiping the content panel also changes cards
-              onTouchStart={handleTouchStart}
-              onTouchMove={handleTouchMove}
-              onTouchEnd={handleTouchEnd}
-              className="rounded-3xl relative mx-auto transition-colors duration-300"
-              style={{
-                width: isMobile ? 'min(90vw, 350px)' : '613px',
-                height: isMobile ? 'auto' : '367px',
-                minHeight: isMobile ? '300px' : '367px',
-                padding: isMobile ? '24px 20px' : '38px 40px',
-                boxShadow: isDarkMode ? '0px 4px 20px 0px rgba(0, 0, 0, 0.5)' : '0px 4px 4px 0px #0000001A',
-                background: isDarkMode ? '#1a1a1a' : '#FAF2E8',
-                overflowY: isMobile ? 'auto' : 'visible', // allow vertical scroll on mobile
-                WebkitOverflowScrolling: 'touch'
-              }}
+          {/* USP Card 2 */}
+          <div className={`p-6 rounded-lg transition-colors duration-300 ${isDarkMode ? 'bg-[#1a1a1a]' : 'bg-white'}`}>
+            <h3 
+              className={`text-xl md:text-2xl font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
+              style={{ fontFamily: 'Petrona', lineHeight: '130%' }}
             >
-              {/* Navigation Arrows - hidden on mobile */}
-              {!isMobile && (
-                <>
-                  <button
-                    onClick={prevCard}
-                    className="absolute left-2 md:left-4 top-1/2 transform -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors z-10"
-                  >
-                    <svg className="w-5 h-5 md:w-6 md:h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                    </svg>
-                  </button>
+              More Space Than Hotels
+            </h3>
+          </div>
 
-                  <button
-                    onClick={nextCard}
-                    className="absolute right-2 md:right-4 top-1/2 transform -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors z-10"
-                  >
-                    <svg className="w-5 h-5 md:w-6 md:h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </button>
-                </>
-              )}
+          {/* USP Card 3 */}
+          <div className={`p-6 rounded-lg transition-colors duration-300 ${isDarkMode ? 'bg-[#1a1a1a]' : 'bg-white'}`}>
+            <h3 
+              className={`text-xl md:text-2xl font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
+              style={{ fontFamily: 'Petrona', lineHeight: '130%' }}
+            >
+              Designed for Extended Stays
+            </h3>
+          </div>
 
-              <div className="text-center px-8 md:px-16 h-full flex flex-col justify-center py-4">
-                <h3 className={`text-2xl md:text-3xl font-bold mb-4 md:mb-6 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  {cards[activeCard].title}
-                </h3>
-                <p
-                  className={`mb-6 md:mb-8 text-sm md:text-base leading-relaxed transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
-                  style={{
-                    fontFamily: 'Work Sans',
-                    fontWeight: 400,
-                    fontSize: isMobile ? '16px' : '20px',
-                    lineHeight: '150%',
-                    letterSpacing: '-2.2%',
-                    textAlign: 'center'
-                  }}
-                >
-                  {cards[activeCard].description}
-                </p>
-              </div>
-            </div>
-            
-            {/* Dots Indicator - Centered Below Content Panel */}
-            <div className="flex justify-center gap-2 mt-6">
-              {cards.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setActiveCard(index)}
-                  aria-label={`Go to card ${index + 1}`}
-                  className={`w-3 h-3 rounded-full transition-colors ${
-                    index === activeCard 
-                      ? (isDarkMode ? 'bg-white' : 'bg-gray-800')
-                      : (isDarkMode ? 'bg-gray-600' : 'bg-gray-300')
-                  }`}
-                />
-              ))}
-            </div>
+          {/* USP Card 4 */}
+          <div className={`p-6 rounded-lg transition-colors duration-300 ${isDarkMode ? 'bg-[#1a1a1a]' : 'bg-white'}`}>
+            <h3 
+              className={`text-xl md:text-2xl font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
+              style={{ fontFamily: 'Petrona', lineHeight: '130%' }}
+            >
+              Hotel-Grade Housekeeping & Concierge
+            </h3>
+          </div>
+
+          {/* USP Card 5 */}
+          <div className={`p-6 rounded-lg transition-colors duration-300 ${isDarkMode ? 'bg-[#1a1a1a]' : 'bg-white'}`}>
+            <h3 
+              className={`text-xl md:text-2xl font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
+              style={{ fontFamily: 'Petrona', lineHeight: '130%' }}
+            >
+              Consistent Experience Across Properties
+            </h3>
+          </div>
+
+          {/* USP Card 6 */}
+          <div className={`p-6 rounded-lg transition-colors duration-300 ${isDarkMode ? 'bg-[#1a1a1a]' : 'bg-white'}`}>
+            <h3 
+              className={`text-xl md:text-2xl font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
+              style={{ fontFamily: 'Petrona', lineHeight: '130%' }}
+            >
+              Corporate & Relocation Friendly
+            </h3>
+          </div>
+
+          {/* USP Card 7 */}
+          <div className={`p-6 rounded-lg transition-colors duration-300 ${isDarkMode ? 'bg-[#1a1a1a]' : 'bg-white'}`}>
+            <h3 
+              className={`text-xl md:text-2xl font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
+              style={{ fontFamily: 'Petrona', lineHeight: '130%' }}
+            >
+              Weekly & Monthly Savings
+            </h3>
+          </div>
+
+          {/* USP Card 8 */}
+          <div className={`p-6 rounded-lg transition-colors duration-300 ${isDarkMode ? 'bg-[#1a1a1a]' : 'bg-white'}`}>
+            <h3 
+              className={`text-xl md:text-2xl font-medium mb-2 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
+              style={{ fontFamily: 'Petrona', lineHeight: '130%' }}
+            >
+              24-7 Guest Support
+            </h3>
           </div>
         </div>
       </div>
