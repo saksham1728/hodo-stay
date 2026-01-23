@@ -168,11 +168,14 @@ const FAQSection = () => {
               </div>
             </div>
 
-            {/* Row 3: Tagline - Centered */}
-            <div className="text-center mb-6">
-              <div className="text-white text-4xl font-medium">
-                Redefining Stays, beyond hotels
-              </div>
+            {/* Row 3: Tagline SVG - Full Width */}
+            <div className="-mx-8 mb-6">
+              <img 
+                src="/footer-content.svg" 
+                alt="Redefining Stays, beyond hotels"
+                className="w-full h-auto"
+                style={{ display: 'block' }}
+              />
             </div>
 
             {/* Policy Links - Centered Below Everything */}
@@ -228,17 +231,15 @@ const FAQSection = () => {
               </div>
             </div>
 
-            {/* Row 3: Tagline - Full Width aligned with content */}
-            <div className="w-full">
-              <div className="text-white font-medium text-left" style={{ 
-                fontSize: '6.4vw',
-                lineHeight: '1.4',
-                whiteSpace: 'nowrap',
-                width: '100%'
-              }}>
-                Redefining Stays, beyond hotels
-              </div>
-              <div className="border-t border-white/30 pt-3 mt-3">
+            {/* Row 3: Tagline SVG - Full Width */}
+            <div className="-mx-4 w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
+              <img 
+                src="/footer-content.svg" 
+                alt="Redefining Stays, beyond hotels"
+                className="w-full h-auto"
+                style={{ display: 'block' }}
+              />
+              <div className="border-t border-white/30 pt-3 mt-3 px-4">
                 <div className="flex justify-between items-center w-full">
                   <a href="#" className="text-white/70 text-xs hover:text-white transition-colors">
                     Terms & Conditions
