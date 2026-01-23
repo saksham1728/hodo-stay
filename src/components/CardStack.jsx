@@ -18,8 +18,8 @@ const CardStack = () => {
       style={{ backgroundColor: isDarkMode ? '#0f0f0f' : '#FFF7F0' }}
     >
       <div className="max-w-7xl mx-auto w-full">
-        {/* Centered Header - Desktop center, Mobile left */}
-        <div className="mb-12 md:mb-16 text-left md:text-center">
+        {/* Left-aligned Header */}
+        <div className="mb-12 md:mb-16 text-left">
           <p 
             className="mb-2 text-sm md:text-base font-medium tracking-wider uppercase"
             style={{ 
@@ -42,7 +42,7 @@ const CardStack = () => {
             Built for Longer, Smarter Stays
           </h2>
           <p
-            className={`md:mx-auto max-w-3xl text-base md:text-lg transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+            className={`max-w-3xl text-base md:text-lg transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
             style={{
               fontFamily: 'Work Sans',
               fontWeight: 400,

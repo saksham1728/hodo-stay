@@ -40,7 +40,7 @@ const FAQSection = () => {
     <div className="py-16 px-8 text-white max-md:py-8 max-md:px-4">
       <div className="max-w-7xl mx-auto">
         <h2
-          className="text-white m-0 mb-12 max-md:mb-8 text-left md:text-center"
+          className="text-white m-0 mb-12 max-md:mb-8 text-left"
           style={{
             fontFamily: "Petrona",
             fontWeight: 400,
@@ -326,7 +326,7 @@ const Footer = () => {
         {/* Reviews Section */}
         <div className="py-16 px-8 text-gray-800 relative max-md:py-8 max-md:px-4">
           <div className="max-w-7xl mx-auto">
-            <div className="text-left md:text-center mb-12">
+            <div className="text-left mb-12">
               <p 
                 className="mb-2 text-sm md:text-base font-medium tracking-wider uppercase"
                 style={{ 
