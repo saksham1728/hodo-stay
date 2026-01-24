@@ -52,11 +52,14 @@ const FooterSimple = () => {
             </div>
           </div>
 
-          {/* Row 3: Tagline - Centered */}
-          <div className="text-center mb-6">
-            <div className="text-white text-4xl font-medium">
-              Redefining Stays, beyond hotels
-            </div>
+          {/* Row 3: Tagline SVG - Full Width */}
+          <div className="mb-6 -mx-8">
+            <img 
+              src="/footer-content.svg" 
+              alt="Redefining Stays, beyond hotels" 
+              className="w-full h-auto"
+              style={{ maxWidth: 'none' }}
+            />
           </div>
 
           {/* Policy Links - Centered */}
@@ -112,28 +115,29 @@ const FooterSimple = () => {
             </div>
           </div>
 
-          {/* Row 3: Tagline - Full Width aligned with content */}
-          <div className="w-full">
-            <div className="text-white font-medium text-left" style={{ 
-              fontSize: '6.4vw',
-              lineHeight: '1.4',
-              whiteSpace: 'nowrap',
-              width: '100%'
-            }}>
-              Redefining Stays, beyond hotels
+          {/* Row 3: Tagline SVG - Full Width Breakout */}
+          <div className="relative left-1/2 right-1/2 w-screen -ml-[50vw] -mr-[50vw] mb-6">
+            <div className="px-4">
+              <img 
+                src="/footer-content.svg" 
+                alt="Redefining Stays, beyond hotels" 
+                className="w-full h-auto"
+              />
             </div>
-            <div className="border-t border-white/30 pt-3 mt-3">
-              <div className="flex justify-between items-center w-full">
-                <a href="#" className="text-white/70 text-xs hover:text-white transition-colors">
-                  Terms & Conditions
-                </a>
-                <a href="#" className="text-white/70 text-xs hover:text-white transition-colors">
-                  Privacy Policy
-                </a>
-                <a href="#" className="text-white/70 text-xs hover:text-white transition-colors">
-                  Refund Policy
-                </a>
-              </div>
+          </div>
+
+          {/* Policy Links */}
+          <div className="border-t border-white/30 pt-3">
+            <div className="flex justify-between items-center w-full">
+              <a href="#" className="text-white/70 text-xs hover:text-white transition-colors">
+                Terms & Conditions
+              </a>
+              <a href="#" className="text-white/70 text-xs hover:text-white transition-colors">
+                Privacy Policy
+              </a>
+              <a href="#" className="text-white/70 text-xs hover:text-white transition-colors">
+                Refund Policy
+              </a>
             </div>
           </div>
         </div>

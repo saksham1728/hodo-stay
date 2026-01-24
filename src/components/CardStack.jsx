@@ -56,7 +56,7 @@ const CardStack = () => {
           <p 
             className="mb-2 text-sm md:text-base font-medium tracking-wider uppercase"
             style={{ 
-              color: '#DE754B',
+              color: isDarkMode ? '#DE754B' : '#0B8043',
               fontFamily: 'Work Sans'
             }}
           >
@@ -97,7 +97,7 @@ const CardStack = () => {
                 minHeight: '240px',
                 display: 'flex',
                 flexDirection: 'column',
-                backgroundColor: isDarkMode ? '#1a1a1a' : '#f5f5f5',
+                backgroundColor: isDarkMode ? '#1a1a1a' : '#FAF2E8',
                 borderColor: 'transparent'
               }}
               onMouseEnter={(e) => {

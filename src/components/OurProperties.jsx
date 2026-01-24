@@ -156,7 +156,7 @@ const OurProperties = () => {
           <p 
             className="mb-2 text-sm md:text-base font-medium tracking-wider uppercase"
             style={{ 
-              color: '#DE754B',
+              color: isDarkMode ? '#DE754B' : '#0B8043',
               fontFamily: 'Work Sans'
             }}
           >

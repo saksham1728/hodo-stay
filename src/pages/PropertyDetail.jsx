@@ -859,96 +859,175 @@ function PropertyDetail() {
         {/* Overview Section */}
         <section ref={overviewRef} className="mb-16">
           <h1 
-            className={`mb-3 max-md:text-3xl transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
+            className={` max-md:text-3xl transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
             style={{ fontFamily: 'Petrona', fontSize: '48px', fontWeight: 600 }}
           >
             {building.name}
           </h1>
           
-          <div className="flex items-center gap-4 mb-4">
-            {/* Rating with star - Same style as property cards */}
-            <div className="flex items-center gap-2">
-              <svg className="w-5 h-5 text-orange-500 fill-current" viewBox="0 0 20 20">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-              <span
-                className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
-                style={{
-                  fontFamily: 'Petrona',
-                  fontWeight: 400,
-                  fontSize: '14px'
-                }}
-              >
-                <span className={`font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>4.8</span> from 120+ verified guest reviews
-              </span>
-            </div>
-          </div>
-          
+          {/* Address - Moved above rating */}
           <p 
-            className={`mb-6 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}
+            className={`mb-5 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}
             style={{ fontFamily: 'Petrona', fontSize: '16px' }}
           >
             {location}
           </p>
+          
+          {/* Rating with star - Moved below address */}
+          <div className="flex items-center gap-2 mb-8">
+            <svg className="w-5 h-5 text-orange-500 fill-current" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+            </svg>
+            <span
+              className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
+              style={{
+                fontFamily: 'Petrona',
+                fontWeight: 400,
+                fontSize: '14px'
+              }}
+            >
+              <span className={`font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>4.8</span> from 120+ verified guest reviews
+            </span>
+          </div>
 
           {/* About this property */}
-          <div className="mb-6">
-            <h2 
-              className={`mb-4 max-md:text-2xl transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
-              style={{ fontFamily: 'Petrona', fontSize: '28px', fontWeight: 600 }}
-            >
-              About this property
-            </h2>
-            <p 
-              className={`mb-6 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
-              style={{ fontFamily: 'Petrona', fontSize: '16px', lineHeight: '160%' }}
-            >
-              {building.description || `Experience comfort and luxury at ${building.name}. Located in ${building.location?.city || 'Bangalore'}, this property offers modern amenities and exceptional service for both short and long stays.`}
-            </p>
-            
-            {/* Amenities Grid - Simple 2-column layout with icons */}
-            <div className="grid grid-cols-2 gap-x-8 gap-y-4 max-md:grid-cols-1 mb-6">
-              {(building.amenities && building.amenities.length > 0 ? building.amenities : ['WiFi', 'Air Conditioning', 'Kitchen', 'Parking', 'Washing Machine', 'TV']).slice(0, 6).map((amenity, index) => {
-                const amenityName = typeof amenity === 'string' ? amenity : amenity.amenityID || '';
-                return (
-                  <div key={index} className="flex items-center gap-3">
-                    {getAmenityIcon(amenityName, isDarkMode)}
-                    <span className={`transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`} style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
-                      {amenityName}
-                    </span>
-                  </div>
-                );
-              })}
+          <div className="mb-12 mt-12">
+            {/* Desktop: Two-column layout, Mobile: Stacked */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-8">
+              {/* Left Column: Headings */}
+              <div className="md:pr-7">
+                <p 
+                  className="mb-3 text-sm md:text-base font-medium tracking-wider uppercase"
+                  style={{ 
+                    color: isDarkMode ? '#DE754B' : '#0B8043',
+                    fontFamily: 'Work Sans',
+                    letterSpacing: '0.2em'
+                  }}
+                >
+                  ABOUT THIS SPACE
+                </p>
+                <h2 
+                  className={`transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
+                  style={{ 
+                    fontFamily: 'Petrona', 
+                    fontSize: window.innerWidth < 768 ? '36px' : '48px',
+                    fontWeight: 400,
+                    lineHeight: '120%',
+                    letterSpacing: '-0.02em'
+                  }}
+                >
+                  A home that holds your whole day.
+                </h2>
+              </div>
+
+              {/* Right Column: Description Content */}
+              <div className="space-y-6">
+                <p 
+                  className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+                  style={{ 
+                    fontFamily: 'Work Sans', 
+                    fontSize: '16px', 
+                    lineHeight: '160%',
+                    fontWeight: 400
+                  }}
+                >
+                  Designed for longer stays, Hodo apartments give you room to work, reset, and live like a local. Expect a full kitchen, work-ready Wi-Fi, and quiet comfort — with hotel-grade housekeeping that keeps everything effortless.
+                </p>
+                
+                <p 
+                  className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
+                  style={{ 
+                    fontFamily: 'Work Sans', 
+                    fontSize: '16px', 
+                    lineHeight: '160%',
+                    fontWeight: 400
+                  }}
+                >
+                  Step outside and you're close to cafés, daily essentials, and the city's business hubs — the kind of urban convenience that makes weeks feel easy.
+                </p>
+              </div>
             </div>
             
-            {/* See all amenities link - Always show with arrow */}
-            <button
-              onClick={() => setShowAmenitiesModal(true)}
-              className={`flex items-center gap-2 text-base font-medium transition-colors duration-300 ${
-                isDarkMode ? 'text-[#DE754B] hover:text-[#ff9d6b]' : 'text-[#0B8043] hover:text-[#0a6d38]'
-              }`}
-              style={{ fontFamily: 'Petrona' }}
-            >
-              See all amenities
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
+            {/* Amenities Section with proper spacing */}
+            <div className="mt-12 pt-8 border-t" style={{ borderColor: isDarkMode ? '#333333' : '#E5E7EB' }}>
+              <h3 
+                className={`mb-6 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
+                style={{ 
+                  fontFamily: 'Petrona', 
+                  fontSize: '24px',
+                  fontWeight: 600,
+                  letterSpacing: '-0.01em'
+                }}
+              >
+                Amenities
+              </h3>
+              
+              {/* Amenities Grid - Simple 2-column layout with icons */}
+              <div className="grid grid-cols-2 gap-x-8 gap-y-4 max-md:grid-cols-1 mb-6">
+                {(building.amenities && building.amenities.length > 0 ? building.amenities : ['WiFi', 'Air Conditioning', 'Kitchen', 'Parking', 'Washing Machine', 'TV']).slice(0, 6).map((amenity, index) => {
+                  const amenityName = typeof amenity === 'string' ? amenity : amenity.amenityID || '';
+                  return (
+                    <div key={index} className="flex items-center gap-3">
+                      {getAmenityIcon(amenityName, isDarkMode)}
+                      <span className={`transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`} style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
+                        {amenityName}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+              
+              {/* See all amenities link - Always show with arrow */}
+              <button
+                onClick={() => setShowAmenitiesModal(true)}
+                className={`flex items-center gap-2 text-base font-medium transition-colors duration-300 ${
+                  isDarkMode ? 'text-[#DE754B] hover:text-[#ff9d6b]' : 'text-[#0B8043] hover:text-[#0a6d38]'
+                }`}
+                style={{ fontFamily: 'Petrona' }}
+              >
+                See all amenities
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
           </div>
         </section>
 
         {/* Rooms Section */}
         <section ref={roomsRef} className="mb-16">
-          <h2 
-            className={`mb-6 max-md:text-2xl transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
-            style={{ fontFamily: 'Petrona', fontSize: '36px', fontWeight: 600 }}
-          >
-            Rooms
-          </h2>
+          <div className="mb-8">
+            <p 
+              className="mb-2 text-sm md:text-base font-medium tracking-wider uppercase"
+              style={{ 
+                color: isDarkMode ? '#DE754B' : '#0B8043',
+                fontFamily: 'Work Sans'
+              }}
+            >
+              ROOMS
+            </p>
+            <h2 
+              className={`mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
+              style={{ fontFamily: 'Petrona', fontSize: '48px', fontWeight: 400, lineHeight: '150%', letterSpacing: '-2.2%' }}
+            >
+              Choose your rhythm
+            </h2>
+            <p
+              className={`max-w-3xl text-base md:text-lg transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+              style={{
+                fontFamily: 'Work Sans',
+                fontWeight: 400,
+                lineHeight: '150%',
+                letterSpacing: '-0.5%'
+              }}
+            >
+              Flexible configurations for solo stays, couples, teams, and longer relocations.
+            </p>
+          </div>
 
           {/* Search Section - Check Availability & Pricing */}
           <div className="mb-8 relative">
-            <div className={`rounded-2xl shadow-md p-6 border transition-colors duration-300 ${isDarkMode ? 'bg-[#1a1a1a] border-[#333333]' : 'bg-white border-gray-200'}`}>
+            <div className={`rounded-2xl shadow-md p-6 border transition-colors duration-300 ${isDarkMode ? 'bg-[#1a1a1a] border-[#333333]' : 'bg-white border-gray-200'}`} style={{ backgroundColor: isDarkMode ? '#1a1a1a' : '#FAF2E8' }}>
               <h3 className={`mb-6 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`} style={{ fontFamily: 'Petrona', fontSize: '24px', fontWeight: 600 }}>
                 Check Availability & Pricing
               </h3>
@@ -1098,7 +1177,7 @@ function PropertyDetail() {
                 <div
                   key={unitTypeData.unitType}
                   className={`rounded-2xl max-md:rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden ${isDarkMode ? '' : 'bg-white'}`}
-                  style={{ backgroundColor: isDarkMode ? '#1a1a1a' : 'white' }}
+                  style={{ backgroundColor: isDarkMode ? '#1a1a1a' : '#FAF2E8' }}
                 >
                   {/* Mobile-style card layout */}
                   <div className="relative h-[280px] overflow-hidden">
@@ -1163,7 +1242,7 @@ function PropertyDetail() {
                           fontSize: '14px'
                         }}
                       >
-                        Rated <span className={`font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>4.8★</span> from 120+ reviews
+                        Rated <span className={`font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>4.8 </span> from 120+ reviews
                       </span>
                     </div>
 
@@ -1213,7 +1292,7 @@ function PropertyDetail() {
                     </div>
 
                     {/* Price & action */}
-                    <div className="flex flex-col gap-3 mt-4">
+                    <div className="flex items-center justify-between gap-4 mt-4">
                       <div>
                         {hasPrice ? (
                           <>
@@ -1301,11 +1380,11 @@ function PropertyDetail() {
                         )}
                       </div>
 
-                      <div>
+                      <div className="flex-shrink-0">
                         {hasPrice ? (
                           <Link
                             to={`/booking-details/${unitPricing.unit._id}?checkIn=${checkIn}&checkOut=${checkOut}&guests=${guests}`}
-                            className="block w-full bg-orange-500 text-white px-4 py-2.5 rounded-full hover:bg-orange-600 no-underline font-medium text-center"
+                            className="block bg-orange-500 text-white px-6 py-2.5 rounded-full hover:bg-orange-600 no-underline font-medium text-center whitespace-nowrap"
                             style={{ fontFamily: 'Petrona', fontSize: '14px' }}
                           >
                             Book now
@@ -1313,7 +1392,7 @@ function PropertyDetail() {
                         ) : (
                           <button
                             disabled
-                            className="w-full bg-gray-400 text-white px-4 py-2.5 rounded-full cursor-not-allowed font-medium"
+                            className="bg-gray-400 text-white px-6 py-2.5 rounded-full cursor-not-allowed font-medium whitespace-nowrap"
                             style={{ fontFamily: 'Petrona', fontSize: '14px' }}
                           >
                             {searchPerformed ? 'Not Available' : 'Search to Book'}

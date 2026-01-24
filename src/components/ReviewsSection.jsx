@@ -37,9 +37,9 @@ const ReviewsSection = () => {
     if (reviewsRef.current) {
       const container = reviewsRef.current;
       const isMobile = window.innerWidth < 768;
-      const cardWidth = isMobile ? window.innerWidth - 32 : 370;
+      const cardWidth = isMobile ? window.innerWidth - 64 : 400;
       const scrollLeft = container.scrollLeft;
-      const newActiveIndex = Math.round(scrollLeft / cardWidth);
+      const newActiveIndex = Math.round(scrollLeft / (cardWidth + 24)); // card width + gap
       if (newActiveIndex >= 0 && newActiveIndex < reviews.length) {
         setActiveReview(newActiveIndex);
       }
@@ -64,208 +64,89 @@ const ReviewsSection = () => {
       }}
     >
       <div className="max-w-7xl mx-auto">
-        <h2
-          className={`m-0 mb-12 max-md:text-3xl max-md:mb-8 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}
-          style={{
-            fontFamily: "Petrona",
-            fontWeight: 400,
-            fontSize: window.innerWidth < 768 ? '36px' : '48px',
-            lineHeight: "150%",
-            letterSpacing: "-2.2%",
-          }}
-        >
-          What our Guests say
-        </h2>
-
-        {/* Desktop Layout - 3 cards side by side */}
-        <div className="hidden md:flex justify-center mb-12 relative">
-          <div className="relative w-full max-w-6xl px-4">
-            {/* Navigation arrows */}
-            <button
-              className="absolute left-0 top-1/2 transform -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center shadow-lg z-20 hover:bg-white/90 transition-colors"
-              style={{ 
-                backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                border: '1px solid rgba(0,0,0,0.1)'
-              }}
-              onClick={() => {
-                const newIndex =
-                  activeReview > 0 ? activeReview - 1 : reviews.length - 1;
-                setActiveReview(newIndex);
-              }}
-            >
-              <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-            <button
-              className="absolute right-0 top-1/2 transform -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center shadow-lg z-20 hover:bg-white/90 transition-colors"
-              style={{ 
-                backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                border: '1px solid rgba(0,0,0,0.1)'
-              }}
-              onClick={() => {
-                const newIndex =
-                  activeReview < reviews.length - 1 ? activeReview + 1 : 0;
-                setActiveReview(newIndex);
-              }}
-            >
-              <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-
-            {/* Review cards container - 3 straight cards */}
-            <div className="flex items-center justify-center gap-6 px-16">
-              {/* Left card - Previous review */}
-              <div 
-                className="w-96 rounded-2xl p-5 opacity-75 flex flex-col"
-                style={{ 
-                  backgroundColor: isDarkMode ? '#2d4a3e' : '#F6F0E7',
-                  boxShadow: '0px 4px 4px 0px #00000040',
-                  minHeight: '280px',
-                  maxHeight: '280px'
-                }}
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-start gap-3">
-                    <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 text-white text-xl font-bold" style={{ backgroundColor: '#4A5568' }}>
-                      {reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].name.charAt(0)}
-                    </div>
-                    <div>
-                      <div className={`font-semibold text-base mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].name}</div>
-                      <div className={`flex items-center gap-2 text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                        <img 
-                          src={`https://flagcdn.com/w20/${reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].countryCode.toLowerCase()}.png`}
-                          alt={reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].country}
-                          className="w-5 h-4"
-                        />
-                        <span>{reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].country}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-1 flex-shrink-0">
-                    <div className="text-pink-500 text-sm flex">
-                      {"★".repeat(reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].rating)}
-                    </div>
-                    <span className={`font-medium text-sm ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>{reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].rating}/5</span>
-                  </div>
-                </div>
-                <p className={`text-sm leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  {reviews[activeReview > 0 ? activeReview - 1 : reviews.length - 1].text}
-                </p>
-              </div>
-
-              {/* Center card - Active review (highlighted) */}
-              <div 
-                className="w-[420px] rounded-2xl p-6 transform scale-105 z-10 flex flex-col"
-                style={{ 
-                  backgroundColor: isDarkMode ? '#2d4a3e' : '#F6F0E7',
-                  boxShadow: '0px 4px 4px 0px #00000040',
-                  minHeight: '280px',
-                  maxHeight: '280px'
-                }}
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-start gap-4">
-                    <div className="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 text-white text-2xl font-bold" style={{ backgroundColor: '#4A5568' }}>
-                      {reviews[activeReview].name.charAt(0)}
-                    </div>
-                    <div>
-                      <div className={`font-bold text-lg mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{reviews[activeReview].name}</div>
-                      <div className={`flex items-center gap-2 text-base ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                        <img 
-                          src={`https://flagcdn.com/w20/${reviews[activeReview].countryCode.toLowerCase()}.png`}
-                          alt={reviews[activeReview].country}
-                          className="w-5 h-4"
-                        />
-                        <span>{reviews[activeReview].country}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-1 flex-shrink-0">
-                    <div className="text-pink-500 text-base flex">
-                      {"★".repeat(reviews[activeReview].rating)}
-                    </div>
-                    <span className={`font-semibold text-base ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>{reviews[activeReview].rating}/5</span>
-                  </div>
-                </div>
-                <p className={`text-base leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-800'}`}>
-                  {reviews[activeReview].text}
-                </p>
-              </div>
-
-              {/* Right card - Next review */}
-              <div 
-                className="w-96 rounded-2xl p-5 opacity-75 flex flex-col"
-                style={{ 
-                  backgroundColor: isDarkMode ? '#2d4a3e' : '#F6F0E7',
-                  boxShadow: '0px 4px 4px 0px #00000040',
-                  minHeight: '280px',
-                  maxHeight: '280px'
-                }}
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-start gap-3">
-                    <div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 text-white text-xl font-bold" style={{ backgroundColor: '#4A5568' }}>
-                      {reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].name.charAt(0)}
-                    </div>
-                    <div>
-                      <div className={`font-semibold text-base mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].name}</div>
-                      <div className={`flex items-center gap-2 text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                        <img 
-                          src={`https://flagcdn.com/w20/${reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].countryCode.toLowerCase()}.png`}
-                          alt={reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].country}
-                          className="w-5 h-4"
-                        />
-                        <span>{reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].country}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-1 flex-shrink-0">
-                    <div className="text-pink-500 text-sm flex">
-                      {"★".repeat(reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].rating)}
-                    </div>
-                    <span className={`font-medium text-sm ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>{reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].rating}/5</span>
-                  </div>
-                </div>
-                <p className={`text-sm leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  {reviews[activeReview < reviews.length - 1 ? activeReview + 1 : 0].text}
-                </p>
-              </div>
-            </div>
-          </div>
+        <div className="text-left mb-8">
+          <p 
+            className="mb-2 text-sm md:text-base font-medium tracking-wider uppercase"
+            style={{ 
+              color: isDarkMode ? '#DE754B' : '#0B8043',
+              fontFamily: 'Work Sans'
+            }}
+          >
+            Guest Experiences
+          </p>
+          <h2
+            className={`m-0 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}
+            style={{
+              fontFamily: "Petrona",
+              fontWeight: 400,
+              fontSize: window.innerWidth < 768 ? '36px' : '48px',
+              lineHeight: "150%",
+              letterSpacing: "-2.2%",
+            }}
+          >
+            What our Guests say
+          </h2>
         </div>
 
-        {/* Mobile Layout - Touch scrollable full width cards */}
-        <div className="md:hidden mb-8">
+        {/* Horizontal Scrollable Review Cards */}
+        <div className="relative">
           <div 
             ref={reviewsRef}
-            className="flex gap-4 overflow-x-auto pb-4 px-4 scrollbar-hide snap-x snap-mandatory"
+            className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory scroll-smooth"
             style={{
               scrollbarWidth: 'none',
               msOverflowStyle: 'none',
               WebkitOverflowScrolling: 'touch'
             }}
           >
+            <style>{`
+              .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+              }
+            `}</style>
+            
             {reviews.map((review) => (
               <div 
                 key={review.id}
-                className="rounded-2xl p-8 flex-shrink-0 w-full snap-start"
+                className="group rounded-2xl p-6 flex-shrink-0 snap-start transition-all duration-300 hover:cursor-pointer"
                 style={{ 
-                  minWidth: 'calc(100vw - 32px)',
-                  minHeight: '280px',
-                  backgroundColor: isDarkMode ? '#2d4a3e' : '#F6F0E7',
-                  boxShadow: '0px 4px 4px 0px #00000040'
+                  width: window.innerWidth < 768 ? 'calc(100vw - 64px)' : '400px',
+                  minHeight: '260px',
+                  backgroundColor: isDarkMode ? '#1a2a27' : '#F6F0E7',
+                  boxShadow: '0px 4px 12px rgba(0,0,0,0.1)',
+                  border: '1px solid transparent'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = '#DE754B'
+                  e.currentTarget.style.boxShadow = '0 12px 44px -22px rgba(222, 117, 75, 0.3)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'transparent'
+                  e.currentTarget.style.boxShadow = '0px 4px 12px rgba(0,0,0,0.1)'
                 }}
               >
                 <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-start gap-3">
-                    <div className="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 text-white text-2xl font-bold" style={{ backgroundColor: '#4A5568' }}>
+                  <div className="flex items-start gap-4">
+                    <div 
+                      className="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 text-white text-2xl font-bold" 
+                      style={{ 
+                        backgroundColor: '#4A5568',
+                        fontFamily: 'Petrona'
+                      }}
+                    >
                       {review.name.charAt(0)}
                     </div>
                     <div>
-                      <div className={`font-bold text-lg mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{review.name}</div>
-                      <div className={`flex items-center gap-2 text-base ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                      <div 
+                        className={`font-semibold text-lg mb-1 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
+                        style={{ fontFamily: 'Petrona' }}
+                      >
+                        {review.name}
+                      </div>
+                      <div 
+                        className={`flex items-center gap-2 text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
+                        style={{ fontFamily: 'Work Sans' }}
+                      >
                         <img 
                           src={`https://flagcdn.com/w20/${review.countryCode.toLowerCase()}.png`}
                           alt={review.country}
@@ -276,32 +157,29 @@ const ReviewsSection = () => {
                     </div>
                   </div>
                   <div className="flex items-center gap-1 flex-shrink-0">
-                    <div className="text-pink-500 text-base flex">
+                    <div className="text-orange-500 text-base flex">
                       {"★".repeat(review.rating)}
                     </div>
-                    <span className={`font-semibold text-base ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>{review.rating}/5</span>
+                    <span 
+                      className={`font-semibold text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+                      style={{ fontFamily: 'Work Sans' }}
+                    >
+                      {review.rating}/5
+                    </span>
                   </div>
                 </div>
-                
-                <p className={`text-base leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-800'}`}>
+                <p 
+                  className={`text-base leading-relaxed transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+                  style={{ 
+                    fontFamily: 'Work Sans',
+                    lineHeight: '1.6'
+                  }}
+                >
                   {review.text}
                 </p>
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Dots Navigation */}
-        <div className="flex justify-center gap-2">
-          {reviews.map((_, index) => (
-            <span
-              key={index}
-              className={`w-3 h-3 rounded-full cursor-pointer transition-colors duration-300 ${
-                index === activeReview ? "bg-emerald-800" : "bg-gray-400"
-              }`}
-              onClick={() => setActiveReview(index)}
-            ></span>
-          ))}
         </div>
       </div>
     </div>
