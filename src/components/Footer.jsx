@@ -128,7 +128,7 @@ const FAQSection = () => {
         </div>
 
         {/* Footer section */}
-        <div className="mt-16 pt-8">
+        <div className="mt-16 pt-8 md:mt-10">
           {/* Desktop Layout */}
           <div className="hidden md:block">
             {/* Row 1: Logo and Social Icons */}
@@ -169,7 +169,7 @@ const FAQSection = () => {
             </div>
 
             {/* Row 3: Tagline SVG - Full Width */}
-            <div className="-mx-8 mb-6">
+            <div className="-mx-8 md:-mb-8">
               <img 
                 src="/footer-content.svg" 
                 alt="Redefining Stays, beyond hotels"
@@ -178,17 +178,25 @@ const FAQSection = () => {
               />
             </div>
 
-            {/* Policy Links - Centered Below Everything */}
-            <div className="flex gap-3 justify-center">
-              <a href="#" className="text-white/70 text-xs hover:text-white transition-colors">
-                Terms & Conditions
-              </a>
-              <a href="#" className="text-white/70 text-xs hover:text-white transition-colors">
-                Privacy Policy
-              </a>
-              <a href="#" className="text-white/70 text-xs hover:text-white transition-colors">
-                Refund Policy
-              </a>
+            {/* Horizontal Line */}
+            <div className="border-t border-white/20 mb-4"></div>
+
+            {/* Copyright and Policy Links - Desktop: Left/Right, Mobile keeps existing */}
+            <div className="flex justify-between items-center">
+              <div className="text-white/70 text-sm">
+                © 2026 Hodo Stays. All rights reserved.
+              </div>
+              <div className="flex gap-6">
+                <a href="#" className="text-white/70 text-sm hover:text-white transition-colors">
+                  Privacy Policy
+                </a>
+                <a href="#" className="text-white/70 text-sm hover:text-white transition-colors">
+                  Terms & Conditions
+                </a>
+                <a href="#" className="text-white/70 text-sm hover:text-white transition-colors">
+                  Refund Policy
+                </a>
+              </div>
             </div>
           </div>
 

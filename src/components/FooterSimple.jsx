@@ -53,7 +53,7 @@ const FooterSimple = () => {
           </div>
 
           {/* Row 3: Tagline SVG - Full Width */}
-          <div className="mb-6 -mx-8">
+          <div className="md:-mb-8 md:-mx-8">
             <img 
               src="/footer-content.svg" 
               alt="Redefining Stays, beyond hotels" 
@@ -62,17 +62,25 @@ const FooterSimple = () => {
             />
           </div>
 
-          {/* Policy Links - Centered */}
-          <div className="flex gap-6 justify-center">
-            <a href="#" className="text-white/70 text-sm hover:text-white transition-colors">
-              Terms & Conditions
-            </a>
-            <a href="#" className="text-white/70 text-sm hover:text-white transition-colors">
-              Privacy Policy
-            </a>
-            <a href="#" className="text-white/70 text-sm hover:text-white transition-colors">
-              Refund Policy
-            </a>
+          {/* Horizontal Line */}
+          <div className="border-t border-white/20 mb-6"></div>
+
+          {/* Copyright and Policy Links - Desktop: Left/Right */}
+          <div className="flex justify-between items-center">
+            <div className="text-white/70 text-sm">
+              © 2026 Hodo Stays. All rights reserved.
+            </div>
+            <div className="flex gap-6">
+              <a href="#" className="text-white/70 text-sm hover:text-white transition-colors">
+                Privacy Policy
+              </a>
+              <a href="#" className="text-white/70 text-sm hover:text-white transition-colors">
+                Terms & Conditions
+              </a>
+              <a href="#" className="text-white/70 text-sm hover:text-white transition-colors">
+                Refund Policy
+              </a>
+            </div>
           </div>
         </div>
 
