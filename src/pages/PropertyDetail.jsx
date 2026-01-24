@@ -68,7 +68,7 @@ const ImageCarousel = ({ images, onViewPhotos }) => {
       {/* View Photos Button */}
       <button
         onClick={onViewPhotos}
-        className="absolute bottom-4 right-4 text-white px-4 py-2 rounded-lg hover:bg-black/40 transition-colors z-20 flex items-center gap-2"
+        className="absolute bottom-4 right-4 text-white px-4 py-2 rounded-lg border border-transparent hover:border-white/50 transition-all duration-300 cursor-pointer z-20 flex items-center gap-2"
         style={{ 
           fontFamily: 'Petrona', 
           fontSize: '14px', 
@@ -580,6 +580,9 @@ function PropertyDetail() {
   
   // Amenities modal state
   const [showAmenitiesModal, setShowAmenitiesModal] = useState(false);
+  
+  // Accordion state for policies
+  const [openAccordion, setOpenAccordion] = useState(null);
   
   const overviewRef = useRef(null);
   const roomsRef = useRef(null);
@@ -1438,51 +1441,219 @@ function PropertyDetail() {
 
         {/* Policies Section */}
         <section ref={policiesRef} className="mb-16">
-          <h2 
-            className={`mb-6 max-md:text-2xl transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
-            style={{ fontFamily: 'Petrona', fontSize: '36px', fontWeight: 600 }}
-          >
-            Policies
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-            <div className={`rounded-lg p-6 border transition-colors duration-300 ${isDarkMode ? 'bg-[#1a1a1a] border-[#333333]' : 'bg-white border-gray-200'}`}>
-              <h3 
-                className={`mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
-                style={{ fontFamily: 'Petrona', fontSize: '20px', fontWeight: 600 }}
-              >
-                Check-in
-              </h3>
-              <div className={`space-y-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`} style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
-                <p>Check-in start time: 2:00 PM</p>
-                <p>Check-in end time: midnight</p>
-                <p>Minimum check-in age: 18</p>
-              </div>
-            </div>
-
-            <div className={`rounded-lg p-6 border transition-colors duration-300 ${isDarkMode ? 'bg-[#1a1a1a] border-[#333333]' : 'bg-white border-gray-200'}`}>
-              <h3 
-                className={`mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
-                style={{ fontFamily: 'Petrona', fontSize: '20px', fontWeight: 600 }}
-              >
-                Check-out
-              </h3>
-              <div className={`space-y-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`} style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
-                <p>Check-out before noon</p>
-              </div>
-            </div>
-          </div>
-
-          <div className={`rounded-lg p-6 border transition-colors duration-300 ${isDarkMode ? 'bg-[#1a1a1a] border-[#333333]' : 'bg-white border-gray-200'}`}>
-            <h3 
-              className={`mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
-              style={{ fontFamily: 'Petrona', fontSize: '20px', fontWeight: 600 }}
+          <div className="mb-8">
+            <p 
+              className="mb-2 text-sm md:text-base font-medium tracking-wider uppercase"
+              style={{ 
+                color: isDarkMode ? '#DE754B' : '#0B8043',
+                fontFamily: 'Work Sans',
+                letterSpacing: '0.2em'
+              }}
             >
-              Special check-in instructions
-            </h3>
-            <div className={`space-y-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`} style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
-              <p>Front desk staff will greet guests on arrival at the property.</p>
-              <p>If you are planning to arrive after 6:00 PM, please contact the property in advance.</p>
+              POLICIES & FAQS
+            </p>
+            <h2 
+              className={`transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
+              style={{ 
+                fontFamily: 'Petrona', 
+                fontSize: window.innerWidth < 768 ? '36px' : '48px',
+                fontWeight: 400,
+                lineHeight: '120%',
+                letterSpacing: '-0.02em'
+              }}
+            >
+              Everything, clearly
+            </h2>
+          </div>
+          
+          {/* Accordion-style policies - 2 columns on desktop, 1 on mobile */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12">
+            {/* Check-in & check-out */}
+            <div className={`border-b transition-colors duration-300 ${isDarkMode ? 'border-[#333333]' : 'border-gray-200'}`}>
+              <button
+                className="w-full py-6 pr-4 flex justify-between items-center text-left hover:opacity-80 transition-opacity cursor-pointer"
+                onClick={() => setOpenAccordion(openAccordion === 'checkin' ? null : 'checkin')}
+              >
+                <span 
+                  className={`transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
+                  style={{ fontFamily: 'Petrona', fontSize: '20px', fontWeight: 400 }}
+                >
+                  Check-in & check-out
+                </span>
+                <svg 
+                  className={`w-5 h-5 transition-all duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} ${openAccordion === 'checkin' ? 'rotate-180' : 'rotate-0'}`}
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div 
+                className={`overflow-hidden transition-all duration-500 ease-in-out ${openAccordion === 'checkin' ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+              >
+                <div className={`pb-6 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`} style={{ fontFamily: 'Work Sans', fontSize: '15px', lineHeight: '1.6' }}>
+                  <p className="mb-2">Check-in: 2:00 PM - midnight</p>
+                  <p className="mb-2">Check-out: Before noon</p>
+                  <p>Minimum check-in age: 18</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Housekeeping */}
+            <div className={`border-b transition-colors duration-300 ${isDarkMode ? 'border-[#333333]' : 'border-gray-200'}`}>
+              <button
+                className="w-full py-6 pr-4 flex justify-between items-center text-left hover:opacity-80 transition-opacity cursor-pointer"
+                onClick={() => setOpenAccordion(openAccordion === 'housekeeping' ? null : 'housekeeping')}
+              >
+                <span 
+                  className={`transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
+                  style={{ fontFamily: 'Petrona', fontSize: '20px', fontWeight: 400 }}
+                >
+                  Housekeeping
+                </span>
+                <svg 
+                  className={`w-5 h-5 transition-all duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} ${openAccordion === 'housekeeping' ? 'rotate-180' : 'rotate-0'}`}
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div 
+                className={`overflow-hidden transition-all duration-500 ease-in-out ${openAccordion === 'housekeeping' ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+              >
+                <div className={`pb-6 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`} style={{ fontFamily: 'Work Sans', fontSize: '15px', lineHeight: '1.6' }}>
+                  <p className="mb-2">Weekly housekeeping included for stays over 7 days</p>
+                  <p>Additional cleaning available on request</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Long stays */}
+            <div className={`border-b transition-colors duration-300 ${isDarkMode ? 'border-[#333333]' : 'border-gray-200'}`}>
+              <button
+                className="w-full py-6 pr-4 flex justify-between items-center text-left hover:opacity-80 transition-opacity cursor-pointer"
+                onClick={() => setOpenAccordion(openAccordion === 'longstays' ? null : 'longstays')}
+              >
+                <span 
+                  className={`transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
+                  style={{ fontFamily: 'Petrona', fontSize: '20px', fontWeight: 400 }}
+                >
+                  Long stays
+                </span>
+                <svg 
+                  className={`w-5 h-5 transition-all duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} ${openAccordion === 'longstays' ? 'rotate-180' : 'rotate-0'}`}
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div 
+                className={`overflow-hidden transition-all duration-500 ease-in-out ${openAccordion === 'longstays' ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+              >
+                <div className={`pb-6 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`} style={{ fontFamily: 'Work Sans', fontSize: '15px', lineHeight: '1.6' }}>
+                  <p className="mb-2">Discounted rates for stays over 28 days</p>
+                  <p>Flexible lease terms available</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Cancellation */}
+            <div className={`border-b transition-colors duration-300 ${isDarkMode ? 'border-[#333333]' : 'border-gray-200'}`}>
+              <button
+                className="w-full py-6 pr-4 flex justify-between items-center text-left hover:opacity-80 transition-opacity cursor-pointer"
+                onClick={() => setOpenAccordion(openAccordion === 'cancellation' ? null : 'cancellation')}
+              >
+                <span 
+                  className={`transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
+                  style={{ fontFamily: 'Petrona', fontSize: '20px', fontWeight: 400 }}
+                >
+                  Cancellation
+                </span>
+                <svg 
+                  className={`w-5 h-5 transition-all duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} ${openAccordion === 'cancellation' ? 'rotate-180' : 'rotate-0'}`}
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div 
+                className={`overflow-hidden transition-all duration-500 ease-in-out ${openAccordion === 'cancellation' ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+              >
+                <div className={`pb-6 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`} style={{ fontFamily: 'Work Sans', fontSize: '15px', lineHeight: '1.6' }}>
+                  <p className="mb-2">Free cancellation up to 48 hours before check-in</p>
+                  <p>50% refund for cancellations within 48 hours</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Payments */}
+            <div className={`border-b transition-colors duration-300 ${isDarkMode ? 'border-[#333333]' : 'border-gray-200'}`}>
+              <button
+                className="w-full py-6 pr-4 flex justify-between items-center text-left hover:opacity-80 transition-opacity cursor-pointer"
+                onClick={() => setOpenAccordion(openAccordion === 'payments' ? null : 'payments')}
+              >
+                <span 
+                  className={`transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
+                  style={{ fontFamily: 'Petrona', fontSize: '20px', fontWeight: 400 }}
+                >
+                  Payments
+                </span>
+                <svg 
+                  className={`w-5 h-5 transition-all duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} ${openAccordion === 'payments' ? 'rotate-180' : 'rotate-0'}`}
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div 
+                className={`overflow-hidden transition-all duration-500 ease-in-out ${openAccordion === 'payments' ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+              >
+                <div className={`pb-6 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`} style={{ fontFamily: 'Work Sans', fontSize: '15px', lineHeight: '1.6' }}>
+                  <p className="mb-2">We accept all major credit cards and UPI</p>
+                  <p>Security deposit may be required</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Additional policies */}
+            <div className={`border-b transition-colors duration-300 ${isDarkMode ? 'border-[#333333]' : 'border-gray-200'}`}>
+              <button
+                className="w-full py-6 pr-4 flex justify-between items-center text-left hover:opacity-80 transition-opacity cursor-pointer"
+                onClick={() => setOpenAccordion(openAccordion === 'additional' ? null : 'additional')}
+              >
+                <span 
+                  className={`transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
+                  style={{ fontFamily: 'Petrona', fontSize: '20px', fontWeight: 400 }}
+                >
+                  Additional policies
+                </span>
+                <svg 
+                  className={`w-5 h-5 transition-all duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} ${openAccordion === 'additional' ? 'rotate-180' : 'rotate-0'}`}
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div 
+                className={`overflow-hidden transition-all duration-500 ease-in-out ${openAccordion === 'additional' ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+              >
+                <div className={`pb-6 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`} style={{ fontFamily: 'Work Sans', fontSize: '15px', lineHeight: '1.6' }}>
+                  <p className="mb-2">No smoking inside the property</p>
+                  <p className="mb-2">Pets allowed with prior approval</p>
+                  <p>Quiet hours: 10 PM - 8 AM</p>
+                </div>
+              </div>
             </div>
           </div>
         </section>
