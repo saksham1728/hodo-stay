@@ -433,7 +433,7 @@ const BookingDetails = () => {
           
           {/* Centered Compact Box */}
           <div className="absolute inset-0 flex items-center justify-center p-4">
-            <div className={`rounded-xl shadow-lg p-3 w-full max-w-sm transition-colors duration-300 ${isDarkMode ? 'bg-gray-900/95 backdrop-blur-sm' : 'bg-white'}`}>
+            <div className={`rounded-xl shadow-lg p-3 w-full max-w-sm transition-colors duration-300 ${isDarkMode ? 'bg-black/90 backdrop-blur-sm' : 'bg-white'}`}>
               {/* Property Name and Type */}
               <div className="mb-2">
                 <h3 className={`font-semibold text-sm transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
@@ -442,31 +442,31 @@ const BookingDetails = () => {
               </div>
               
               {/* Underline */}
-              <hr className={`mb-2 transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'border-gray-300'}`} />
+              <hr className={`mb-2 transition-colors duration-300 ${isDarkMode ? 'border-gray-600' : 'border-gray-300'}`} />
               
               {/* Check-in and Check-out */}
               <div className="flex justify-between items-center mb-2">
                 <div className="flex-1">
-                  <p className={`text-xs mb-0.5 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Check-in</p>
+                  <p className={`text-xs mb-0.5 font-medium transition-colors duration-300`} style={{ color: isDarkMode ? '#DE754B' : '#0B8043' }}>Check-in</p>
                   <p className={`font-semibold text-sm transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{checkInFormatted.day}</p>
-                  <p className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>{checkInFormatted.weekday}</p>
+                  <p className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-500'}`}>{checkInFormatted.weekday}</p>
                 </div>
                 
                 <div className="px-2">
-                  <svg className={`w-4 h-4 transition-colors duration-300 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className={`w-4 h-4 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>
                 </div>
                 
                 <div className="flex-1 text-right">
-                  <p className={`text-xs mb-0.5 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Check-out</p>
+                  <p className={`text-xs mb-0.5 font-medium transition-colors duration-300`} style={{ color: isDarkMode ? '#DE754B' : '#0B8043' }}>Check-out</p>
                   <p className={`font-semibold text-sm transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{checkOutFormatted.day}</p>
-                  <p className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>{checkOutFormatted.weekday}</p>
+                  <p className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-500'}`}>{checkOutFormatted.weekday}</p>
                 </div>
               </div>
               
               {/* Underline */}
-              <hr className={`mb-2 transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'border-gray-300'}`} />
+              <hr className={`mb-2 transition-colors duration-300 ${isDarkMode ? 'border-gray-600' : 'border-gray-300'}`} />
               
               {/* Pricing Row - Left: Label & Info, Right: Price & Arrow */}
               <div 
@@ -475,9 +475,9 @@ const BookingDetails = () => {
               >
                 {/* Left Side - Total Amount Label and Info */}
                 <div>
-                  <p className={`text-xs mb-0.5 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Total Amount</p>
+                  <p className={`text-xs mb-0.5 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Total Amount</p>
                   {!isPricingLoading && calculatedPricing.nights > 0 && (
-                    <p className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
+                    <p className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                       {calculatedPricing.nights} night{calculatedPricing.nights !== 1 ? 's' : ''} • {guests.adults} guest{guests.adults !== 1 ? 's' : ''}
                     </p>
                   )}
@@ -494,7 +494,7 @@ const BookingDetails = () => {
                   </p>
                   
                   <svg 
-                    className={`w-5 h-5 transition-transform transition-colors duration-300 ${showPricingDetails ? 'rotate-180' : ''} ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
+                    className={`w-5 h-5 transition-transform transition-colors duration-300 ${showPricingDetails ? 'rotate-180' : ''} ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}
                     fill="none" 
                     stroke="currentColor" 
                     viewBox="0 0 24 24"
@@ -518,45 +518,45 @@ const BookingDetails = () => {
           />
           
           {/* Bottom Sheet - Reduced Height */}
-          <div className={`relative w-full rounded-t-3xl shadow-2xl max-h-[70vh] overflow-y-auto animate-slide-up transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}>
+          <div className={`relative w-full rounded-t-3xl shadow-2xl max-h-[70vh] overflow-y-auto animate-slide-up transition-colors duration-300`} style={{ backgroundColor: isDarkMode ? '#0f0f0f' : '#ffffff' }}>
             {/* Handle */}
             <div className="flex justify-center pt-2 pb-1">
-              <div className="w-12 h-1 bg-gray-300 rounded-full" />
+              <div className={`w-12 h-1 rounded-full transition-colors duration-300`} style={{ backgroundColor: isDarkMode ? '#444444' : '#d1d5db' }} />
             </div>
             
             {/* Content - Compact Spacing */}
             <div className="p-4 space-y-4">
               {/* Unit Info - Compact */}
               <div>
-                <h3 className="text-base font-semibold text-gray-900 mb-1">
+                <h3 className={`text-base font-semibold mb-1 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   {unit?.unitType || 'Loading...'}
                 </h3>
-                <p className="text-xs text-gray-600">
+                <p className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   {unit?.name || ''}
                 </p>
               </div>
 
               {/* Date Summary - Compact */}
-              <div className="p-3 bg-gray-50 rounded-lg">
+              <div className={`p-3 rounded-lg transition-colors duration-300`} style={{ backgroundColor: isDarkMode ? '#1f1f1f' : '#f9fafb' }}>
                 <div className="flex justify-between items-center mb-2">
                   <div>
-                    <p className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Check-in</p>
+                    <p className={`text-xs mb-0.5 font-medium transition-colors duration-300`} style={{ color: isDarkMode ? '#DE754B' : '#0B8043' }}>Check-in</p>
                     <p className={`text-sm font-semibold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{checkInFormatted.day}</p>
-                    <p className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{checkInFormatted.weekday}, {unit?.checkInOut?.checkInFrom || '2pm'}</p>
+                    <p className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>{checkInFormatted.weekday}, {unit?.checkInOut?.checkInFrom || '2pm'}</p>
                   </div>
                   
-                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className={`w-4 h-4 transition-colors duration-300 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>
                   
                   <div className="text-right">
-                    <p className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Check-out</p>
+                    <p className={`text-xs mb-0.5 font-medium transition-colors duration-300`} style={{ color: isDarkMode ? '#DE754B' : '#0B8043' }}>Check-out</p>
                     <p className={`text-sm font-semibold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{checkOutFormatted.day}</p>
-                    <p className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{checkOutFormatted.weekday}, {unit?.checkInOut?.checkOutUntil || '11am'}</p>
+                    <p className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>{checkOutFormatted.weekday}, {unit?.checkInOut?.checkOutUntil || '11am'}</p>
                   </div>
                 </div>
                 
-                <div className={`pt-2 border-t transition-colors duration-300 ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+                <div className={`pt-2 border-t transition-colors duration-300`} style={{ borderColor: isDarkMode ? '#333333' : '#e5e7eb' }}>
                   <p className={`text-xs mb-0.5 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Guests</p>
                   <p className={`text-sm font-medium transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     {guests.adults} Adult{guests.adults !== 1 ? 's' : ''}
@@ -567,19 +567,19 @@ const BookingDetails = () => {
 
               {/* Pricing Breakdown - Compact */}
               <div className="space-y-2">
-                <h4 className="font-semibold text-gray-900 text-sm">Price Breakdown</h4>
+                <h4 className={`font-semibold text-sm transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Price Breakdown</h4>
                 
                 {isPricingLoading ? (
                   <div className="text-center py-3">
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-orange-500 mx-auto"></div>
-                    <p className="text-xs text-gray-500 mt-2">Getting live prices...</p>
+                    <p className={`text-xs mt-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Getting live prices...</p>
                   </div>
                 ) : calculatedPricing.total === 0 ? (
-                  <p className="text-sm text-gray-500">Select dates to see pricing</p>
+                  <p className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Select dates to see pricing</p>
                 ) : (
                   <>
                     <div className="flex justify-between items-center">
-                      <span className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      <span className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                         {formatCurrency(calculatedPricing.basePrice, calculatedPricing.currency)} x {calculatedPricing.nights} Night{calculatedPricing.nights !== 1 ? 's' : ''}
                       </span>
                       <span className={`text-sm font-medium transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
@@ -589,8 +589,8 @@ const BookingDetails = () => {
                     
                     {calculatedPricing.taxes > 0 && (
                       <div className="flex justify-between items-center">
-                        <span className="text-sm text-gray-600">Taxes and charges</span>
-                        <span className="text-sm font-medium text-gray-900">
+                        <span className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Taxes and charges</span>
+                        <span className={`text-sm font-medium transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                           {formatCurrency(calculatedPricing.taxes, calculatedPricing.currency)}
                         </span>
                       </div>
@@ -598,7 +598,7 @@ const BookingDetails = () => {
                     
                     {appliedCoupon && (
                       <div className="flex justify-between items-center">
-                        <span className="text-sm text-gray-600">
+                        <span className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                           Coupon ({appliedCoupon.code})
                           <button 
                             onClick={removeCoupon}
@@ -613,7 +613,7 @@ const BookingDetails = () => {
                       </div>
                     )}
                     
-                    <hr className="my-2" />
+                    <hr className={`my-2 transition-colors duration-300`} style={{ borderColor: isDarkMode ? '#333333' : '#e5e7eb' }} />
                     
                     <div className="flex justify-between items-center">
                       <span className={`font-semibold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Total Payable</span>
@@ -635,7 +635,11 @@ const BookingDetails = () => {
               {/* Close Button - Compact */}
               <button
                 onClick={() => setShowPricingDetails(false)}
-                className="w-full py-2.5 bg-gray-200 text-gray-900 rounded-lg font-medium text-sm"
+                className={`w-full py-2.5 rounded-lg font-medium text-sm transition-colors duration-300`}
+                style={{ 
+                  backgroundColor: isDarkMode ? '#2a2a2a' : '#e5e7eb',
+                  color: isDarkMode ? '#ffffff' : '#111827'
+                }}
               >
                 Close
               </button>
@@ -653,7 +657,7 @@ const BookingDetails = () => {
             <div className="lg:col-span-2 space-y-6">
               
               {/* Guest Information - FIRST */}
-              <div className={`lg:rounded-2xl lg:p-6 p-0 lg:shadow-sm transition-colors duration-300`} style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#FAF2E8', boxShadow: '0px 4px 4px 0px rgba(0,0,0,0.25)' }} 
+              <div className={`lg:rounded-2xl lg:p-6 p-0 lg:shadow-sm transition-colors duration-300`} style={{ backgroundColor: isDarkMode ? '#1f1f1f' : '#FAF2E8', boxShadow: '0px 4px 4px 0px rgba(0,0,0,0.25)' }} 
                    data-mobile-transparent="true">
                 <style>{`
                   @media (max-width: 1023px) {
@@ -754,7 +758,7 @@ const BookingDetails = () => {
               </div>
 
               {/* Coupon Code Section - Mobile Only */}
-              <div className={`lg:hidden lg:rounded-2xl lg:p-6 p-0 lg:shadow-sm transition-colors duration-300`} style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#FAF2E8', boxShadow: '0px 4px 4px 0px rgba(0,0,0,0.25)' }} 
+              <div className={`lg:hidden lg:rounded-2xl lg:p-6 p-0 lg:shadow-sm transition-colors duration-300`} style={{ backgroundColor: isDarkMode ? '#1f1f1f' : '#FAF2E8', boxShadow: '0px 4px 4px 0px rgba(0,0,0,0.25)' }} 
                    data-mobile-transparent="true">
                 <h3 
                   className={`mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
@@ -808,7 +812,7 @@ const BookingDetails = () => {
               </div>
 
               {/* Additional Amenities */}
-              <div className={`lg:rounded-2xl lg:p-6 p-0 lg:shadow-sm transition-colors duration-300`} style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#FAF2E8', boxShadow: '0px 4px 4px 0px rgba(0,0,0,0.25)' }} 
+              <div className={`lg:rounded-2xl lg:p-6 p-0 lg:shadow-sm transition-colors duration-300`} style={{ backgroundColor: isDarkMode ? '#1f1f1f' : '#FAF2E8', boxShadow: '0px 4px 4px 0px rgba(0,0,0,0.25)' }} 
                    data-mobile-transparent="true">
                 <h3 
                   className={`mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
@@ -871,7 +875,7 @@ const BookingDetails = () => {
               </div>
 
               {/* Payment Information */}
-              <div className={`lg:rounded-2xl lg:p-6 p-0 lg:shadow-sm transition-colors duration-300`} style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#FAF2E8', boxShadow: '0px 4px 4px 0px rgba(0,0,0,0.25)' }} 
+              <div className={`lg:rounded-2xl lg:p-6 p-0 lg:shadow-sm transition-colors duration-300`} style={{ backgroundColor: isDarkMode ? '#1f1f1f' : '#FAF2E8', boxShadow: '0px 4px 4px 0px rgba(0,0,0,0.25)' }} 
                    data-mobile-transparent="true">
                 <h3 
                   className={`mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
@@ -932,7 +936,7 @@ const BookingDetails = () => {
               </div>
 
               {/* Terms and Conditions */}
-              <div className={`lg:rounded-2xl lg:p-6 p-0 lg:shadow-sm transition-colors duration-300`} style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#FAF2E8', boxShadow: '0px 4px 4px 0px rgba(0,0,0,0.25)' }} 
+              <div className={`lg:rounded-2xl lg:p-6 p-0 lg:shadow-sm transition-colors duration-300`} style={{ backgroundColor: isDarkMode ? '#1f1f1f' : '#FAF2E8', boxShadow: '0px 4px 4px 0px rgba(0,0,0,0.25)' }} 
                    data-mobile-transparent="true">
                 <label className="flex items-start gap-3">
                   <input 
@@ -1026,7 +1030,7 @@ const BookingDetails = () => {
                     {/* Date Summary */}
                     <div className={`flex items-center justify-between mb-4 p-3 rounded-lg transition-colors duration-300`} style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#f9fafb' }}>
                       <div>
-                        <p className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-600'}`}>Check-in</p>
+                        <p className={`text-sm font-medium transition-colors duration-300`} style={{ color: isDarkMode ? '#DE754B' : '#0B8043' }}>Check-in</p>
                         <p className={`font-semibold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                           {checkInFormatted.day}
                         </p>
@@ -1042,7 +1046,7 @@ const BookingDetails = () => {
                       </div>
                       
                       <div className="text-right">
-                        <p className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-600'}`}>Check-out</p>
+                        <p className={`text-sm font-medium transition-colors duration-300`} style={{ color: isDarkMode ? '#DE754B' : '#0B8043' }}>Check-out</p>
                         <p className={`font-semibold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                           {checkOutFormatted.day}
                         </p>
@@ -1053,7 +1057,7 @@ const BookingDetails = () => {
                     </div>
 
                     <div className={`mb-6 p-3 rounded-lg transition-colors duration-300`} style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#f9fafb' }}>
-                      <p className={`text-xs mb-1 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-600'}`}>Selected Guests:</p>
+                      <p className={`text-xs mb-1 font-medium transition-colors duration-300`} style={{ color: isDarkMode ? '#DE754B' : '#0B8043' }}>Selected Guests:</p>
                       <p className={`font-medium transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                         {guests.adults} Adult{guests.adults !== 1 ? 's' : ''}
                         {guests.children > 0 && `, ${guests.children} Child${guests.children !== 1 ? 'ren' : ''}`}
