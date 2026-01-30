@@ -137,6 +137,20 @@ const OurProperties = () => {
       amenities: building.amenities?.slice(0, 3) || ['WiFi', 'Air-conditioning', 'Free Parking on Premises']
     }
   })
+  
+  // Add dummy second property - Hodo Sol
+  if (properties.length > 0 && !loading && !error) {
+    const dummyProperty = {
+      id: properties[0].id, // Use same ID to redirect to same property detail
+      title: 'Hodo - Sol',
+      address: 'JP Nagar, Bangalore',
+      rating: 4.8,
+      price: 6500,
+      images: ['/card-4.png', '/card-5.png', '/card-6.png'],
+      amenities: ['WiFi', 'Air-conditioning', 'Free Parking on Premises']
+    }
+    properties.push(dummyProperty)
+  }
 
   useEffect(() => {
     const onResize = () => setIsMobile(window.innerWidth < 768)
