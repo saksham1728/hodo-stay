@@ -12,7 +12,7 @@ const HomeHeader = () => {
   return (
     <div 
       style={{ 
-        backgroundColor: isDarkMode ? "rgba(0, 0, 0, 0.8)" : "#FFF7F0",
+        backgroundColor: isDarkMode ? "rgba(26, 26, 26, 0.75)" : "#FFF7F0",
         borderBottom: isDarkMode ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid rgba(0, 0, 0, 0.1)"
       }} 
       className={`relative transition-colors duration-300 ${
@@ -27,7 +27,7 @@ const HomeHeader = () => {
             <img
               src={isDarkMode ? "/hodo-white-logo.png" : "/hodo-header-logo.png"}
               alt="Hodo Stays"
-              className="h-24 md:h-32 w-auto mt-4 md:mt-0 mb-4 md:mb-0 transition-opacity duration-300"
+              className="h-24 md:h-32 w-auto mt-4 md:mt-0 mb-4 md:mb-0 transition-opacity duration-300 lg:ml-[10px]"
               style={{ objectFit: 'contain' }}
             />
           </Link>
