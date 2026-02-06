@@ -116,9 +116,9 @@ const HodoBlogs = () => {
               style={{
                 fontFamily: 'Work Sans, sans-serif',
                 fontWeight: 400,
-                fontSize: window.innerWidth < 768 ? '16px' : '20px',
+                fontSize: window.innerWidth < 768 ? '16px' : '18px',
                 lineHeight: '150%',
-                letterSpacing: '-0.8%'
+                letterSpacing: '-0.5%'
               }}
             >
               Dive into our world! Explore travel tips, local insights, and the latest updates from Hodo Stays.
