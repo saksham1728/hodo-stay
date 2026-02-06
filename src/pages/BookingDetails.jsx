@@ -34,6 +34,19 @@ const BookingDetails = () => {
     .animate-slide-up {
       animation: slideUp 0.3s ease-out;
     }
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .animate-slide-down {
+      animation: slideDown 0.3s ease-out;
+    }
   `
   
   // Get URL parameters for check-in, check-out, and guests
@@ -151,6 +164,11 @@ const BookingDetails = () => {
   
   // Mobile pricing dropdown state
   const [showPricingDetails, setShowPricingDetails] = useState(false)
+  
+  // GST section state
+  const [showGstSection, setShowGstSection] = useState(false)
+  const [gstNumber, setGstNumber] = useState('')
+  const [gstCompanyName, setGstCompanyName] = useState('')
 
   // Dates and guests are READ-ONLY - user must go back to property page to change them
 
@@ -809,6 +827,68 @@ const BookingDetails = () => {
                     ✓ {appliedCoupon.description} applied!
                   </p>
                 )}
+                
+                {/* GST Section Toggle */}
+                <div className="mt-4">
+                  <button
+                    onClick={() => setShowGstSection(!showGstSection)}
+                    className="flex items-center gap-2 transition-colors duration-300 cursor-pointer"
+                    style={{
+                      color: isDarkMode ? '#DE754B' : '#0B8043',
+                      fontFamily: 'Work Sans',
+                      fontWeight: 500,
+                      fontSize: '14px'
+                    }}
+                  >
+                    Have a GST number?
+                    <svg 
+                      className={`w-4 h-4 transition-transform duration-300 ${showGstSection ? 'rotate-180' : ''}`}
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  
+                  {/* GST Input Fields */}
+                  {showGstSection && (
+                    <div className="mt-3 space-y-3 animate-slide-down">
+                      <input 
+                        type="text"
+                        placeholder="GST Number (e.g., 22AAAAA0000A1Z5)"
+                        value={gstNumber}
+                        onChange={(e) => setGstNumber(e.target.value.toUpperCase())}
+                        className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:border-orange-500 hover:border-orange-500 transition-all duration-300 ${
+                          isDarkMode 
+                            ? 'bg-black border-[#333333] text-white placeholder-gray-500' 
+                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
+                        }`}
+                        style={{
+                          fontFamily: 'Work Sans',
+                          fontWeight: 400,
+                          fontSize: '16px'
+                        }}
+                      />
+                      <input 
+                        type="text"
+                        placeholder="Company Name"
+                        value={gstCompanyName}
+                        onChange={(e) => setGstCompanyName(e.target.value)}
+                        className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:border-orange-500 hover:border-orange-500 transition-all duration-300 ${
+                          isDarkMode 
+                            ? 'bg-black border-[#333333] text-white placeholder-gray-500' 
+                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
+                        }`}
+                        style={{
+                          fontFamily: 'Work Sans',
+                          fontWeight: 400,
+                          fontSize: '16px'
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Additional Amenities */}
@@ -1196,6 +1276,68 @@ const BookingDetails = () => {
                         <p className="text-green-600 text-xs mt-2">
                           ✓ {appliedCoupon.description} applied!
                         </p>
+                      )}
+                    </div>
+                    
+                    {/* GST Section - Desktop */}
+                    <div className={`mt-4 p-3 rounded-lg transition-colors duration-300`} style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#f9fafb' }}>
+                      <button
+                        onClick={() => setShowGstSection(!showGstSection)}
+                        className="flex items-center gap-2 transition-colors duration-300 cursor-pointer w-full"
+                        style={{
+                          color: isDarkMode ? '#DE754B' : '#0B8043',
+                          fontFamily: 'Work Sans',
+                          fontWeight: 500,
+                          fontSize: '13px'
+                        }}
+                      >
+                        Have a GST number?
+                        <svg 
+                          className={`w-4 h-4 transition-transform duration-300 ${showGstSection ? 'rotate-180' : ''}`}
+                          fill="none" 
+                          stroke="currentColor" 
+                          viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                      
+                      {/* GST Input Fields */}
+                      {showGstSection && (
+                        <div className="mt-3 space-y-2">
+                          <input 
+                            type="text"
+                            placeholder="GST Number (e.g., 22AAAAA0000A1Z5)"
+                            value={gstNumber}
+                            onChange={(e) => setGstNumber(e.target.value.toUpperCase())}
+                            className={`w-full px-3 py-2 border-2 rounded text-sm focus:outline-none focus:border-orange-500 hover:border-orange-500 transition-all duration-300 ${
+                              isDarkMode 
+                                ? 'bg-black border-[#333333] text-white placeholder-gray-500' 
+                                : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
+                            }`}
+                            style={{
+                              fontFamily: 'Work Sans',
+                              fontWeight: 400,
+                              fontSize: '12px'
+                            }}
+                          />
+                          <input 
+                            type="text"
+                            placeholder="Company Name"
+                            value={gstCompanyName}
+                            onChange={(e) => setGstCompanyName(e.target.value)}
+                            className={`w-full px-3 py-2 border-2 rounded text-sm focus:outline-none focus:border-orange-500 hover:border-orange-500 transition-all duration-300 ${
+                              isDarkMode 
+                                ? 'bg-black border-[#333333] text-white placeholder-gray-500' 
+                                : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
+                            }`}
+                            style={{
+                              fontFamily: 'Work Sans',
+                              fontWeight: 400,
+                              fontSize: '12px'
+                            }}
+                          />
+                        </div>
                       )}
                     </div>
                   </>
