@@ -48,7 +48,42 @@ const FooterSimple = () => {
               <div className="text-white/80 text-sm mb-1">
                 hello@hodostays.com
               </div>
-              <div className="text-white/80 text-sm">+91 7483413235</div>
+              <div className="text-white/80 text-sm mb-3">+91 7483413235</div>
+              
+              {/* Payment Methods - Right Side Below Contact */}
+              <div className="flex flex-col items-end">
+                <div className="text-white/70 text-xs mb-2">We accept</div>
+                <div className="flex gap-2 items-center">
+                  <div className="bg-white rounded flex items-center justify-center" style={{ width: '28px', height: '18px', padding: '2px' }}>
+                    <img 
+                      src="/pay1.svg" 
+                      alt="American Express"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                  <div className="bg-white rounded flex items-center justify-center" style={{ width: '28px', height: '18px', padding: '2px' }}>
+                    <img 
+                      src="/pay2.svg" 
+                      alt="Google Pay"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                  <div className="bg-white rounded flex items-center justify-center" style={{ width: '28px', height: '18px', padding: '2px' }}>
+                    <img 
+                      src="/pay3.svg" 
+                      alt="Mastercard"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                  <div className="bg-white rounded flex items-center justify-center" style={{ width: '28px', height: '18px', padding: '2px' }}>
+                    <img 
+                      src="/pay4.svg" 
+                      alt="Visa"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -119,7 +154,42 @@ const FooterSimple = () => {
               <div className="text-white/80 text-sm mb-1">
                 hello@hodostays.com
               </div>
-              <div className="text-white/80 text-sm">+91 7483413235</div>
+              <div className="text-white/80 text-sm mb-3">+91 7483413235</div>
+              
+              {/* Payment Methods - Mobile Right Side Below Contact */}
+              <div className="flex flex-col items-end">
+                <div className="text-white/70 text-xs mb-2">We accept</div>
+                <div className="flex gap-2 items-center">
+                  <div className="bg-white rounded flex items-center justify-center" style={{ width: '28px', height: '18px', padding: '2px' }}>
+                    <img 
+                      src="/pay1.svg" 
+                      alt="American Express"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                  <div className="bg-white rounded flex items-center justify-center" style={{ width: '28px', height: '18px', padding: '2px' }}>
+                    <img 
+                      src="/pay2.svg" 
+                      alt="Google Pay"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                  <div className="bg-white rounded flex items-center justify-center" style={{ width: '28px', height: '18px', padding: '2px' }}>
+                    <img 
+                      src="/pay3.svg" 
+                      alt="Mastercard"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                  <div className="bg-white rounded flex items-center justify-center" style={{ width: '28px', height: '18px', padding: '2px' }}>
+                    <img 
+                      src="/pay4.svg" 
+                      alt="Visa"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
