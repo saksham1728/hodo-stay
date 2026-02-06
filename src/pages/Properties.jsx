@@ -476,7 +476,7 @@ const Properties = () => {
                             fontSize: "14px",
                           }}
                         >
-                          View rooms
+                          View spaces
                         </span>
                       </div>
                     </div>

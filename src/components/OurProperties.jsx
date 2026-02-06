@@ -519,7 +519,7 @@ const OurProperties = () => {
                           fontSize: '14px'
                         }}
                       >
-                        View rooms
+                        View spaces
                       </Link>
                     </div>
                   </div>
