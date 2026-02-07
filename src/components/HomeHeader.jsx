@@ -37,7 +37,7 @@ const HomeHeader = () => {
 
           {/* Desktop Right Navigation */}
           <div className="hidden md:flex items-center gap-8">
-            <Link to="/" className={`font-medium transition-colors ${isDarkMode ? 'text-gray-200 hover:text-gray-400' : 'text-gray-800 hover:text-gray-600'}`}>
+            <Link to="/about" className={`font-medium transition-colors ${isDarkMode ? 'text-gray-200 hover:text-gray-400' : 'text-gray-800 hover:text-gray-600'}`}>
               About
             </Link>
             <Link to="/properties" className={`font-medium transition-colors ${isDarkMode ? 'text-gray-200 hover:text-gray-400' : 'text-gray-800 hover:text-gray-600'}`}>
@@ -152,6 +152,18 @@ const HomeHeader = () => {
                 isDarkMode 
                   ? 'text-gray-200 hover:bg-gray-800 hover:text-orange-400 border-gray-700' 
                   : 'text-gray-800 hover:bg-orange-50 hover:text-orange-600 border-gray-200'
+              }`}
+              style={{ fontFamily: 'Work Sans' }}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Home
+            </Link>
+            <Link 
+              to="/about" 
+              className={`block font-medium text-base py-4 px-4 rounded-lg transition-all duration-200 border-b ${
+                isDarkMode 
+                  ? 'text-gray-200 hover:bg-gray-800 hover:text-orange-400 border-gray-700' 
+                  : 'text-gray-800 hover:bg-gray-100 hover:text-orange-600 border-gray-200'
               }`}
               style={{ fontFamily: 'Work Sans' }}
               onClick={() => setIsMobileMenuOpen(false)}

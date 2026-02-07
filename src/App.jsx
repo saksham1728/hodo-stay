@@ -10,6 +10,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy'
 import TermsOfService from './pages/TermsOfService'
 import RefundPolicy from './pages/RefundPolicy'
 import ContactUs from './pages/ContactUs'
+import AboutUs from './pages/AboutUs'
 import ScrollToTop from './components/ScrollToTop'
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
         <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="/refund-policy" element={<RefundPolicy />} />
         <Route path="/contact" element={<ContactUs />} />
+        <Route path="/about" element={<AboutUs />} />
       </Routes>
     </Router>
   )
