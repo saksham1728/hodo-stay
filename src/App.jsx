@@ -6,6 +6,9 @@ import PropertyDetail from './pages/PropertyDetail'
 import BookingDetails from './pages/BookingDetails'
 import BookingConfirmed from './pages/BookingConfirmed'
 import MyBookings from './pages/MyBookings'
+import PrivacyPolicy from './pages/PrivacyPolicy'
+import TermsOfService from './pages/TermsOfService'
+import RefundPolicy from './pages/RefundPolicy'
 import ScrollToTop from './components/ScrollToTop'
 
 function App() {
@@ -20,6 +23,9 @@ function App() {
         <Route path="/booking-details/:unitId" element={<BookingDetails />} />
         <Route path="/booking-confirmed/:bookingReference" element={<BookingConfirmed />} />
         <Route path="/my-bookings" element={<MyBookings />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-of-service" element={<TermsOfService />} />
+        <Route path="/refund-policy" element={<RefundPolicy />} />
       </Routes>
     </Router>
   )

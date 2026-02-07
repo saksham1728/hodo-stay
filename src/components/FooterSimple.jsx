@@ -106,13 +106,13 @@ const FooterSimple = () => {
               © 2026 Hodo Stays. All rights reserved.
             </div>
             <div className="flex gap-6">
-              <a href="#" className="text-white/70 text-sm hover:text-white transition-colors">
+              <a href="/privacy-policy" className="text-white/70 text-sm hover:text-white transition-colors">
                 Privacy Policy
               </a>
-              <a href="#" className="text-white/70 text-sm hover:text-white transition-colors">
+              <a href="/terms-of-service" className="text-white/70 text-sm hover:text-white transition-colors">
                 Terms & Conditions
               </a>
-              <a href="#" className="text-white/70 text-sm hover:text-white transition-colors">
+              <a href="/refund-policy" className="text-white/70 text-sm hover:text-white transition-colors">
                 Refund Policy
               </a>
             </div>
@@ -207,13 +207,13 @@ const FooterSimple = () => {
           {/* Policy Links */}
           <div className="border-t border-white/30 pt-3">
             <div className="flex justify-between items-center w-full">
-              <a href="#" className="text-white/70 text-xs hover:text-white transition-colors">
+              <a href="/terms-of-service" className="text-white/70 text-xs hover:text-white transition-colors">
                 Terms & Conditions
               </a>
-              <a href="#" className="text-white/70 text-xs hover:text-white transition-colors">
+              <a href="/privacy-policy" className="text-white/70 text-xs hover:text-white transition-colors">
                 Privacy Policy
               </a>
-              <a href="#" className="text-white/70 text-xs hover:text-white transition-colors">
+              <a href="/refund-policy" className="text-white/70 text-xs hover:text-white transition-colors">
                 Refund Policy
               </a>
             </div>
