@@ -50,6 +50,15 @@ const FooterSimple = () => {
               </div>
               <div className="text-white/80 text-sm mb-3">+91 7483413235</div>
               
+              {/* Get in Touch Link */}
+              <a 
+                href="/contact" 
+                className="text-sm font-semibold hover:underline transition-colors duration-300 inline-block mb-4"
+                style={{ color: '#DE754B' }}
+              >
+                Get in Touch
+              </a>
+              
               {/* Payment Methods - Right Side Below Contact */}
               <div className="flex flex-col items-end">
                 <div className="text-white/70 text-xs mb-2">We accept</div>
@@ -155,6 +164,15 @@ const FooterSimple = () => {
                 hello@hodostays.com
               </div>
               <div className="text-white/80 text-sm mb-3">+91 7483413235</div>
+              
+              {/* Get in Touch Link - Mobile */}
+              <a 
+                href="/contact" 
+                className="text-sm font-semibold hover:underline transition-colors duration-300 inline-block mb-4"
+                style={{ color: '#DE754B' }}
+              >
+                Get in Touch
+              </a>
               
               {/* Payment Methods - Mobile Right Side Below Contact */}
               <div className="flex flex-col items-end">

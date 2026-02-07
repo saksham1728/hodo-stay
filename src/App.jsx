@@ -9,6 +9,7 @@ import MyBookings from './pages/MyBookings'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import TermsOfService from './pages/TermsOfService'
 import RefundPolicy from './pages/RefundPolicy'
+import ContactUs from './pages/ContactUs'
 import ScrollToTop from './components/ScrollToTop'
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="/refund-policy" element={<RefundPolicy />} />
+        <Route path="/contact" element={<ContactUs />} />
       </Routes>
     </Router>
   )
