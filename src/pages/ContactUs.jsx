@@ -32,7 +32,7 @@ const ContactUs = () => {
     <div className="min-h-screen transition-colors duration-300" style={{ backgroundColor: isDarkMode ? '#0f0f0f' : '#FFF7F0' }}>
       <HomeHeader />
       
-      <main className="pt-32 pb-20 max-md:pt-24 max-md:pb-12">
+      <main className="pt-10 pb-20 max-md:pt-24 max-md:pb-12">
         <div className="px-8 max-md:px-4">
           <div className="max-w-7xl mx-auto">
             {/* Header */}
