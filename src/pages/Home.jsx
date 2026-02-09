@@ -39,10 +39,10 @@ const Home = () => {
         {/* Content on Top of Overlay */}
         <div className="relative z-10 flex items-center justify-center h-full">
           <div className="text-center px-4 max-w-4xl mx-auto">
-            <h1 className="text-6xl font-bold text-white mb-4 max-md:text-4xl">
+            <h1 className="text-6xl font-bold text-white mb-4 max-md:text-4xl" style={{ fontFamily: 'Petrona' }}>
               Redefining stays,
             </h1>
-            <h2 className="text-6xl font-bold text-white mb-6 max-md:text-4xl">
+            <h2 className="text-6xl font-bold text-white mb-6 max-md:text-4xl" style={{ fontFamily: 'Petrona' }}>
               Beyond hotels
             </h2>
             <p className="text-white/90 text-xl mb-8 leading-relaxed max-md:text-base max-w-2xl mx-auto">
