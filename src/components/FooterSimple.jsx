@@ -48,7 +48,7 @@ const FooterSimple = () => {
               <div className="text-white/80 text-sm mb-1">
                 hello@hodostays.com
               </div>
-              <div className="text-white/80 text-sm mb-3">+91 7483413235</div>
+              <div className="text-white/80 text-sm mb-3">+91-8046395093</div>
               
               {/* Get in Touch Link */}
               <a 
@@ -163,7 +163,7 @@ const FooterSimple = () => {
               <div className="text-white/80 text-sm mb-1">
                 hello@hodostays.com
               </div>
-              <div className="text-white/80 text-sm mb-3">+91 7483413235</div>
+              <div className="text-white/80 text-sm mb-3">+91-8046395093</div>
               
               {/* Get in Touch Link - Mobile */}
               <a 
