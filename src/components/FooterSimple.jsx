@@ -5,62 +5,41 @@ const FooterSimple = () => {
   
   return (
     <div
-      className="py-16 px-8 text-white max-md:py-8 max-md:px-4"
+      className="py-8 px-8 text-white max-md:py-8 max-md:px-4"
       style={{
         background: isDarkMode
-          ? "linear-gradient(180deg, #2d4a3e 0%, #1a2421 50%, #0f0f0f 100%)"
+          ? "linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 50%, #0f0f0f 100%)"
           : "linear-gradient(180deg, #506C60 0%, #2D3A36 50.54%, #000000 100%)",
       }}
     >
       <div className="max-w-7xl mx-auto">
-        {/* Desktop Layout - Same as Mobile */}
+        {/* Desktop Layout - 3 Columns */}
         <div className="hidden md:block">
-          {/* Row 1: Logo and Social Icons */}
-          <div className="flex justify-between items-center mb-8">
-            <div className="flex items-center md:-ml-10">
-              <img
-                src="/hodo-white-logo.png"
-                alt="Hodo Logo"
-                className="h-32 w-auto object-contain"
-              />
-            </div>
-            <div className="flex gap-3">
-              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
-                <span className="text-white text-sm font-bold">in</span>
+          {/* Three Column Layout */}
+          <div className="flex justify-between items-start">
+            {/* Column 1: Logo, Social Icons, and Payment Methods - Left Aligned */}
+            <div className="flex-shrink-0">
+              <div className="md:-mt-13 mb-6">
+                <img
+                  src="/hodo-white-logo.png"
+                  alt="Hodo Logo"
+                  className="h-38 md:-ml-10 w-auto object-contain"
+                />
               </div>
-              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
-                <span className="text-white text-sm">@</span>
+              <div className="flex gap-3 md:-mt-10">
+                <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
+                  <span className="text-white text-sm font-bold">in</span>
+                </div>
+                <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
+                  <span className="text-white text-sm">@</span>
+                </div>
+                <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
+                  <span className="text-white text-sm font-bold">f</span>
+                </div>
               </div>
-              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
-                <span className="text-white text-sm font-bold">f</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Row 2: Links and Contact */}
-          <div className="flex justify-between mb-16">
-            <div className="text-left">
-              <div className="text-white text-sm mb-1">Business and Groups</div>
-              <div className="text-white/80 text-sm mb-1">Blogs</div>
-              <div className="text-white/80 text-sm">Careers</div>
-            </div>
-            <div className="text-right">
-              <div className="text-white/80 text-sm mb-1">
-                hello@hodostays.com
-              </div>
-              <div className="text-white/80 text-sm mb-3">+91-8046395093</div>
               
-              {/* Get in Touch Link */}
-              <a 
-                href="/contact" 
-                className="text-sm font-semibold hover:underline transition-colors duration-300 inline-block mb-4"
-                style={{ color: '#DE754B' }}
-              >
-                Get in Touch
-              </a>
-              
-              {/* Payment Methods - Right Side Below Contact */}
-              <div className="flex flex-col items-end">
+              {/* Payment Methods - Moved from right column */}
+              <div className="mt-4">
                 <div className="text-white/70 text-xs mb-2">We accept</div>
                 <div className="flex gap-2 items-center">
                   <div className="bg-white rounded flex items-center justify-center" style={{ width: '28px', height: '18px', padding: '2px' }}>
@@ -94,10 +73,37 @@ const FooterSimple = () => {
                 </div>
               </div>
             </div>
+
+            {/* Column 2: Quick Links - Left Aligned */}
+            <div className="flex-shrink-0 text-left">
+              <h3 className="text-white font-semibold text-base mb-3">Quick Links</h3>
+              <div className="space-y-2">
+                <a href="/" className="text-white/80 text-sm hover:text-white transition-colors block">Home</a>
+                <a href="/about" className="text-white/80 text-sm hover:text-white transition-colors block">About</a>
+                <a href="/properties" className="text-white/80 text-sm hover:text-white transition-colors block">Properties</a>
+              </div>
+            </div>
+
+            {/* Column 3: Contact Details - Left Aligned */}
+            <div className="flex-shrink-0 text-left">
+              <h3 className="text-white font-semibold text-base mb-3">Contact</h3>
+              <div className="space-y-2 mb-4">
+                <div className="text-white/80 text-sm">hello@hodostays.com</div>
+                <div className="text-white/80 text-sm">+91-8046395093</div>
+              </div>
+              
+              <a 
+                href="/contact" 
+                className="text-sm font-semibold hover:underline transition-colors duration-300 inline-block"
+                style={{ color: '#DE754B' }}
+              >
+                Get in Touch
+              </a>
+            </div>
           </div>
 
-          {/* Row 3: Tagline SVG - Full Width */}
-          <div className="md:-mb-8 md:-mx-8">
+          {/* Tagline SVG - Full Width */}
+          <div className="mb-3 -mx-8">
             <img 
               src="/footer-content.svg" 
               alt="Redefining Stays, beyond hotels" 
@@ -107,9 +113,9 @@ const FooterSimple = () => {
           </div>
 
           {/* Horizontal Line */}
-          <div className="border-t border-white/20 mb-6"></div>
+          <div className="border-t border-white/20 mb-4"></div>
 
-          {/* Copyright and Policy Links - Desktop: Left/Right */}
+          {/* Copyright and Policy Links */}
           <div className="flex justify-between items-center">
             <div className="text-white/70 text-sm">
               © 2026 Hodo Stays. All rights reserved.
@@ -128,7 +134,7 @@ const FooterSimple = () => {
           </div>
         </div>
 
-        {/* Mobile Layout */}
+        {/* Mobile Layout - UNCHANGED */}
         <div className="md:hidden">
           {/* Row 1: Logo and Social Icons */}
           <div className="grid grid-cols-2 gap-4 mb-6">
