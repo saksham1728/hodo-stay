@@ -336,11 +336,18 @@ const AmenitiesModal = ({ amenities, isOpen, onClose, isDarkMode }) => {
             {/* Group amenities by category */}
             <div className="space-y-3">
               {displayAmenities.map((amenity, index) => {
-                const amenityName = typeof amenity === 'string' ? amenity : amenity.amenityID || '';
+                // Handle both old (string) and new (object) format
+                const amenityName = typeof amenity === 'string' ? amenity : (amenity.name || amenity.amenityID || '');
+                const amenityIcon = typeof amenity === 'object' && amenity.icon ? amenity.icon : null;
+                
                 return (
                   <div key={index}>
                     <div className="flex items-start gap-3 py-2">
-                      {getAmenityIcon(amenityName, isDarkMode)}
+                      {amenityIcon ? (
+                        <span className="text-2xl flex-shrink-0">{amenityIcon}</span>
+                      ) : (
+                        getAmenityIcon(amenityName, isDarkMode)
+                      )}
                       <div className="flex-1">
                         <h3 className={`font-medium transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`} style={{ fontFamily: 'Petrona', fontSize: '15px' }}>
                           {amenityName}
@@ -723,9 +730,9 @@ function PropertyDetail() {
     return dayjs(dateString).format('MMM DD, YYYY');
   };
 
-  // Get images for hero grid
+  // Get images for hero grid - prefer gallery, fallback to images
   const getHeroImages = () => {
-    if (!building || !building.images || building.images.length === 0) {
+    if (!building) {
       return [
         '/property_1.png',
         '/property_2.jpg',
@@ -735,7 +742,27 @@ function PropertyDetail() {
       ];
     }
     
-    const images = building.images.map(img => img.url).filter(url => url);
+    // Try gallery first (new structure)
+    let images = [];
+    if (building.gallery?.length > 0) {
+      images = building.gallery.map(img => img.url).filter(url => url);
+    } else if (building.images?.length > 0) {
+      // Fallback to legacy images
+      images = building.images.map(img => img.url).filter(url => url);
+    }
+    
+    // If still no images, use defaults
+    if (images.length === 0) {
+      return [
+        '/property_1.png',
+        '/property_2.jpg',
+        '/property_3.png',
+        '/property_4.jpg',
+        '/property_5.jpg'
+      ];
+    }
+    
+    // Ensure we have at least 5 images by repeating
     while (images.length < 5) {
       images.push(...images.slice(0, Math.min(images.length, 5 - images.length)));
     }
@@ -968,10 +995,17 @@ function PropertyDetail() {
               {/* Amenities Grid - Simple 2-column layout with icons */}
               <div className="grid grid-cols-2 gap-x-8 gap-y-4 max-md:grid-cols-1 mb-6">
                 {(building.amenities && building.amenities.length > 0 ? building.amenities : ['WiFi', 'Air Conditioning', 'Kitchen', 'Parking', 'Washing Machine', 'TV']).slice(0, 6).map((amenity, index) => {
-                  const amenityName = typeof amenity === 'string' ? amenity : amenity.amenityID || '';
+                  // Handle both old (string) and new (object) format
+                  const amenityName = typeof amenity === 'string' ? amenity : (amenity.name || amenity.amenityID || '');
+                  const amenityIcon = typeof amenity === 'object' && amenity.icon ? amenity.icon : null;
+                  
                   return (
                     <div key={index} className="flex items-center gap-3">
-                      {getAmenityIcon(amenityName, isDarkMode)}
+                      {amenityIcon ? (
+                        <span className="text-2xl">{amenityIcon}</span>
+                      ) : (
+                        getAmenityIcon(amenityName, isDarkMode)
+                      )}
                       <span className={`transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`} style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
                         {amenityName}
                       </span>

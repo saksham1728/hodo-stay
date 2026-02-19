@@ -107,25 +107,85 @@ const Properties = () => {
   const { buildings: apiBuildings, loading, error } = useBuildings();
   const { isDarkMode } = useTheme();
   
+  // Helper function to get amenity icon SVG
+  const getAmenityIconSVG = (amenityName) => {
+    const name = amenityName.toLowerCase();
+    const iconColor = isDarkMode ? '#9CA3AF' : '#6B7280';
+    
+    if (name.includes('wifi') || name.includes('internet')) {
+      return (
+        <svg className="w-4 h-4 flex-shrink-0" style={{ color: iconColor }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" />
+        </svg>
+      );
+    }
+    
+    if (name.includes('furnish')) {
+      return (
+        <svg className="w-4 h-4 flex-shrink-0" style={{ color: iconColor }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+        </svg>
+      );
+    }
+    
+    if (name.includes('housekeeping') || name.includes('cleaning')) {
+      return (
+        <svg className="w-4 h-4 flex-shrink-0" style={{ color: iconColor }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+        </svg>
+      );
+    }
+    
+    // Default icon
+    return (
+      <svg className="w-4 h-4 flex-shrink-0" style={{ color: iconColor }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+      </svg>
+    );
+  };
+  
   // Clean function to format buildings for Properties page display
   const formatBuildingForDisplay = (building) => {
-    // Format location
+    // Format location - use new structure, fallback to legacy
     const location = building.location?.city 
-      ? `${building.location.address || ''}, ${building.location.city}`.trim().replace(/^,\s*/, '')
-      : "Bangalore, India";
+      ? `${building.location.addressLine1 || ''}, ${building.location.city}`.trim().replace(/^,\s*/, '')
+      : (building.legacyLocation?.city 
+        ? `${building.legacyLocation.address || ''}, ${building.legacyLocation.city}`.trim().replace(/^,\s*/, '')
+        : "Bangalore, India");
     
-    // Get images - use building images or default
-    const images = building.images?.length > 0 
-      ? building.images.map(img => img.url).filter(url => url)
-      : ["/card-1.png", "/card-2.png", "/card-3.png"];
+    // Get images - prefer gallery, fallback to images, then default
+    let images = [];
+    if (building.gallery?.length > 0) {
+      images = building.gallery.map(img => img.url).filter(url => url);
+    } else if (building.images?.length > 0) {
+      images = building.images.map(img => img.url).filter(url => url);
+    } else {
+      images = ["/card-1.png", "/card-2.png", "/card-3.png"];
+    }
+    
+    // Get amenities - use new structured format if available
+    let amenities = [];
+    if (building.amenities?.length > 0) {
+      amenities = building.amenities.slice(0, 3).map(a => ({
+        name: typeof a === 'string' ? a : a.name,
+        icon: typeof a === 'object' && a.icon ? a.icon : null
+      }));
+    } else {
+      amenities = [
+        { name: "WiFi", icon: null },
+        { name: "Air-conditioning", icon: null },
+        { name: "Free Parking on Premises", icon: null }
+      ];
+    }
     
     return {
-      id: building._id, // Use MongoDB _id for routing to property detail
-      title: building.name,
+      id: building._id,
+      title: building.title || building.name,
       location: location,
-      size: `${building.totalUnits || building.availableUnits || 0} units available`,
-      rating: 4.5,
-      amenities: building.amenities?.slice(0, 3) || ["WiFi", "Air-conditioning", "Free Parking on Premises"],
+      size: `${building.totalUnits || 0} units available`,
+      rating: building.reviewSummary?.[0]?.averageRating || 4.5,
+      totalReviews: building.reviewSummary?.[0]?.totalReviews || 0,
+      amenities: amenities,
       description: building.description || "Modern apartments with all amenities",
       price: 7000,
       images: images
@@ -316,7 +376,7 @@ const Properties = () => {
                           </span>
                         </div>
 
-                        {/* Circular scrollable amenities */}
+                        {/* Dynamic amenities from API */}
                         <div className="flex gap-3 mb-4 overflow-x-auto pb-2 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                           <style>{`
                             .scrollbar-hide::-webkit-scrollbar {
@@ -324,45 +384,25 @@ const Properties = () => {
                             }
                           `}</style>
                           
-                          <div className="flex items-center gap-2 px-3 py-2 rounded-full whitespace-nowrap" style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#F3F4F6' }}>
-                            <svg className="w-4 h-4 flex-shrink-0" style={{ color: isDarkMode ? '#9CA3AF' : '#6B7280' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                            </svg>
-                            <span
-                              className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
-                              style={{ fontFamily: 'Petrona' }}
-                            >
-                              Fully Furnished
-                            </span>
-                          </div>
-                          
-                          <div className="flex items-center gap-2 px-3 py-2 rounded-full whitespace-nowrap" style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#F3F4F6' }}>
-                            <svg className="w-4 h-4 flex-shrink-0" style={{ color: isDarkMode ? '#9CA3AF' : '#6B7280' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                            </svg>
-                            <span
-                              className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
-                              style={{ fontFamily: 'Petrona' }}
-                            >
-                              Housekeeping Included
-                            </span>
-                          </div>
-                          
-                          <div className="flex items-center gap-2 px-3 py-2 rounded-full whitespace-nowrap" style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#F3F4F6' }}>
-                            <svg className="w-4 h-4 flex-shrink-0" style={{ color: isDarkMode ? '#9CA3AF' : '#6B7280' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" />
-                            </svg>
-                            <span
-                              className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
-                              style={{ fontFamily: 'Petrona' }}
-                            >
-                              High-Speed WiFi
-                            </span>
-                          </div>
+                          {property.amenities.map((amenity, idx) => (
+                            <div key={idx} className="flex items-center gap-2 px-3 py-2 rounded-full whitespace-nowrap" style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#F3F4F6' }}>
+                              {amenity.icon ? (
+                                <span className="text-base">{amenity.icon}</span>
+                              ) : (
+                                getAmenityIconSVG(amenity.name)
+                              )}
+                              <span
+                                className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
+                                style={{ fontFamily: 'Petrona' }}
+                              >
+                                {amenity.name}
+                              </span>
+                            </div>
+                          ))}
                         </div>
                       </div>
 
-                      {/* Mobile: Rating with star - Below image */}
+                      {/* Mobile: Dynamic amenities from API */}
                       <div className="md:hidden flex gap-3 mb-4 overflow-x-auto pb-2 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                         <style>{`
                           .scrollbar-hide::-webkit-scrollbar {
@@ -370,41 +410,21 @@ const Properties = () => {
                           }
                         `}</style>
                         
-                        <div className="flex items-center gap-2 px-3 py-2 rounded-full whitespace-nowrap" style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#F3F4F6' }}>
-                          <svg className="w-4 h-4 flex-shrink-0" style={{ color: isDarkMode ? '#9CA3AF' : '#6B7280' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                          </svg>
-                          <span
-                            className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
-                            style={{ fontFamily: 'Petrona' }}
-                          >
-                            Fully Furnished
-                          </span>
-                        </div>
-                        
-                        <div className="flex items-center gap-2 px-3 py-2 rounded-full whitespace-nowrap" style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#F3F4F6' }}>
-                          <svg className="w-4 h-4 flex-shrink-0" style={{ color: isDarkMode ? '#9CA3AF' : '#6B7280' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                          </svg>
-                          <span
-                            className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
-                            style={{ fontFamily: 'Petrona' }}
-                          >
-                            Housekeeping Included
-                          </span>
-                        </div>
-                        
-                        <div className="flex items-center gap-2 px-3 py-2 rounded-full whitespace-nowrap" style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#F3F4F6' }}>
-                          <svg className="w-4 h-4 flex-shrink-0" style={{ color: isDarkMode ? '#9CA3AF' : '#6B7280' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" />
-                          </svg>
-                          <span
-                            className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
-                            style={{ fontFamily: 'Petrona' }}
-                          >
-                            High-Speed WiFi
-                          </span>
-                        </div>
+                        {property.amenities.map((amenity, idx) => (
+                          <div key={idx} className="flex items-center gap-2 px-3 py-2 rounded-full whitespace-nowrap" style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#F3F4F6' }}>
+                            {amenity.icon ? (
+                              <span className="text-base">{amenity.icon}</span>
+                            ) : (
+                              getAmenityIconSVG(amenity.name)
+                            )}
+                            <span
+                              className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
+                              style={{ fontFamily: 'Petrona' }}
+                            >
+                              {amenity.name}
+                            </span>
+                          </div>
+                        ))}
                       </div>
 
                       {/* Desktop: Description */}
