@@ -65,18 +65,24 @@ const Booking = () => {
   // Fetch pricing when dates change
   useEffect(() => {
     const fetchPricing = async () => {
-      if (!formData.checkIn || !formData.checkOut || !unit) return;
+      if (!formData.checkIn || !formData.checkOut || !unitId) return;
 
       try {
-        const response = await pricingService.getAvailabilityAndPrice({
-          propertyId: unit.ruPropertyId,
-          dateFrom: formData.checkIn,
-          dateTo: formData.checkOut,
-          guests: formData.numberOfGuests
-        });
+        const response = await pricingService.getPriceQuote(
+          unitId,
+          formData.checkIn,
+          formData.checkOut,
+          formData.numberOfGuests
+        );
 
-        if (response.success) {
-          setPricing(response.data);
+        if (response && response.success && response.data && response.data.quote) {
+          const quote = response.data.quote;
+          setPricing({
+            price: quote.pricing.totalPrice,
+            pricePerNight: quote.pricing.pricePerNight,
+            nights: quote.nights,
+            currency: quote.pricing.currency
+          });
         }
       } catch (err) {
         console.error('Error fetching pricing:', err);
@@ -84,7 +90,7 @@ const Booking = () => {
     };
 
     fetchPricing();
-  }, [formData.checkIn, formData.checkOut, formData.numberOfGuests, unit]);
+  }, [formData.checkIn, formData.checkOut, formData.numberOfGuests, unitId]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -134,9 +140,9 @@ const Booking = () => {
         numberOfChildren: formData.numberOfChildren,
         guestInfo: formData.guestInfo,
         pricing: {
-          ruPrice: pricing?.price || 70 * calculateNights(),
-          clientPrice: pricing?.price || 70 * calculateNights(),
-          currency: 'INR'
+          ruPrice: pricing?.price || 0,
+          clientPrice: pricing?.price || 0,
+          currency: pricing?.currency || 'INR'
         },
         specialRequests: formData.specialRequests
       };
@@ -171,7 +177,7 @@ const Booking = () => {
   }
 
   const nights = calculateNights();
-  const totalPrice = pricing?.price || 70 * nights;
+  const totalPrice = pricing?.price || 0;
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#FFF7F0' }}>
@@ -396,8 +402,10 @@ const Booking = () => {
 
               <div className="border-t pt-4 space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">$70 x {nights} nights</span>
-                  <span>${(70 * nights).toLocaleString()}</span>
+                  <span className="text-gray-600">
+                    {pricing?.pricePerNight ? `₹${pricing.pricePerNight.toFixed(2)}` : '₹0'} x {nights} nights
+                  </span>
+                  <span>₹{(pricing?.price || 0).toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-lg font-semibold pt-2 border-t">
                   <span>Total</span>

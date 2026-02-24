@@ -170,7 +170,10 @@ const OurProperties = () => {
       images = building.gallery.map(img => img.url).filter(url => url);
     } else if (building.images?.length > 0) {
       images = building.images.map(img => img.url).filter(url => url);
-    } else {
+    }
+    
+    // If no images, use defaults
+    if (images.length === 0) {
       images = ['/card-1.png', '/card-2.png', '/card-3.png'];
     }
     
@@ -192,30 +195,36 @@ const OurProperties = () => {
     return {
       id: building._id,
       title: building.title || building.name,
+      subTitle: building.subTitle || '',
       address: location,
       rating: building.reviewSummary?.[0]?.averageRating || 4.5,
-      totalReviews: building.reviewSummary?.[0]?.totalReviews || 0,
-      price: 7000,
+      totalReviews: building.reviewSummary?.[0]?.totalReviews || 120,
+      price: 7000, // TODO: Get from pricing API or building default
       images: images,
       amenities: amenities,
-      description: building.description || "Comfortable, thoughtfully designed spaces for short & long stays."
+      description: building.description || "Comfortable, thoughtfully designed spaces for short & long stays.",
+      highlights: building.highlights || []
     };
   });
   
-  // Add dummy second property - Hodo Sol
+  // Add dummy second property - Hodo Sol (only if we have at least one real property)
   if (properties.length > 0 && !loading && !error) {
     const dummyProperty = {
       id: properties[0].id, // Use same ID to redirect to same property detail
       title: 'Hodo - Sol',
+      subTitle: '',
       address: 'JP Nagar, Bangalore',
       rating: 4.8,
+      totalReviews: 95,
       price: 6500,
       images: ['/card-4.png', '/card-5.png', '/card-6.png'],
       amenities: [
         { name: 'WiFi', icon: null },
         { name: 'Air-conditioning', icon: null },
         { name: 'Free Parking on Premises', icon: null }
-      ]
+      ],
+      description: "Modern living spaces in the heart of JP Nagar.",
+      highlights: []
     }
     properties.push(dummyProperty)
   }

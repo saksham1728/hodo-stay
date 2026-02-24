@@ -110,7 +110,7 @@ const BookingDetails = () => {
         setUnit(unitData)
         console.log('✅ Unit loaded:', unitData.name, 'RU ID:', unitData.ruPropertyId)
         
-        // Step 2: Get live pricing from Rentals United via our API
+        // Step 2: Get cached pricing from our API
         const { pricingService } = await import('../api/pricing/pricingService')
         const pricingResponse = await pricingService.getPriceQuote(
           unitId,
@@ -121,7 +121,8 @@ const BookingDetails = () => {
         
         console.log('💰 Pricing response:', pricingResponse)
         
-        if (pricingResponse.success && pricingResponse.data.quote) {
+        // Response structure: { success: true, data: { quote: {...} } }
+        if (pricingResponse && pricingResponse.success && pricingResponse.data && pricingResponse.data.quote) {
           const quote = pricingResponse.data.quote
           setPricing({
             price: quote.pricing.totalPrice,
@@ -132,7 +133,8 @@ const BookingDetails = () => {
           })
           console.log('✅ Pricing loaded:', quote.pricing.totalPrice, quote.pricing.currency)
         } else {
-          throw new Error(pricingResponse.message || 'Failed to get pricing')
+          console.error('❌ Unexpected response structure:', pricingResponse)
+          throw new Error('Invalid pricing response format')
         }
         
       } catch (error) {
