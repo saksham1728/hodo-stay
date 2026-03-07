@@ -360,7 +360,7 @@ const AmenitiesModal = ({ amenities, isOpen, onClose, isDarkMode }) => {
                   <div key={index}>
                     <div className="flex items-start gap-3 py-2">
                       {amenityIcon ? (
-                        <span className="text-2xl flex-shrink-0">{amenityIcon}</span>
+                        <span className="text-2xl flex-shrink-0" style={{ filter: 'grayscale(100%)' }}>{amenityIcon}</span>
                       ) : (
                         getAmenityIcon(amenityName, isDarkMode)
                       )}
@@ -1086,7 +1086,7 @@ function PropertyDetail() {
                   return (
                     <div key={index} className="flex items-center gap-3">
                       {amenityIcon ? (
-                        <span className="text-2xl">{amenityIcon}</span>
+                        <span className="text-2xl" style={{ filter: 'grayscale(100%)' }}>{amenityIcon}</span>
                       ) : (
                         getAmenityIcon(amenityName, isDarkMode)
                       )}
