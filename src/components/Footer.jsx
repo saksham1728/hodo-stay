@@ -417,7 +417,7 @@ const Footer = () => {
         className="transition-all duration-300"
         style={{
           background: isDarkMode
-            ? "linear-gradient(180deg, #000000 0%, #1a2421 25%, #2D3A36 50%, #1a2421 75%, #000000 100%)"
+            ? "linear-gradient(180deg, #000000 0%, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 75%, #000000 100%)"
             : "linear-gradient(180deg, #FFF7F0 0%, #506C60 50%, #2D3A36 75%, #000000 100%)",
         }}
       >
@@ -472,7 +472,9 @@ const Footer = () => {
                     style={{ 
                       width: window.innerWidth < 768 ? 'calc(100vw - 64px)' : '400px',
                       minHeight: '260px',
-                      backgroundColor: isDarkMode ? '#1a2a27' : '#F6F0E7',
+                      background: isDarkMode 
+                        ? 'radial-gradient(circle at top left, #2a2a2a 0%, #1a1a1a 50%, #0a0a0a 100%)' 
+                        : '#F6F0E7',
                       boxShadow: '0px 4px 12px rgba(0,0,0,0.1)',
                       border: '1px solid transparent'
                     }}

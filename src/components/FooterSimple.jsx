@@ -134,78 +134,56 @@ const FooterSimple = () => {
           </div>
         </div>
 
-        {/* Mobile Layout - UNCHANGED */}
+        {/* Mobile Layout - Two Column Layout */}
         <div className="md:hidden">
-          {/* Row 1: Logo and Social Icons */}
-          <div className="grid grid-cols-2 gap-4 mb-6">
-            <div className="flex items-center">
-              <img
-                src="/hodo-white-logo.png"
-                alt="Hodo Logo"
-                className="h-28 w-auto object-contain -ml-10"
-              />
-            </div>
-            <div className="flex gap-3 justify-end items-center">
-              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
-                <span className="text-white text-sm font-bold">in</span>
+          <div className="flex justify-between items-start gap-6 mb-6">
+            {/* Left Column: Logo → Quick Links → We Accept */}
+            <div className="flex-shrink-0">
+              {/* Logo */}
+              <div className="mb-4">    
+                <img
+                  src="/hodo-white-logo.png"
+                  alt="Hodo Logo"
+                  className="h-32 w-auto object-contain -ml-9 -mt-13"
+                />
               </div>
-              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
-                <span className="text-white text-sm">@</span>
-              </div>
-              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
-                <span className="text-white text-sm font-bold">f</span>
-              </div>
-            </div>
-          </div>
 
-          {/* Row 2: Links and Contact */}
-          <div className="grid grid-cols-2 gap-4 mb-20">
-            <div className="text-left">
-              <div className="text-white text-sm mb-1">Business and Groups</div>
-              <div className="text-white/80 text-sm mb-1">Blogs</div>
-              <div className="text-white/80 text-sm">Careers</div>
-            </div>
-            <div className="text-right">
-              <div className="text-white/80 text-sm mb-1">
-                hello@hodostays.com
+              {/* Quick Links */}
+              <div className="mb-4 -mt-8">
+                <h3 className="text-white font-semibold text-sm mb-2">Quick Links</h3>
+                <div className="space-y-1.5">
+                  <a href="/" className="text-white/80 text-xs hover:text-white transition-colors block">Home</a>
+                  <a href="/about" className="text-white/80 text-xs hover:text-white transition-colors block">About</a>
+                  <a href="/properties" className="text-white/80 text-xs hover:text-white transition-colors block">Properties</a>
+                </div>
               </div>
-              <div className="text-white/80 text-sm mb-3">+91-8046395093</div>
               
-              {/* Get in Touch Link - Mobile */}
-              <a 
-                href="/contact" 
-                className="text-sm font-semibold hover:underline transition-colors duration-300 inline-block mb-4"
-                style={{ color: '#DE754B' }}
-              >
-                Get in Touch
-              </a>
-              
-              {/* Payment Methods - Mobile Right Side Below Contact */}
-              <div className="flex flex-col items-end">
+              {/* Payment Methods */}
+              <div>
                 <div className="text-white/70 text-xs mb-2">We accept</div>
-                <div className="flex gap-2 items-center">
-                  <div className="bg-white rounded flex items-center justify-center" style={{ width: '28px', height: '18px', padding: '2px' }}>
+                <div className="flex gap-1.5 items-center">
+                  <div className="bg-white rounded flex items-center justify-center" style={{ width: '24px', height: '16px', padding: '2px' }}>
                     <img 
                       src="/pay1.svg" 
                       alt="American Express"
                       className="w-full h-full object-contain"
                     />
                   </div>
-                  <div className="bg-white rounded flex items-center justify-center" style={{ width: '28px', height: '18px', padding: '2px' }}>
+                  <div className="bg-white rounded flex items-center justify-center" style={{ width: '24px', height: '16px', padding: '2px' }}>
                     <img 
                       src="/pay2.svg" 
                       alt="Google Pay"
                       className="w-full h-full object-contain"
                     />
                   </div>
-                  <div className="bg-white rounded flex items-center justify-center" style={{ width: '28px', height: '18px', padding: '2px' }}>
+                  <div className="bg-white rounded flex items-center justify-center" style={{ width: '24px', height: '16px', padding: '2px' }}>
                     <img 
                       src="/pay3.svg" 
                       alt="Mastercard"
                       className="w-full h-full object-contain"
                     />
                   </div>
-                  <div className="bg-white rounded flex items-center justify-center" style={{ width: '28px', height: '18px', padding: '2px' }}>
+                  <div className="bg-white rounded flex items-center justify-center" style={{ width: '24px', height: '16px', padding: '2px' }}>
                     <img 
                       src="/pay4.svg" 
                       alt="Visa"
@@ -213,6 +191,39 @@ const FooterSimple = () => {
                     />
                   </div>
                 </div>
+              </div>
+            </div>
+
+            {/* Right Column: Social Icons → Contact Us */}
+            <div className="flex-shrink-0 text-left">
+              {/* Social Icons */}
+              <div className="flex gap-2 mb-6">
+                <div className="w-7 h-7 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
+                  <span className="text-white text-xs font-bold">in</span>
+                </div>
+                <div className="w-7 h-7 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
+                  <span className="text-white text-xs">@</span>
+                </div>
+                <div className="w-7 h-7 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
+                  <span className="text-white text-xs font-bold">f</span>
+                </div>
+              </div>
+
+              {/* Contact Details */}
+              <div className="mt-8">
+                <h3 className="text-white font-semibold text-sm mb-2">Contact</h3>
+                <div className="space-y-1.5 mb-3">
+                  <div className="text-white/80 text-xs">hello@hodostays.com</div>
+                  <div className="text-white/80 text-xs">+91-8046395093</div>
+                </div>
+                
+                <a 
+                  href="/contact" 
+                  className="text-xs font-semibold hover:underline transition-colors duration-300 inline-block"
+                  style={{ color: '#DE754B' }}
+                >
+                  Get in Touch
+                </a>
               </div>
             </div>
           </div>
