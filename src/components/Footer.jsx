@@ -358,6 +358,7 @@ const FAQSection = () => {
 
 const Footer = () => {
   const { isDarkMode } = useTheme();
+  const [pausedRow, setPausedRow] = useState(null); // Track which row is paused
 
   const reviewsRow1 = [
     {
@@ -535,23 +536,27 @@ const Footer = () => {
             {/* First Row - Scrolling Left to Right */}
             <div className="mb-6 overflow-hidden">
               <div 
-                className="flex gap-6 animate-scroll-left hover:pause-animation"
+                className={`flex gap-6 md:gap-6 gap-4 animate-scroll-left ${pausedRow === 1 ? 'pause-animation' : ''}`}
                 style={{ width: 'max-content' }}
+                onMouseEnter={() => setPausedRow(1)}
+                onMouseLeave={() => setPausedRow(null)}
               >
                 {/* Duplicate reviews for seamless loop */}
                 {[...reviewsRow1, ...reviewsRow1].map((review, index) => (
                   <div 
                     key={`row1-${review.id}-${index}`}
-                    className="group rounded-2xl p-5 flex-shrink-0 transition-all duration-300 hover:cursor-pointer"
+                    className="group rounded-2xl p-5 md:p-5 p-4 flex-shrink-0 transition-all duration-300 hover:cursor-pointer"
                     style={{ 
-                      width: '450px',
-                      height: '180px',
+                      width: window.innerWidth < 768 ? '280px' : '450px',
+                      height: window.innerWidth < 768 ? 'auto' : '180px',
+                      minHeight: window.innerWidth < 768 ? '220px' : '180px',
                       background: isDarkMode 
                         ? 'radial-gradient(circle at top left, #2a2a2a 0%, #1a1a1a 50%, #0a0a0a 100%)' 
                         : '#F6F0E7',
                       boxShadow: '0px 4px 12px rgba(0,0,0,0.1)',
                       border: '1px solid transparent'
                     }}
+                    onClick={() => setPausedRow(pausedRow === 1 ? null : 1)}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.borderColor = '#DE754B'
                       e.currentTarget.style.boxShadow = '0 12px 44px -22px rgba(222, 117, 75, 0.3)'
@@ -597,7 +602,7 @@ const Footer = () => {
                           {"★".repeat(review.rating)}
                         </div>
                         <span 
-                          className={` mt-[3px] font-semibold text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+                          className={`mt-[3px] font-semibold text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
                           style={{ fontFamily: 'Work Sans' }}
                         >
                           {review.rating}/5
@@ -621,23 +626,27 @@ const Footer = () => {
             {/* Second Row - Scrolling Right to Left */}
             <div className="overflow-hidden">
               <div 
-                className="flex gap-6 animate-scroll-right hover:pause-animation"
+                className={`flex gap-6 md:gap-6 gap-4 animate-scroll-right ${pausedRow === 2 ? 'pause-animation' : ''}`}
                 style={{ width: 'max-content' }}
+                onMouseEnter={() => setPausedRow(2)}
+                onMouseLeave={() => setPausedRow(null)}
               >
                 {/* Duplicate reviews for seamless loop */}
                 {[...reviewsRow2, ...reviewsRow2].map((review, index) => (
                   <div 
                     key={`row2-${review.id}-${index}`}
-                    className="group rounded-2xl p-5 flex-shrink-0 transition-all duration-300 hover:cursor-pointer"
+                    className="group rounded-2xl p-5 md:p-5 p-4 flex-shrink-0 transition-all duration-300 hover:cursor-pointer"
                     style={{ 
-                      width: '450px',
-                      height: '180px',
+                      width: window.innerWidth < 768 ? '280px' : '450px',
+                      height: window.innerWidth < 768 ? 'auto' : '180px',
+                      minHeight: window.innerWidth < 768 ? '220px' : '180px',
                       background: isDarkMode 
                         ? 'radial-gradient(circle at top left, #2a2a2a 0%, #1a1a1a 50%, #0a0a0a 100%)' 
                         : '#F6F0E7',
                       boxShadow: '0px 4px 12px rgba(0,0,0,0.1)',
                       border: '1px solid transparent'
                     }}
+                    onClick={() => setPausedRow(pausedRow === 2 ? null : 2)}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.borderColor = '#DE754B'
                       e.currentTarget.style.boxShadow = '0 12px 44px -22px rgba(222, 117, 75, 0.3)'
