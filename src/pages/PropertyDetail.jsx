@@ -65,6 +65,22 @@ const ImageCarousel = ({ images, onViewPhotos }) => {
         </div>
       </div>
 
+      {/* Dots Indicator */}
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
+        {images.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setIndex(i)}
+            className={`h-2 rounded-full transition-all duration-300 ${
+              i === index 
+                ? 'w-8 bg-white' 
+                : 'w-2 bg-white/50 hover:bg-white/70'
+            }`}
+            aria-label={`Go to image ${i + 1}`}
+          />
+        ))}
+      </div>
+
       {/* View Photos Button */}
       <button
         onClick={onViewPhotos}
@@ -738,7 +754,10 @@ function PropertyDetail() {
         '/property_2.jpg',
         '/property_3.png',
         '/property_4.jpg',
-        '/property_5.jpg'
+        '/property_5.jpg',
+        '/card-1.png',
+        '/card-2.png',
+        '/card-3.png'
       ];
     }
     
@@ -751,22 +770,25 @@ function PropertyDetail() {
       images = building.images.map(img => img.url).filter(url => url);
     }
     
-    // If still no images, use defaults
+    // If still no images, use defaults with more variety
     if (images.length === 0) {
       return [
         '/property_1.png',
         '/property_2.jpg',
         '/property_3.png',
         '/property_4.jpg',
-        '/property_5.jpg'
+        '/property_5.jpg',
+        '/card-1.png',
+        '/card-2.png',
+        '/card-3.png'
       ];
     }
     
-    // Ensure we have at least 5 images by repeating
-    while (images.length < 5) {
-      images.push(...images.slice(0, Math.min(images.length, 5 - images.length)));
+    // Ensure we have at least 8 images by repeating
+    while (images.length < 8) {
+      images.push(...images.slice(0, Math.min(images.length, 8 - images.length)));
     }
-    return images.slice(0, 5);
+    return images;
   };
 
   if (loading) {
@@ -811,47 +833,109 @@ function PropertyDetail() {
     <div className="min-h-screen transition-colors duration-300" style={{ backgroundColor: isDarkMode ? '#0f0f0f' : '#FFF7F0' }}>
       <HomeHeader />
       
-      {/* Hero Image Grid - EXACTLY 5 images */}
-      <div className="px-8 max-md:px-4 py-4">
+      {/* Hero Image Grid - Desktop: 5 images, Mobile: Scrollable Carousel */}
+      <div className="px-8 max-md:px-0 py-4 max-md:py-0">
         <div className="max-w-7xl mx-auto">
-          <div className="flex gap-2 h-[400px] max-md:h-[300px]">
-          {/* Left: 1 Large image (50% width) */}
-          <div className="w-1/2 max-md:w-full">
-            <img 
-              src={heroImages[0]} 
-              alt={building.name}
-              className="w-full h-full object-cover rounded-lg"
+          {/* Desktop View - 5 Image Grid */}
+          <div className="hidden md:flex gap-2 h-[400px]">
+            {/* Left: 1 Large image (50% width) */}
+            <div 
+              className="w-1/2 cursor-pointer"
+              onClick={() => {
+                setGalleryImages(heroImages);
+                setGalleryInitialIndex(0);
+                setGalleryOpen(true);
+              }}
+            >
+              <img 
+                src={heroImages[0]} 
+                alt={building.name}
+                className="w-full h-full object-cover rounded-lg hover:opacity-90 transition-opacity"
+              />
+            </div>
+            
+            {/* Right: 4 small images in 2x2 grid (50% width) */}
+            <div className="w-1/2 flex flex-col gap-2">
+              <div className="flex gap-2 h-1/2">
+                <div 
+                  className="w-1/2 cursor-pointer"
+                  onClick={() => {
+                    setGalleryImages(heroImages);
+                    setGalleryInitialIndex(1);
+                    setGalleryOpen(true);
+                  }}
+                >
+                  <img 
+                    src={heroImages[1]} 
+                    alt={building.name}
+                    className="w-full h-full object-cover rounded-lg hover:opacity-90 transition-opacity"
+                  />
+                </div>
+                <div 
+                  className="w-1/2 cursor-pointer"
+                  onClick={() => {
+                    setGalleryImages(heroImages);
+                    setGalleryInitialIndex(2);
+                    setGalleryOpen(true);
+                  }}
+                >
+                  <img 
+                    src={heroImages[2]} 
+                    alt={building.name}
+                    className="w-full h-full object-cover rounded-lg hover:opacity-90 transition-opacity"
+                  />
+                </div>
+              </div>
+              <div className="flex gap-2 h-1/2">
+                <div 
+                  className="w-1/2 cursor-pointer"
+                  onClick={() => {
+                    setGalleryImages(heroImages);
+                    setGalleryInitialIndex(3);
+                    setGalleryOpen(true);
+                  }}
+                >
+                  <img 
+                    src={heroImages[3]} 
+                    alt={building.name}
+                    className="w-full h-full object-cover rounded-lg hover:opacity-90 transition-opacity"
+                  />
+                </div>
+                <div 
+                  className="w-1/2 cursor-pointer relative"
+                  onClick={() => {
+                    setGalleryImages(heroImages);
+                    setGalleryInitialIndex(4);
+                    setGalleryOpen(true);
+                  }}
+                >
+                  <img 
+                    src={heroImages[4]} 
+                    alt={building.name}
+                    className="w-full h-full object-cover rounded-lg hover:opacity-90 transition-opacity"
+                  />
+                  {/* View all photos overlay */}
+                  <div className="absolute inset-0 bg-black/40 rounded-lg flex items-center justify-center hover:bg-black/50 transition-colors">
+                    <span className="text-white font-semibold" style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
+                      View all photos
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile View - Scrollable Carousel */}
+          <div className="md:hidden h-[300px]">
+            <ImageCarousel 
+              images={heroImages} 
+              onViewPhotos={() => {
+                setGalleryImages(heroImages);
+                setGalleryInitialIndex(0);
+                setGalleryOpen(true);
+              }}
             />
           </div>
-          
-          {/* Right: 4 small images in 2x2 grid (50% width) */}
-          <div className="w-1/2 flex flex-col gap-2 max-md:hidden">
-            <div className="flex gap-2 h-1/2">
-              <img 
-                src={heroImages[1]} 
-                alt={building.name}
-                className="w-1/2 h-full object-cover rounded-lg"
-              />
-              <img 
-                src={heroImages[2]} 
-                alt={building.name}
-                className="w-1/2 h-full object-cover rounded-lg"
-              />
-            </div>
-            <div className="flex gap-2 h-1/2">
-              <img 
-                src={heroImages[3]} 
-                alt={building.name}
-                className="w-1/2 h-full object-cover rounded-lg"
-              />
-              <img 
-                src={heroImages[4]} 
-                alt={building.name}
-                className="w-1/2 h-full object-cover rounded-lg"
-              />
-            </div>
-          </div>
-        </div>
         </div>
       </div>
 
