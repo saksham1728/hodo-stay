@@ -357,58 +357,109 @@ const FAQSection = () => {
 };
 
 const Footer = () => {
-  const [activeReview, setActiveReview] = useState(0);
-  const reviewsRef = useRef(null);
   const { isDarkMode } = useTheme();
 
-  const reviews = [
+  const reviewsRow1 = [
     {
       id: 1,
-      name: "David",
+      name: "David Chen",
       rating: 5,
       country: "China",
       countryCode: "CN",
-      text: "Back to the Future was excellent. Effects were amazing, quirky and great acting. Highly recommended!!!",
+      text: "Exceptional stay! The property exceeded all expectations with its modern amenities and prime location.",
     },
     {
       id: 2,
-      name: "Sarah",
+      name: "Sarah Williams",
       rating: 5,
       country: "Japan",
       countryCode: "JP",
-      text: "One of the best stays I've had in Bangalore. The amenities were top-notch and the location was perfect for exploring the city.",
+      text: "One of the best stays I've had in Bangalore. Perfect for exploring the city!",
     },
     {
       id: 3,
-      name: "Priya",
+      name: "Priya Sharma",
       rating: 5,
       country: "India",
       countryCode: "IN",
-      text: "Amazing experience! The property was exactly as described and the host was very responsive. Will definitely book again.",
+      text: "Amazing experience! The host was very responsive. Will definitely book again.",
+    },
+    {
+      id: 4,
+      name: "Michael Brown",
+      rating: 5,
+      country: "United States",
+      countryCode: "US",
+      text: "Fantastic property with great attention to detail. Highly recommend for business travelers!",
+    },
+    {
+      id: 5,
+      name: "Emma Wilson",
+      rating: 5,
+      country: "United Kingdom",
+      countryCode: "GB",
+      text: "Beautiful space, spotlessly clean, and the location couldn't be better. Five stars!",
+    },
+    {
+      id: 6,
+      name: "Raj Patel",
+      rating: 5,
+      country: "India",
+      countryCode: "IN",
+      text: "Outstanding service and comfortable rooms. Made our family vacation memorable!",
     },
   ];
 
-  const handleScroll = () => {
-    if (reviewsRef.current) {
-      const container = reviewsRef.current;
-      const isMobile = window.innerWidth < 768;
-      const cardWidth = isMobile ? window.innerWidth - 64 : 420;
-      const gap = 24;
-      const scrollLeft = container.scrollLeft;
-      const newActiveIndex = Math.round(scrollLeft / (cardWidth + gap));
-      if (newActiveIndex >= 0 && newActiveIndex < reviews.length) {
-        setActiveReview(newActiveIndex);
-      }
-    }
-  };
-
-  useEffect(() => {
-    const container = reviewsRef.current;
-    if (container) {
-      container.addEventListener("scroll", handleScroll, { passive: true });
-      return () => container.removeEventListener("scroll", handleScroll);
-    }
-  }, []);
+  const reviewsRow2 = [
+    {
+      id: 7,
+      name: "Sophie Martin",
+      rating: 5,
+      country: "France",
+      countryCode: "FR",
+      text: "Wonderful hospitality and excellent facilities. Felt like home away from home!",
+    },
+    {
+      id: 8,
+      name: "Akira Tanaka",
+      rating: 5,
+      country: "Japan",
+      countryCode: "JP",
+      text: "Impeccable cleanliness and modern design. The staff went above and beyond!",
+    },
+    {
+      id: 9,
+      name: "Carlos Rodriguez",
+      rating: 5,
+      country: "Spain",
+      countryCode: "ES",
+      text: "Perfect location with amazing views. The amenities were top-notch!",
+    },
+    {
+      id: 10,
+      name: "Lisa Anderson",
+      rating: 5,
+      country: "Australia",
+      countryCode: "AU",
+      text: "Exceeded expectations in every way. Great value and wonderful experience!",
+    },
+    {
+      id: 11,
+      name: "Ahmed Hassan",
+      rating: 5,
+      country: "United Arab Emirates",
+      countryCode: "AE",
+      text: "Luxurious stay with excellent service. The attention to detail was impressive!",
+    },
+    {
+      id: 12,
+      name: "Nina Petrov",
+      rating: 5,
+      country: "Russia",
+      countryCode: "RU",
+      text: "Comfortable, clean, and conveniently located. Would definitely stay here again!",
+    },
+  ];
 
   return (
     <div>
@@ -421,8 +472,8 @@ const Footer = () => {
             : "linear-gradient(180deg, #FFF7F0 0%, #506C60 50%, #2D3A36 75%, #000000 100%)",
         }}
       >
-        {/* Reviews Section - Horizontal Scrollable Left-Aligned */}
-        <div className="py-16 px-8 text-gray-800 relative max-md:py-8 max-md:px-4">
+        {/* Reviews Section - Two Row Infinite Carousel */}
+        <div className="py-16 px-8 text-gray-800 relative max-md:py-8 max-md:px-4 overflow-hidden">
           <div className="max-w-7xl mx-auto">
             <div className="text-left mb-8">
               <p 
@@ -448,30 +499,53 @@ const Footer = () => {
               </h2>
             </div>
 
-            {/* Horizontal Scrollable Review Cards */}
-            <div className="relative">
+            {/* CSS for infinite scroll animation */}
+            <style>{`
+              @keyframes scroll-left {
+                0% {
+                  transform: translateX(0);
+                }
+                100% {
+                  transform: translateX(-50%);
+                }
+              }
+              
+              @keyframes scroll-right {
+                0% {
+                  transform: translateX(-50%);
+                }
+                100% {
+                  transform: translateX(0);
+                }
+              }
+              
+              .animate-scroll-left {
+                animation: scroll-left 40s linear infinite;
+              }
+              
+              .animate-scroll-right {
+                animation: scroll-right 40s linear infinite;
+              }
+              
+              .pause-animation {
+                animation-play-state: paused;
+              }
+            `}</style>
+
+            {/* First Row - Scrolling Left to Right */}
+            <div className="mb-6 overflow-hidden">
               <div 
-                ref={reviewsRef}
-                className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory scroll-smooth"
-                style={{
-                  scrollbarWidth: 'none',
-                  msOverflowStyle: 'none',
-                  WebkitOverflowScrolling: 'touch'
-                }}
+                className="flex gap-6 animate-scroll-left hover:pause-animation"
+                style={{ width: 'max-content' }}
               >
-                <style>{`
-                  .scrollbar-hide::-webkit-scrollbar {
-                    display: none;
-                  }
-                `}</style>
-                
-                {reviews.map((review, index) => (
+                {/* Duplicate reviews for seamless loop */}
+                {[...reviewsRow1, ...reviewsRow1].map((review, index) => (
                   <div 
-                    key={review.id}
-                    className="group rounded-2xl p-6 flex-shrink-0 snap-start transition-all duration-300  hover:cursor-pointer"
+                    key={`row1-${review.id}-${index}`}
+                    className="group rounded-2xl p-5 flex-shrink-0 transition-all duration-300 hover:cursor-pointer"
                     style={{ 
-                      width: window.innerWidth < 768 ? 'calc(100vw - 64px)' : '400px',
-                      minHeight: '260px',
+                      width: '450px',
+                      height: '180px',
                       background: isDarkMode 
                         ? 'radial-gradient(circle at top left, #2a2a2a 0%, #1a1a1a 50%, #0a0a0a 100%)' 
                         : '#F6F0E7',
@@ -487,10 +561,10 @@ const Footer = () => {
                       e.currentTarget.style.boxShadow = '0px 4px 12px rgba(0,0,0,0.1)'
                     }}
                   >
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex items-start gap-4">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-start gap-3">
                         <div 
-                          className="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 text-white text-2xl font-bold" 
+                          className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 text-white text-xl font-bold" 
                           style={{ 
                             backgroundColor: '#4A5568',
                             fontFamily: 'Petrona'
@@ -500,30 +574,30 @@ const Footer = () => {
                         </div>
                         <div>
                           <div 
-                            className={`font-semibold text-lg mb-1 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
+                            className={`font-semibold text-base mb-1 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
                             style={{ fontFamily: 'Petrona' }}
                           >
                             {review.name}
                           </div>
                           <div 
-                            className={`flex items-center gap-2 text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
+                            className={`flex items-center gap-2 text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
                             style={{ fontFamily: 'Work Sans' }}
                           >
                             <img 
                               src={`https://flagcdn.com/w20/${review.countryCode.toLowerCase()}.png`}
                               alt={review.country}
-                              className="w-5 h-4"
+                              className="w-4 h-3"
                             />
                             <span>{review.country}</span>
                           </div>
                         </div>
                       </div>
                       <div className="flex items-center gap-1 flex-shrink-0">
-                        <div className="text-orange-500 text-base flex">
+                        <div className="text-orange-500 text-sm flex">
                           {"★".repeat(review.rating)}
                         </div>
                         <span 
-                          className={`font-semibold text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+                          className={` mt-[3px] font-semibold text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
                           style={{ fontFamily: 'Work Sans' }}
                         >
                           {review.rating}/5
@@ -531,10 +605,10 @@ const Footer = () => {
                       </div>
                     </div>
                     <p 
-                      className={`text-base leading-relaxed transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+                      className={`text-sm leading-relaxed transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
                       style={{ 
                         fontFamily: 'Work Sans',
-                        lineHeight: '1.6'
+                        lineHeight: '1.5'
                       }}
                     >
                       {review.text}
@@ -542,31 +616,92 @@ const Footer = () => {
                   </div>
                 ))}
               </div>
-              
-              {/* Scroll Indicator Dots */}
-              {/* <div className="flex justify-start gap-2 mt-6">
-                {reviews.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => {
-                      const container = reviewsRef.current
-                      if (container) {
-                        const cardWidth = window.innerWidth < 768 ? window.innerWidth - 64 : 420
-                        container.scrollTo({
-                          left: index * (cardWidth + 24), // card width + gap
-                          behavior: 'smooth'
-                        })
-                      }
+            </div>
+
+            {/* Second Row - Scrolling Right to Left */}
+            <div className="overflow-hidden">
+              <div 
+                className="flex gap-6 animate-scroll-right hover:pause-animation"
+                style={{ width: 'max-content' }}
+              >
+                {/* Duplicate reviews for seamless loop */}
+                {[...reviewsRow2, ...reviewsRow2].map((review, index) => (
+                  <div 
+                    key={`row2-${review.id}-${index}`}
+                    className="group rounded-2xl p-5 flex-shrink-0 transition-all duration-300 hover:cursor-pointer"
+                    style={{ 
+                      width: '450px',
+                      height: '180px',
+                      background: isDarkMode 
+                        ? 'radial-gradient(circle at top left, #2a2a2a 0%, #1a1a1a 50%, #0a0a0a 100%)' 
+                        : '#F6F0E7',
+                      boxShadow: '0px 4px 12px rgba(0,0,0,0.1)',
+                      border: '1px solid transparent'
                     }}
-                    className={`h-2 rounded-full transition-all duration-300 ${
-                      index === activeReview 
-                        ? 'w-8 bg-orange-500' 
-                        : 'w-2 bg-gray-400 hover:bg-gray-500'
-                    }`}
-                    aria-label={`Go to review ${index + 1}`}
-                  />
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = '#DE754B'
+                      e.currentTarget.style.boxShadow = '0 12px 44px -22px rgba(222, 117, 75, 0.3)'
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = 'transparent'
+                      e.currentTarget.style.boxShadow = '0px 4px 12px rgba(0,0,0,0.1)'
+                    }}
+                  >
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-start gap-3">
+                        <div 
+                          className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 text-white text-xl font-bold" 
+                          style={{ 
+                            backgroundColor: '#4A5568',
+                            fontFamily: 'Petrona'
+                          }}
+                        >
+                          {review.name.charAt(0)}
+                        </div>
+                        <div>
+                          <div 
+                            className={`font-semibold text-base mb-1 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
+                            style={{ fontFamily: 'Petrona' }}
+                          >
+                            {review.name}
+                          </div>
+                          <div 
+                            className={`flex items-center gap-2 text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
+                            style={{ fontFamily: 'Work Sans' }}
+                          >
+                            <img 
+                              src={`https://flagcdn.com/w20/${review.countryCode.toLowerCase()}.png`}
+                              alt={review.country}
+                              className="w-4 h-3"
+                            />
+                            <span>{review.country}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1 flex-shrink-0">
+                        <div className="text-orange-500 text-sm flex">
+                          {"★".repeat(review.rating)}
+                        </div>
+                        <span 
+                          className={`mt-[3px] font-semibold text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+                          style={{ fontFamily: 'Work Sans' }}
+                        >
+                          {review.rating}/5
+                        </span>
+                      </div>
+                    </div>
+                    <p 
+                      className={`text-sm leading-relaxed transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+                      style={{ 
+                        fontFamily: 'Work Sans',
+                        lineHeight: '1.5'
+                      }}
+                    >
+                      {review.text}
+                    </p>
+                  </div>
                 ))}
-              </div> */}
+              </div>
             </div>
           </div>
         </div>
