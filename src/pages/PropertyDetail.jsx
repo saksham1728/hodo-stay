@@ -1537,20 +1537,21 @@ function PropertyDetail() {
             Accessibility
           </h2>
           <p 
-            className={`mb-6 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+            className={`mb-8 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
             style={{ fontFamily: 'Petrona', fontSize: '16px' }}
           >
             If you have requests for specific accessibility needs, please contact the property using the information on the reservation confirmation received after booking.
           </p>
           
-          <div className={`rounded-lg p-6 border transition-colors duration-300 ${isDarkMode ? 'bg-[#1a1a1a] border-[#333333]' : 'bg-white border-gray-200'}`}>
+          {/* Common areas - No card background */}
+          <div className={`border-b pb-6 transition-colors duration-300 ${isDarkMode ? 'border-[#333333]' : 'border-gray-200'}`}>
             <h3 
               className={`mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
-              style={{ fontFamily: 'Petrona', fontSize: '20px', fontWeight: 600 }}
+              style={{ fontFamily: 'Petrona', fontSize: '20px', fontWeight: 400 }}
             >
               Common areas
             </h3>
-            <ul className={`space-y-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`} style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
+            <ul className={`space-y-2 transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`} style={{ fontFamily: 'Work Sans', fontSize: '15px', lineHeight: '1.6' }}>
               <li>• No elevator</li>
               <li>• Well-lit path to entrance</li>
             </ul>
