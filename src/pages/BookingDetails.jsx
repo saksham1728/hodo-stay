@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import HomeHeader from '../components/HomeHeader'
 import { unitService } from '../api'
 import { paymentService } from '../api/payments/paymentService'
+import { couponService } from '../api/coupons/couponService'
 import { useTheme } from '../context/ThemeContext'
 
 // Helper function to format currency - always displays in USD ($)
@@ -187,25 +190,77 @@ const BookingDetails = () => {
     
     setCouponLoading(true)
     try {
-      // Simulate coupon validation (you can implement real coupon API later)
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      // Validate coupon with real API
+      const response = await couponService.validateCoupon({
+        code: couponCode.trim(),
+        email: formData.email || '',
+        phone: formData.mobile || '',
+        propertyId: unitId,
+        city: unit?.city || '',
+        bookingAmount: pricing?.price || 0,
+        nights: pricing?.nights || 1
+      })
       
-      // Mock coupon logic
-      const mockCoupons = {
-        'SAVE10': { discount: 0.1, type: 'percentage', description: '10% off' },
-        'FLAT500': { discount: 500, type: 'fixed', description: '$500 off' },
-        'WELCOME': { discount: 0.15, type: 'percentage', description: '15% off for new users' }
-      }
+      console.log('🎟️ Coupon validation response:', response)
       
-      const coupon = mockCoupons[couponCode.toUpperCase()]
-      if (coupon) {
-        setAppliedCoupon({ code: couponCode.toUpperCase(), ...coupon })
+      // Handle response structure: couponService returns response.data directly
+      // So response = {valid: true, coupon: {...}, discount: {...}} for success
+      // or response = {success: false, message: "error"} for errors
+      if (response.valid) {
+        const { coupon, discount } = response
+        setAppliedCoupon({
+          code: coupon.code,
+          description: coupon.description,
+          discountType: coupon.discountType,
+          discountValue: coupon.discountValue,
+          discountAmount: discount.amount,
+          originalPrice: discount.originalPrice,
+          finalPrice: discount.finalPrice
+        })
+        toast.success(`✅ Coupon applied! You save $${discount.amount.toFixed(2)}`, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        })
       } else {
-        alert('Invalid coupon code')
+        console.log('❌ Validation failed:', response)
+        // Use the specific error message from backend
+        const errorMessage = response.message || 'Invalid coupon code'
+        toast.error(errorMessage, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        })
+        setAppliedCoupon(null)
       }
     } catch (error) {
       console.error('Error applying coupon:', error)
-      alert('Failed to apply coupon')
+      // Extract the exact error message from backend response
+      let errorMessage = 'Failed to apply coupon. Please try again.'
+      
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message
+      } else if (error.response?.data?.error) {
+        errorMessage = error.response.data.error
+      } else if (error.message && !error.message.includes('400')) {
+        errorMessage = error.message
+      }
+      
+      toast.error(errorMessage, {
+        position: "top-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      })
+      setAppliedCoupon(null)
     } finally {
       setCouponLoading(false)
     }
@@ -236,13 +291,10 @@ const BookingDetails = () => {
     const currency = pricing.currency || 'USD'
     const taxes = 0
     
+    // Use real coupon discount from API
     let couponDiscount = 0
-    if (appliedCoupon) {
-      if (appliedCoupon.type === 'percentage') {
-        couponDiscount = subtotal * appliedCoupon.discount
-      } else {
-        couponDiscount = appliedCoupon.discount
-      }
+    if (appliedCoupon && appliedCoupon.discountAmount) {
+      couponDiscount = appliedCoupon.discountAmount
     }
     
     return {
@@ -320,7 +372,7 @@ const BookingDetails = () => {
         },
         paymentMethod: paymentMethod,
         additionalAmenities: additionalAmenities,
-        appliedCoupon: appliedCoupon ? appliedCoupon.code : null
+        couponCode: appliedCoupon ? appliedCoupon.code : null
       }
 
       console.log('📝 Creating Razorpay order...')
@@ -796,9 +848,9 @@ const BookingDetails = () => {
                 <div className="flex gap-2">
                   <input 
                     type="text"
-                    placeholder="Enter coupon code"
+                    placeholder="Enter coupon code (try WEEKEND15)"
                     value={couponCode}
-                    onChange={(e) => setCouponCode(e.target.value)}
+                    onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                     className={`flex-1 px-4 py-3 border-2 rounded-lg focus:outline-none focus:border-orange-500 hover:border-orange-500 transition-all duration-300 ${
                       isDarkMode 
                         ? 'bg-black border-[#333333] text-white placeholder-gray-500' 
@@ -1246,9 +1298,9 @@ const BookingDetails = () => {
                       <div className="flex gap-2">
                         <input 
                           type="text"
-                          placeholder="Enter coupon code (try SAVE10)"
+                          placeholder="Enter coupon code (try WEEKEND15)"
                           value={couponCode}
-                          onChange={(e) => setCouponCode(e.target.value)}
+                          onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                           className={`flex-1 px-3 py-2 border-2 rounded text-sm focus:outline-none focus:border-orange-500 hover:border-orange-500 transition-all duration-300 ${
                             isDarkMode 
                               ? 'bg-black border-[#333333] text-white placeholder-gray-500' 
@@ -1356,6 +1408,20 @@ const BookingDetails = () => {
           </div>
         </div>
       </div>
+      
+      {/* Toast Container */}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme={isDarkMode ? "dark" : "light"}
+      />
     </div>
   )
 }

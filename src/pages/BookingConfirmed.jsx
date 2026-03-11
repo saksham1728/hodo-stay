@@ -365,7 +365,7 @@ const BookingConfirmed = () => {
         </div>
       </div>
 
-      <Footer />
+      <FooterSimple />
     </div>
   )
 }
