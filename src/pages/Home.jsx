@@ -11,9 +11,9 @@ const Home = () => {
   
   return (
     <div className="relative" style={{ backgroundColor: isDarkMode ? '#000000' : 'transparent' }}>
-      {/* Hero Section with Video Background */}
+      {/* Hero Section with Fullscreen Video */}
       <div className="relative h-screen overflow-hidden">
-        {/* Background Video */}
+        {/* Fullscreen Background Video */}
         <video 
           className="absolute inset-0 w-full h-full object-cover"
           autoPlay 
@@ -25,54 +25,111 @@ const Home = () => {
           Your browser does not support the video tag.
         </video>
         
-        {/* Video Overlay - Covers Complete Video */}
+        {/* Dark overlay on video */}
         <div 
           className="absolute inset-0"
           style={{ 
             background: isDarkMode 
-              ? 'linear-gradient(0deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.9) 87.5%)'
-              : 'linear-gradient(0deg, rgba(217, 217, 217, 0.148) 0%, rgba(0, 0, 0, 0.592) 87.5%)',
-            boxShadow: '0px 4px 4px 0px #00000040'
+              ? 'linear-gradient(90deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 100%)'
+              : 'linear-gradient(90deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.5) 100%)'
           }}
         ></div>
         
-        {/* Content on Top of Overlay */}
-        <div className="relative z-10 flex items-center justify-center h-full">
-          <div className="text-center px-4 max-w-4xl mx-auto">
-            <h1 className="text-6xl font-bold text-white mb-4 max-md:text-4xl" style={{ fontFamily: 'Petrona' }}>
-              Redefining stays,
-            </h1>
-            <h2 className="text-6xl font-bold text-white mb-6 max-md:text-4xl" style={{ fontFamily: 'Petrona' }}>
-              Beyond hotels
-            </h2>
-            <p className="text-white/90 text-xl mb-8 leading-relaxed max-md:text-base max-w-2xl mx-auto">
-              Experience isn't a luxury, it's a baseline.
-              <br />
-              Welcome to eco-friendly stays with global hotel standards
-            </p>
-            
-            {/* Action Button */}
-            <div className="flex justify-center">
-              <Link 
-                to="/properties" 
-                className="bg-transparent border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white/10 transition-colors duration-200"
+        {/* Content Overlay - Left Side */}
+        <div className="relative z-10 h-full flex items-center">
+          <div className="w-1/2 max-md:w-full px-12 max-md:px-6">
+            <div className="max-w-xl">
+              {/* Main Heading with Gradient */}
+              <h1 
+                className="animate-fade-in delay-200 text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-medium tracking-tighter leading-[0.9] mb-6"
+                style={{ 
+                  fontFamily: 'Petrona',
+                  maskImage: 'linear-gradient(black 0%, black 80%, transparent 100%)'
+                }}
               >
-                Explore Properties
+                <span className={isDarkMode ? 'text-white' : 'text-black'}>Redefining stays,</span>
+                <br />
+                <span 
+                  className="bg-clip-text text-transparent"
+                  style={{
+                    backgroundImage: isDarkMode 
+                      ? 'linear-gradient(to bottom right, white, white, #ffcd75)'
+                      : 'linear-gradient(to bottom right, black, black, #ff9500)'
+                  }}
+                >
+                  Beyond hotels
+                </span>
+              </h1>
+              
+              {/* Description */}
+              <p 
+                className={`animate-fade-in delay-300 max-w-xl text-lg leading-relaxed mb-8 ${
+                  isDarkMode ? 'text-zinc-400' : 'text-zinc-600'
+                }`}
+              >
+                Experience isn't a luxury, it's a baseline.
+                <br />
+                Welcome to eco-friendly stays with global hotel standards
+              </p>
+              
+              {/* Watch Showreel Button */}
+              <Link to="/properties">
+                <button 
+                  className={`group inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 text-sm font-semibold backdrop-blur-sm transition-colors ${
+                    isDarkMode 
+                      ? 'border border-white/10 bg-white/5 text-white hover:bg-white/10 hover:border-white/20'
+                      : 'border border-black/10 bg-black/5 text-black hover:bg-black/10 hover:border-black/20'
+                  }`}
+                >
+                  <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    width="24" 
+                    height="24" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="2" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    className="lucide lucide-play w-4 h-4 fill-current" 
+                    aria-hidden="true"
+                  >
+                    <polygon points="6 3 20 12 6 21 6 3"></polygon>
+                  </svg>
+                  Watch Showreel
+                </button>
               </Link>
             </div>
           </div>
         </div>
-        
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white animate-bounce">
-          <div className="flex flex-col items-center">
-            <span className="text-sm mb-2">Scroll to explore</span>
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-            </svg>
-          </div>
-        </div>
       </div>
+      
+      {/* Add CSS Animations */}
+      <style>{`
+        @keyframes fade-in {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        .animate-fade-in {
+          animation: fade-in 0.8s ease-out forwards;
+          opacity: 0;
+        }
+        
+        .delay-200 {
+          animation-delay: 0.2s;
+        }
+        
+        .delay-300 {
+          animation-delay: 0.3s;
+        }
+      `}</style>
       
       {/* Home Header - Sticky */}
       <div className="sticky top-0 z-50">

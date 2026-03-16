@@ -131,84 +131,110 @@ const FAQSection = () => {
         <div className="mt-16 pt-8 md:mt-10">
           {/* Desktop Layout */}
           <div className="hidden md:block">
-            {/* Row 1: Logo and Social Icons */}
-            <div className="flex justify-between items-center mb-8">
-              <div className="flex items-center md:-ml-10">
-                <img
-                  src="/hodo-white-logo.png"
-                  alt="Hodo Logo"
-                  className="h-32 w-auto object-contain"
-                />
-              </div>
-              <div className="flex gap-3">
-                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
-                  <span className="text-white text-sm font-bold">in</span>
+            {/* Three Column Layout */}
+            <div className="flex justify-between items-start mb-16">
+              {/* Column 1: Logo, Social Icons, and Payment Methods - Left Aligned */}
+              <div className="flex-shrink-0 md:-mt-11">
+                <div className="md:-ml-10 mb-6">
+                  <img
+                    src="/hodo-white-logo.png"
+                    alt="Hodo Logo"
+                    className="h-32 w-auto object-contain"
+                  />
                 </div>
-                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
-                  <span className="text-white text-sm">@</span>
+                <div className="flex gap-3 mb-6 -mt-5">
+                  <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
+                    <span className="text-white text-sm font-bold">in</span>
+                  </div>
+                  <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
+                    <span className="text-white text-sm">@</span>
+                  </div>
+                  <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
+                    <span className="text-white text-sm font-bold">f</span>
+                  </div>
                 </div>
-                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
-                  <span className="text-white text-sm font-bold">f</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Row 2: Links and Contact */}
-            <div className="flex justify-between mb-16">
-              <div className="text-left">
-                <div className="text-white text-sm mb-1">Business and Groups</div>
-                <div className="text-white/80 text-sm mb-1">Blogs</div>
-                <div className="text-white/80 text-sm">Careers</div>
-              </div>
-              <div className="text-right">
-                <div className="text-white/80 text-sm mb-1">
-                  hello@hodostays.com
-                </div>
-                <div className="text-white/80 text-sm mb-3">+91-8046395093</div>
                 
-                {/* Get in Touch Link */}
+                {/* Payment Methods with Hover Effect */}
+                <div>
+                  <div className="text-white/70 text-xs mb-2">We accept</div>
+                  <div className="flex gap-2 items-center">
+                    <div className="group/card relative">
+                      <div className="bg-white rounded flex items-center justify-center transition-transform duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover/card:-translate-y-1" style={{ width: '28px', height: '18px', padding: '2px' }}>
+                        <img 
+                          src="/pay1.svg" 
+                          alt="American Express"
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                      <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                        <span className="text-white/80 text-[10px] font-medium">Amex</span>
+                      </div>
+                    </div>
+                    <div className="group/card relative">
+                      <div className="bg-white rounded flex items-center justify-center transition-transform duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover/card:-translate-y-1" style={{ width: '28px', height: '18px', padding: '2px' }}>
+                        <img 
+                          src="/pay2.svg" 
+                          alt="Google Pay"
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                      <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                        <span className="text-white/80 text-[10px] font-medium">Google Pay</span>
+                      </div>
+                    </div>
+                    <div className="group/card relative">
+                      <div className="bg-white rounded flex items-center justify-center transition-transform duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover/card:-translate-y-1" style={{ width: '28px', height: '18px', padding: '2px' }}>
+                        <img 
+                          src="/pay3.svg" 
+                          alt="Mastercard"
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                      <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                        <span className="text-white/80 text-[10px] font-medium">Mastercard</span>
+                      </div>
+                    </div>
+                    <div className="group/card relative">
+                      <div className="bg-white rounded flex items-center justify-center transition-transform duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover/card:-translate-y-1" style={{ width: '28px', height: '18px', padding: '2px' }}>
+                        <img 
+                          src="/pay4.svg" 
+                          alt="Visa"
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                      <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                        <span className="text-white/80 text-[10px] font-medium">Visa</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Column 2: Quick Links - Left Aligned */}
+              <div className="flex-shrink-0 text-left">
+                <h3 className="text-white font-semibold text-base mb-3">Quick Links</h3>
+                <div className="space-y-2">
+                  <div className="text-white text-sm">Business and Groups</div>
+                  <div className="text-white/80 text-sm">Blogs</div>
+                  <div className="text-white/80 text-sm">Careers</div>
+                </div>
+              </div>
+
+              {/* Column 3: Contact Details - Left Aligned */}
+              <div className="flex-shrink-0 text-left">
+                <h3 className="text-white font-semibold text-base mb-3">Contact</h3>
+                <div className="space-y-2 mb-4">
+                  <div className="text-white/80 text-sm">hello@hodostays.com</div>
+                  <div className="text-white/80 text-sm">+91-8046395093</div>
+                </div>
+                
                 <a 
                   href="/contact" 
-                  className="text-sm font-semibold hover:underline transition-colors duration-300 inline-block mb-4"
+                  className="text-sm font-semibold hover:underline transition-colors duration-300 inline-block"
                   style={{ color: '#DE754B' }}
                 >
                   Get in Touch
                 </a>
-                
-                {/* Payment Methods - Right Side Below Contact */}
-                <div className="flex flex-col items-end">
-                  <div className="text-white/70 text-xs mb-2">We accept</div>
-                  <div className="flex gap-2 items-center">
-                    <div className="bg-white rounded flex items-center justify-center" style={{ width: '28px', height: '18px', padding: '2px' }}>
-                      <img 
-                        src="/pay1.svg" 
-                        alt="American Express"
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
-                    <div className="bg-white rounded flex items-center justify-center" style={{ width: '28px', height: '18px', padding: '2px' }}>
-                      <img 
-                        src="/pay2.svg" 
-                        alt="Google Pay"
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
-                    <div className="bg-white rounded flex items-center justify-center" style={{ width: '28px', height: '18px', padding: '2px' }}>
-                      <img 
-                        src="/pay3.svg" 
-                        alt="Mastercard"
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
-                    <div className="bg-white rounded flex items-center justify-center" style={{ width: '28px', height: '18px', padding: '2px' }}>
-                      <img 
-                        src="/pay4.svg" 
-                        alt="Visa"
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
 

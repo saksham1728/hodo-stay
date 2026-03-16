@@ -5,11 +5,9 @@ const FooterSimple = () => {
   
   return (
     <div
-      className="py-8 px-8 text-white max-md:py-8 max-md:px-4"
+      className="py-8 px-8 text-white max-md:py-8 max-md:px-4 border-t border-white/20"
       style={{
-        background: isDarkMode
-          ? "linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 50%, #0f0f0f 100%)"
-          : "linear-gradient(180deg, #506C60 0%, #2D3A36 50.54%, #000000 100%)",
+        background: "#000000",
       }}
     >
       <div className="max-w-7xl mx-auto">
@@ -42,33 +40,53 @@ const FooterSimple = () => {
               <div className="mt-4">
                 <div className="text-white/70 text-xs mb-2">We accept</div>
                 <div className="flex gap-2 items-center">
-                  <div className="bg-white rounded flex items-center justify-center" style={{ width: '28px', height: '18px', padding: '2px' }}>
-                    <img 
-                      src="/pay1.svg" 
-                      alt="American Express"
-                      className="w-full h-full object-contain"
-                    />
+                  <div className="group/card relative">
+                    <div className="bg-white rounded flex items-center justify-center transition-transform duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover/card:-translate-y-1" style={{ width: '28px', height: '18px', padding: '2px' }}>
+                      <img 
+                        src="/pay1.svg" 
+                        alt="American Express"
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                    <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                      <span className="text-white/80 text-[10px] font-medium">Amex</span>
+                    </div>
                   </div>
-                  <div className="bg-white rounded flex items-center justify-center" style={{ width: '28px', height: '18px', padding: '2px' }}>
-                    <img 
-                      src="/pay2.svg" 
-                      alt="Google Pay"
-                      className="w-full h-full object-contain"
-                    />
+                  <div className="group/card relative">
+                    <div className="bg-white rounded flex items-center justify-center transition-transform duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover/card:-translate-y-1" style={{ width: '28px', height: '18px', padding: '2px' }}>
+                      <img 
+                        src="/pay2.svg" 
+                        alt="Google Pay"
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                    <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                      <span className="text-white/80 text-[10px] font-medium">Google Pay</span>
+                    </div>
                   </div>
-                  <div className="bg-white rounded flex items-center justify-center" style={{ width: '28px', height: '18px', padding: '2px' }}>
-                    <img 
-                      src="/pay3.svg" 
-                      alt="Mastercard"
-                      className="w-full h-full object-contain"
-                    />
+                  <div className="group/card relative">
+                    <div className="bg-white rounded flex items-center justify-center transition-transform duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover/card:-translate-y-1" style={{ width: '28px', height: '18px', padding: '2px' }}>
+                      <img 
+                        src="/pay3.svg" 
+                        alt="Mastercard"
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                    <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                      <span className="text-white/80 text-[10px] font-medium">Mastercard</span>
+                    </div>
                   </div>
-                  <div className="bg-white rounded flex items-center justify-center" style={{ width: '28px', height: '18px', padding: '2px' }}>
-                    <img 
-                      src="/pay4.svg" 
-                      alt="Visa"
-                      className="w-full h-full object-contain"
-                    />
+                  <div className="group/card relative">
+                    <div className="bg-white rounded flex items-center justify-center transition-transform duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover/card:-translate-y-1" style={{ width: '28px', height: '18px', padding: '2px' }}>
+                      <img 
+                        src="/pay4.svg" 
+                        alt="Visa"
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                    <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                      <span className="text-white/80 text-[10px] font-medium">Visa</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -102,18 +120,8 @@ const FooterSimple = () => {
             </div>
           </div>
 
-          {/* Tagline SVG - Full Width */}
-          <div className="mb-3 -mx-8">
-            <img 
-              src="/footer-content.svg" 
-              alt="Redefining Stays, beyond hotels" 
-              className="w-full h-auto"
-              style={{ maxWidth: 'none' }}
-            />
-          </div>
-
           {/* Horizontal Line */}
-          <div className="border-t border-white/20 mb-4"></div>
+          <div className="border-t border-white/20 mb-4 mt-8"></div>
 
           {/* Copyright and Policy Links */}
           <div className="flex justify-between items-center">
@@ -162,33 +170,53 @@ const FooterSimple = () => {
               <div>
                 <div className="text-white/70 text-xs mb-2">We accept</div>
                 <div className="flex gap-1.5 items-center">
-                  <div className="bg-white rounded flex items-center justify-center" style={{ width: '24px', height: '16px', padding: '2px' }}>
-                    <img 
-                      src="/pay1.svg" 
-                      alt="American Express"
-                      className="w-full h-full object-contain"
-                    />
+                  <div className="group/card relative">
+                    <div className="bg-white rounded flex items-center justify-center transition-transform duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover/card:-translate-y-1" style={{ width: '24px', height: '16px', padding: '2px' }}>
+                      <img 
+                        src="/pay1.svg" 
+                        alt="American Express"
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                    <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                      <span className="text-white/80 text-[9px] font-medium">Amex</span>
+                    </div>
                   </div>
-                  <div className="bg-white rounded flex items-center justify-center" style={{ width: '24px', height: '16px', padding: '2px' }}>
-                    <img 
-                      src="/pay2.svg" 
-                      alt="Google Pay"
-                      className="w-full h-full object-contain"
-                    />
+                  <div className="group/card relative">
+                    <div className="bg-white rounded flex items-center justify-center transition-transform duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover/card:-translate-y-1" style={{ width: '24px', height: '16px', padding: '2px' }}>
+                      <img 
+                        src="/pay2.svg" 
+                        alt="Google Pay"
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                    <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                      <span className="text-white/80 text-[9px] font-medium">Google Pay</span>
+                    </div>
                   </div>
-                  <div className="bg-white rounded flex items-center justify-center" style={{ width: '24px', height: '16px', padding: '2px' }}>
-                    <img 
-                      src="/pay3.svg" 
-                      alt="Mastercard"
-                      className="w-full h-full object-contain"
-                    />
+                  <div className="group/card relative">
+                    <div className="bg-white rounded flex items-center justify-center transition-transform duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover/card:-translate-y-1" style={{ width: '24px', height: '16px', padding: '2px' }}>
+                      <img 
+                        src="/pay3.svg" 
+                        alt="Mastercard"
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                    <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                      <span className="text-white/80 text-[9px] font-medium">Mastercard</span>
+                    </div>
                   </div>
-                  <div className="bg-white rounded flex items-center justify-center" style={{ width: '24px', height: '16px', padding: '2px' }}>
-                    <img 
-                      src="/pay4.svg" 
-                      alt="Visa"
-                      className="w-full h-full object-contain"
-                    />
+                  <div className="group/card relative">
+                    <div className="bg-white rounded flex items-center justify-center transition-transform duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover/card:-translate-y-1" style={{ width: '24px', height: '16px', padding: '2px' }}>
+                      <img 
+                        src="/pay4.svg" 
+                        alt="Visa"
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                    <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                      <span className="text-white/80 text-[9px] font-medium">Visa</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -225,17 +253,6 @@ const FooterSimple = () => {
                   Get in Touch
                 </a>
               </div>
-            </div>
-          </div>
-
-          {/* Row 3: Tagline SVG - Full Width Breakout */}
-          <div className="relative left-1/2 right-1/2 w-screen -ml-[50vw] -mr-[50vw] mb-6">
-            <div className="px-4">
-              <img 
-                src="/footer-content.svg" 
-                alt="Redefining Stays, beyond hotels" 
-                className="w-full h-auto"
-              />
             </div>
           </div>
 

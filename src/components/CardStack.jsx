@@ -87,76 +87,92 @@ const CardStack = () => {
           </p>
         </div>
 
-        {/* Grid Layout for 6 Capability Cards */}
+        {/* Grid Layout for 6 Capability Cards with Glassmorphism */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {capabilities.map((capability, index) => (
             <div
               key={index}
-              className="group relative rounded-2xl border-2 p-8 transition-all duration-300 ease-out cursor-pointer overflow-hidden hover:-translate-y-1"
+              className="group relative rounded-2xl p-8 transition-all duration-300 ease-out cursor-pointer overflow-hidden hover:-translate-y-2 hover:scale-[1.02]"
               style={{
                 minHeight: '240px',
                 display: 'flex',
                 flexDirection: 'column',
-                backgroundColor: isDarkMode ? '#1a1a1a' : '#FAF2E8',
-                borderColor: 'transparent'
+                background: isDarkMode 
+                  ? 'rgba(255, 255, 255, 0.05)'
+                  : 'rgba(255, 255, 255, 0.7)',
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+                border: isDarkMode 
+                  ? '1px solid rgba(255, 255, 255, 0.1)'
+                  : '1px solid rgba(0, 0, 0, 0.1)',
+                boxShadow: isDarkMode
+                  ? '0 8px 32px 0 rgba(0, 0, 0, 0.37)'
+                  : '0 8px 32px 0 rgba(31, 38, 135, 0.15)'
               }}
               onMouseEnter={(e) => {
+                e.currentTarget.style.background = isDarkMode 
+                  ? 'rgba(255, 255, 255, 0.08)'
+                  : 'rgba(255, 255, 255, 0.9)'
                 e.currentTarget.style.borderColor = '#C17A4F'
-                e.currentTarget.style.boxShadow = '0 12px 44px -22px rgba(193, 122, 79, 0.22)'
+                e.currentTarget.style.boxShadow = isDarkMode
+                  ? '0 12px 44px -22px rgba(193, 122, 79, 0.5), 0 8px 32px 0 rgba(0, 0, 0, 0.37)'
+                  : '0 12px 44px -22px rgba(193, 122, 79, 0.4), 0 8px 32px 0 rgba(31, 38, 135, 0.25)'
                 const line = e.currentTarget.querySelector('.bottom-line')
                 if (line) line.style.backgroundColor = '#C17A4F'
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'transparent'
-                e.currentTarget.style.boxShadow = 'none'
+                e.currentTarget.style.background = isDarkMode 
+                  ? 'rgba(255, 255, 255, 0.05)'
+                  : 'rgba(255, 255, 255, 0.7)'
+                e.currentTarget.style.borderColor = isDarkMode 
+                  ? 'rgba(255, 255, 255, 0.1)'
+                  : 'rgba(0, 0, 0, 0.1)'
+                e.currentTarget.style.boxShadow = isDarkMode
+                  ? '0 8px 32px 0 rgba(0, 0, 0, 0.37)'
+                  : '0 8px 32px 0 rgba(31, 38, 135, 0.15)'
                 const line = e.currentTarget.querySelector('.bottom-line')
-                if (line) line.style.backgroundColor = isDarkMode ? '#333333' : '#d1d1d1'
+                if (line) line.style.backgroundColor = isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'
               }}
             >
-              {/* Large background number */}
+              {/* Large background number with glass effect */}
               <span
                 aria-hidden="true"
                 className="pointer-events-none absolute right-6 top-6 font-display text-6xl tracking-tight"
                 style={{
                   fontFamily: 'Petrona',
                   fontSize: '96px',
-                  color: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)',
+                  color: isDarkMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)',
                   fontWeight: 600,
-                  lineHeight: 1
+                  lineHeight: 1,
+                  textShadow: isDarkMode 
+                    ? '0 0 20px rgba(255, 255, 255, 0.1)'
+                    : '0 0 20px rgba(0, 0, 0, 0.05)'
                 }}
               >
                 {capability.number}
               </span>
-
-              <p
-                className="text-xs uppercase tracking-widest"
-                style={{
-                  color: '#989081',
-                  fontFamily: 'Work Sans',
-                  letterSpacing: '0.32em'
-                }}
-              >
-                CAPABILITY {capability.number}
-              </p>
               
               <h3
-                className={`mt-3 font-semibold transition-colors duration-300 ${
+                className={`mt-3 font-semibold transition-colors duration-300 relative z-10 ${
                   isDarkMode ? 'text-white' : 'text-black'
                 }`}
                 style={{
                   fontFamily: 'Petrona',
                   lineHeight: '1.3',
                   fontSize: '24px',
-                  fontWeight: 600
+                  fontWeight: 600,
+                  textShadow: isDarkMode 
+                    ? '0 2px 10px rgba(0, 0, 0, 0.3)'
+                    : '0 2px 10px rgba(255, 255, 255, 0.5)'
                 }}
               >
                 {capability.title}
               </h3>
               
               <p
-                className="mt-4 text-sm lg:text-[15px] leading-relaxed"
+                className="mt-4 text-sm lg:text-[15px] leading-relaxed relative z-10"
                 style={{
-                  color: '#989081',
+                  color: isDarkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
                   fontFamily: 'Work Sans',
                   lineHeight: '1.6'
                 }}
@@ -164,12 +180,25 @@ const CardStack = () => {
                 {capability.description}
               </p>
               
-              {/* Horizontal line at bottom */}
+              {/* Horizontal line at bottom with glass effect */}
               <div 
                 aria-hidden="true"
                 className="bottom-line absolute left-8 right-8 bottom-8 h-px transition-colors duration-300"
                 style={{
-                  backgroundColor: isDarkMode ? '#333333' : '#d1d1d1'
+                  backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)',
+                  boxShadow: isDarkMode 
+                    ? '0 0 10px rgba(255, 255, 255, 0.1)'
+                    : '0 0 10px rgba(0, 0, 0, 0.05)'
+                }}
+              />
+              
+              {/* Subtle gradient overlay for extra depth */}
+              <div 
+                className="absolute inset-0 rounded-2xl pointer-events-none"
+                style={{
+                  background: isDarkMode
+                    ? 'radial-gradient(circle at top left, rgba(255, 255, 255, 0.05) 0%, transparent 50%)'
+                    : 'radial-gradient(circle at top left, rgba(255, 255, 255, 0.8) 0%, transparent 50%)'
                 }}
               />
             </div>
