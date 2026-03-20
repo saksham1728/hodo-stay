@@ -450,104 +450,189 @@ const Footer = () => {
   const reviewsRow1 = [
     {
       id: 1,
-      name: "David Chen",
+      name: "Anandita",
       rating: 5,
-      country: "China",
-      countryCode: "CN",
-      text: "Exceptional stay! The property exceeded all expectations with its modern amenities and prime location.",
+      country: "India",
+      countryCode: "IN",
+      text: "The place is awesome! The staff is extremely sweet and helpful. Definitely recommend it for longer stays instead of hotels.",
+      date: "March 2026",
+      source: "Airbnb"
     },
     {
       id: 2,
-      name: "Sarah Williams",
+      name: "Saharsh",
       rating: 5,
-      country: "Japan",
-      countryCode: "JP",
-      text: "One of the best stays I've had in Bangalore. Perfect for exploring the city!",
+      country: "India",
+      countryCode: "IN",
+      text: "Felt right at home. Very easy to access, no obstacles whatsoever. Was in Bengaluru for work trip, very apt stay. Surprised by the welcome drink. Couldn't have asked more.",
+      date: "March 2026",
+      source: "Airbnb"
     },
     {
       id: 3,
-      name: "Priya Sharma",
+      name: "Ruth",
       rating: 5,
       country: "India",
       countryCode: "IN",
-      text: "Amazing experience! The host was very responsive. Will definitely book again.",
+      text: "Exceptional stay! This booking.com exceeded our expectations in every way. The rooms were spacious, modern, and immaculately clean. The bed was incredibly comfortable, and the amenities were top-notch.",
+      date: "March 2025",
+      source: "Booking.com"
     },
     {
       id: 4,
-      name: "Michael Brown",
-      rating: 5,
-      country: "United States",
-      countryCode: "US",
-      text: "Fantastic property with great attention to detail. Highly recommend for business travelers!",
-    },
-    {
-      id: 5,
-      name: "Emma Wilson",
+      name: "Zothankima",
       rating: 5,
       country: "United Kingdom",
       countryCode: "GB",
-      text: "Beautiful space, spotlessly clean, and the location couldn't be better. Five stars!",
+      text: "Very clean and well looked after. Clean apartment and well equipped. Really enjoyed our stay.",
+      date: "February 2026",
+      source: "Airbnb"
+    },
+    {
+      id: 5,
+      name: "Jonathan",
+      rating: 5,
+      country: "United States",
+      countryCode: "US",
+      text: "I enjoyed my stay at Hodo Stay's. My apartment was new and clean, and the Hodo team was helpful during my stay.",
+      date: "January 2026",
+      source: "Airbnb"
     },
     {
       id: 6,
-      name: "Raj Patel",
+      name: "Madhurima",
       rating: 5,
       country: "India",
       countryCode: "IN",
-      text: "Outstanding service and comfortable rooms. Made our family vacation memorable!",
+      text: "Our stay at Hodo was so great! Very clean and spacious rooms. They had room service which was great. Very proactive with communication.",
+      date: "January 2026",
+      source: "Airbnb"
+    },
+    {
+      id: 7,
+      name: "Suresh",
+      rating: 5,
+      country: "India",
+      countryCode: "IN",
+      text: "Booked it for my collegues here, great response, great stay. No complaints. Good price for a city like bangalore.",
+      date: "December 2025",
+      source: "Airbnb"
+    },
+    {
+      id: 8,
+      name: "Sid",
+      rating: 5,
+      country: "United States",
+      countryCode: "US",
+      text: "Was the perfect place for our week long work trip. The flat is well maintained and the staff is extremely courteous/helpful. Will stay again in future.",
+      date: "December 2025",
+      source: "Airbnb"
+    },
+    {
+      id: 9,
+      name: "Navaneet",
+      rating: 5,
+      country: "United States",
+      countryCode: "US",
+      text: "Hodo has become my usual place in Bangalore to stay! Great location, apartments, staff, and covered parking!",
+      date: "June 2025",
+      source: "Airbnb"
+    },
+    {
+      id: 10,
+      name: "Khadeer",
+      rating: 5,
+      country: "Germany",
+      countryCode: "DE",
+      text: "Perfect place for family and friends. Nothing less than home. Spacious rooms, neat and tidy bathrooms, well structured kitchen dining living room combo. Must recommended stays to opt for short or long stays who needs peace.",
+      date: "May 2025",
+      source: "Airbnb"
     },
   ];
 
   const reviewsRow2 = [
     {
-      id: 7,
-      name: "Sophie Martin",
-      rating: 5,
-      country: "France",
-      countryCode: "FR",
-      text: "Wonderful hospitality and excellent facilities. Felt like home away from home!",
-    },
-    {
-      id: 8,
-      name: "Akira Tanaka",
-      rating: 5,
-      country: "Japan",
-      countryCode: "JP",
-      text: "Impeccable cleanliness and modern design. The staff went above and beyond!",
-    },
-    {
-      id: 9,
-      name: "Carlos Rodriguez",
-      rating: 5,
-      country: "Spain",
-      countryCode: "ES",
-      text: "Perfect location with amazing views. The amenities were top-notch!",
-    },
-    {
-      id: 10,
-      name: "Lisa Anderson",
-      rating: 5,
-      country: "Australia",
-      countryCode: "AU",
-      text: "Exceeded expectations in every way. Great value and wonderful experience!",
-    },
-    {
       id: 11,
-      name: "Ahmed Hassan",
+      name: "Lamha",
       rating: 5,
-      country: "United Arab Emirates",
-      countryCode: "AE",
-      text: "Luxurious stay with excellent service. The attention to detail was impressive!",
+      country: "Maldives",
+      countryCode: "MV",
+      text: "Our experience at Hodo Stays was amazing. The host was really helpful and accommodating as well. Highly recommend this stay for anyone staying in Bangalore!",
+      date: "May 2025",
+      source: "Airbnb"
     },
     {
       id: 12,
-      name: "Nina Petrov",
+      name: "Besly",
       rating: 5,
-      country: "Russia",
-      countryCode: "RU",
-      text: "Comfortable, clean, and conveniently located. Would definitely stay here again!",
+      country: "United Kingdom",
+      countryCode: "GB",
+      text: "Stayed at Hodo Apartments for 2 weeks and it was a very pleasant stay. Staff were friendly and helpful. Good price point. Had good amenities. Would recommend 👍🏽",
+      date: "April 2025",
+      source: "Airbnb"
+    },
+    {
+      id: 13,
+      name: "Sravya",
+      rating: 5,
+      country: "United Arab Emirates",
+      countryCode: "AE",
+      text: "Honestly, I'd come here again for the people- super cooperative and helpful staff. The place is really good, as described and as per pictures.",
+      date: "April 2025",
+      source: "Airbnb"
+    },
+    {
+      id: 14,
+      name: "Abhishek",
+      rating: 5,
+      country: "India",
+      countryCode: "IN",
+      text: "It's was very convenient stay, you should use this especially if you are on a business trip. Absolutely convenience.",
+      date: "April 2025",
+      source: "Airbnb"
+    },
+    {
+      id: 15,
+      name: "Bhumika D",
+      rating: 5,
+      country: "India",
+      countryCode: "IN",
+      text: "The best stay i have booked. The service is topnotch. The receptionist and service people are so polite.",
+      date: "March 2026",
+      source: "Google"
+    },
+    {
+      id: 16,
+      name: "Priyanka Cholera",
+      rating: 5,
+      country: "India",
+      countryCode: "IN",
+      text: "Hodo = Good stay and memories. No matter how many days you stay at hodo, it never feels like hotel or service apartment. Asif bhai and the entire staff is extremely accomodating and so grateful for their care and attentiveness.",
+      date: "February 2026",
+      source: "Google"
+    },
+    {
+      id: 17,
+      name: "Danan Christadoss",
+      rating: 5,
+      country: "Indonesia",
+      countryCode: "ID",
+      text: "This is the 2nd time we have stayed here during our visit to India and the team here continues to amaze us. Wonderful hospitality! Great service! Top notch attitude!",
+      date: "January 2026",
+      source: "Google"
+    },
+    {
+      id: 18,
+      name: "Devesh Jhunjhunwala",
+      rating: 5,
+      country: "India",
+      countryCode: "IN",
+      text: "We stayed for 3 weeks, it was very comfortable. The team is extremely prompt with service requests and house-keeping and cleanliness was great. Location is also great with nice cafes within walking distance.",
+      date: "February 2026",
+      source: "Google"
     },
   ];
+
 
   return (
     <div>
@@ -697,14 +782,25 @@ const Footer = () => {
                       </div>
                     </div>
                     <p 
-                      className={`text-sm leading-relaxed transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+                      className={`text-sm leading-relaxed transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'} mb-2`}
                       style={{ 
                         fontFamily: 'Work Sans',
-                        lineHeight: '1.5'
+                        lineHeight: '1.5',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 3,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis'
                       }}
                     >
                       {review.text}
                     </p>
+                    <div 
+                      className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}
+                      style={{ fontFamily: 'Work Sans' }}
+                    >
+                      {review.source} • {review.date}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -787,14 +883,25 @@ const Footer = () => {
                       </div>
                     </div>
                     <p 
-                      className={`text-sm leading-relaxed transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+                      className={`text-sm leading-relaxed transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'} mb-2`}
                       style={{ 
                         fontFamily: 'Work Sans',
-                        lineHeight: '1.5'
+                        lineHeight: '1.5',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 3,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis'
                       }}
                     >
                       {review.text}
                     </p>
+                    <div 
+                      className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}
+                      style={{ fontFamily: 'Work Sans' }}
+                    >
+                      {review.source} • {review.date}
+                    </div>
                   </div>
                 ))}
               </div>
