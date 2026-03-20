@@ -199,35 +199,13 @@ const OurProperties = () => {
       address: location,
       rating: building.reviewSummary?.[0]?.averageRating || 4.5,
       totalReviews: building.reviewSummary?.[0]?.totalReviews || 120,
-      price: 7000, // TODO: Get from pricing API or building default
+      price: 5000, // TODO: Get from pricing API or building default
       images: images,
       amenities: amenities,
       description: building.description || "Comfortable, thoughtfully designed spaces for short & long stays.",
       highlights: building.highlights || []
     };
   });
-  
-  // Add dummy second property - Hodo Sol (only if we have at least one real property)
-  if (properties.length > 0 && !loading && !error) {
-    const dummyProperty = {
-      id: properties[0].id, // Use same ID to redirect to same property detail
-      title: 'Hodo - Sol',
-      subTitle: '',
-      address: 'JP Nagar, Bangalore',
-      rating: 4.8,
-      totalReviews: 95,
-      price: 6500,
-      images: ['/card-4.png', '/card-5.png', '/card-6.png'],
-      amenities: [
-        { name: 'WiFi', icon: null },
-        { name: 'Air-conditioning', icon: null },
-        { name: 'Free Parking on Premises', icon: null }
-      ],
-      description: "Modern living spaces in the heart of JP Nagar.",
-      highlights: []
-    }
-    properties.push(dummyProperty)
-  }
 
   useEffect(() => {
     const onResize = () => setIsMobile(window.innerWidth < 768)
@@ -428,11 +406,7 @@ const OurProperties = () => {
                         
                         {property.amenities.map((amenity, idx) => (
                           <div key={idx} className="flex items-center gap-2 px-3 py-2 rounded-full whitespace-nowrap" style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#F3F4F6' }}>
-                            {amenity.icon ? (
-                              <span className="text-base">{amenity.icon}</span>
-                            ) : (
-                              getAmenityIconSVG(amenity.name)
-                            )}
+                            {getAmenityIconSVG(amenity.name)}
                             <span
                               className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
                               style={{ fontFamily: 'Petrona' }}
@@ -486,11 +460,7 @@ const OurProperties = () => {
                       
                       {property.amenities.map((amenity, idx) => (
                         <div key={idx} className="flex items-center gap-2 px-3 py-2 rounded-full whitespace-nowrap" style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#F3F4F6' }}>
-                          {amenity.icon ? (
-                            <span className="text-base">{amenity.icon}</span>
-                          ) : (
-                            getAmenityIconSVG(amenity.name)
-                          )}
+                          {getAmenityIconSVG(amenity.name)}
                           <span
                             className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
                             style={{ fontFamily: 'Petrona' }}

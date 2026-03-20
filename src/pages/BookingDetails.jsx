@@ -5,15 +5,16 @@ import 'react-toastify/dist/ReactToastify.css'
 import HomeHeader from '../components/HomeHeader'
 import { unitService } from '../api'
 import { paymentService } from '../api/payments/paymentService'
+import { pricingService } from '../api/pricing/pricingService'
 import { couponService } from '../api/coupons/couponService'
 import { useTheme } from '../context/ThemeContext'
 
 // Helper function to format currency - always displays in USD ($)
-const formatCurrency = (amount, currency = 'USD') => {
+const formatCurrency = (amount, currency = 'INR') => {
   // Always use USD for display, regardless of backend currency
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: 'USD',
+    currency: 'INR',
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(amount)
@@ -217,7 +218,7 @@ const BookingDetails = () => {
           originalPrice: discount.originalPrice,
           finalPrice: discount.finalPrice
         })
-        toast.success(`✅ Coupon applied! You save $${discount.amount.toFixed(2)}`, {
+        toast.success(`✅ Coupon applied! You save ₹${discount.amount.toFixed(0)}`, {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
@@ -281,14 +282,14 @@ const BookingDetails = () => {
         taxes: 0,
         couponDiscount: 0,
         total: 0,
-        currency: 'USD'
+        currency: 'INR'
       }
     }
 
     const basePrice = pricing.pricePerNight || 0
     const nights = pricing.nights || 0
     const subtotal = pricing.price || 0
-    const currency = pricing.currency || 'USD'
+    const currency = pricing.currency || 'INR'
     const taxes = 0
     
     // Use real coupon discount from API
@@ -368,7 +369,7 @@ const BookingDetails = () => {
         pricing: {
           ruPrice: calculatedPricing.total,
           clientPrice: calculatedPricing.total,
-          currency: calculatedPricing.currency || 'USD'
+          currency: calculatedPricing.currency || 'INR'
         },
         paymentMethod: paymentMethod,
         additionalAmenities: additionalAmenities,
@@ -377,10 +378,27 @@ const BookingDetails = () => {
 
       console.log('📝 Creating Razorpay order...')
 
-      // Step 1: Create Razorpay order
+      // Step 1: Final availability check before payment
+      console.log('🔍 Performing final availability check...')
+      const availabilityCheck = await pricingService.checkAvailability(
+        bookingData.unitId,
+        bookingData.checkIn,
+        bookingData.checkOut
+      )
+
+      if (!availabilityCheck.success || !availabilityCheck.available) {
+        throw new Error(
+          availabilityCheck.message || 
+          'This unit is no longer available for the selected dates. It may have been booked by another guest.'
+        )
+      }
+
+      console.log('✅ Availability confirmed')
+
+      // Step 2: Create Razorpay order
       const orderResponse = await paymentService.createOrder({
         amount: calculatedPricing.total,
-        currency: calculatedPricing.currency || 'USD',
+        currency: calculatedPricing.currency || 'INR',
         bookingData: bookingData
       })
 
@@ -390,7 +408,7 @@ const BookingDetails = () => {
 
       console.log('✅ Razorpay order created:', orderResponse.data.orderId)
 
-      // Step 2: Open Razorpay payment modal
+      // Step 3: Open Razorpay payment modal
       const paymentResponse = await paymentService.openPaymentModal({
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
         amount: orderResponse.data.amount,
@@ -414,7 +432,7 @@ const BookingDetails = () => {
 
       console.log('✅ Payment successful:', paymentResponse.razorpay_payment_id)
 
-      // Step 3: Verify payment and create booking
+      // Step 4: Verify payment and create booking
       const verifyResponse = await paymentService.verifyPayment({
         razorpay_order_id: paymentResponse.razorpay_order_id,
         razorpay_payment_id: paymentResponse.razorpay_payment_id,

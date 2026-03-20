@@ -187,7 +187,7 @@ const Properties = () => {
       totalReviews: building.reviewSummary?.[0]?.totalReviews || 0,
       amenities: amenities,
       description: building.description || "Modern apartments with all amenities",
-      price: 7000,
+      price:5000,
       images: images
     };
   };

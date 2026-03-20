@@ -1081,15 +1081,10 @@ function PropertyDetail() {
                 {(building.amenities && building.amenities.length > 0 ? building.amenities : ['WiFi', 'Air Conditioning', 'Kitchen', 'Parking', 'Washing Machine', 'TV']).slice(0, 6).map((amenity, index) => {
                   // Handle both old (string) and new (object) format
                   const amenityName = typeof amenity === 'string' ? amenity : (amenity.name || amenity.amenityID || '');
-                  const amenityIcon = typeof amenity === 'object' && amenity.icon ? amenity.icon : null;
                   
                   return (
                     <div key={index} className="flex items-center gap-3">
-                      {amenityIcon ? (
-                        <span className="text-2xl" style={{ filter: 'grayscale(100%)' }}>{amenityIcon}</span>
-                      ) : (
-                        getAmenityIcon(amenityName, isDarkMode)
-                      )}
+                      {getAmenityIcon(amenityName, isDarkMode)}
                       <span className={`transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`} style={{ fontFamily: 'Petrona', fontSize: '16px' }}>
                         {amenityName}
                       </span>
@@ -1427,7 +1422,7 @@ function PropertyDetail() {
                             >
                               Total for {unitPricing.pricing.nights} nights
                             </div>
-                            <div className="flex items-baseline">
+                            <div className="flex items-baseline gap-1">
                               <span
                                 className="transition-colors duration-300"
                                 style={{
@@ -1439,7 +1434,18 @@ function PropertyDetail() {
                                   letterSpacing: '-2.2%'
                                 }}
                               >
-                                $ {Math.round(unitPricing.pricing.price).toLocaleString()}
+                                ₹ {Math.round(unitPricing.pricing.price).toLocaleString()}
+                              </span>
+                              <span
+                                className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}
+                                style={{
+                                  fontFamily: 'Work Sans',
+                                  fontWeight: 400,
+                                  fontSize: '14px',
+                                  marginTop: '8px'
+                                }}
+                              >
+                                onwards
                               </span>
                             </div>
                             <div
@@ -1450,7 +1456,7 @@ function PropertyDetail() {
                                 fontSize: '11px'
                               }}
                             >
-                              $ {Math.round(unitPricing.pricing.pricePerNight).toLocaleString()}/night
+                              ₹ {Math.round(unitPricing.pricing.pricePerNight).toLocaleString()}/night
                             </div>
                           </>
                         ) : priceError ? (
@@ -1483,7 +1489,7 @@ function PropertyDetail() {
                                   letterSpacing: '-2.2%'
                                 }}
                               >
-                                $ 70
+                                ₹ 5000
                               </span>
                               <span
                                 className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}

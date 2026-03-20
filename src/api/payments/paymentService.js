@@ -76,6 +76,8 @@ export const paymentService = {
       }
 
       return new Promise((resolve, reject) => {
+        let isResolved = false; // Track if promise is already resolved/rejected
+        
         const razorpayOptions = {
           key: options.key,
           amount: options.amount,
@@ -94,13 +96,21 @@ export const paymentService = {
             color: options.themeColor || '#DE754B'
           },
           handler: function (response) {
-            console.log('✅ Payment successful:', response);
-            resolve(response);
+            // Payment successful - resolve promise
+            if (!isResolved) {
+              isResolved = true;
+              console.log('✅ Payment successful:', response);
+              resolve(response);
+            }
           },
           modal: {
             ondismiss: function() {
-              console.log('⚠️ Payment modal closed by user');
-              reject(new Error('Payment cancelled by user'));
+              // Modal closed - only reject if payment wasn't successful
+              if (!isResolved) {
+                isResolved = true;
+                console.log('⚠️ Payment modal closed by user');
+                reject(new Error('Payment cancelled by user'));
+              }
             }
           }
         };
@@ -108,8 +118,11 @@ export const paymentService = {
         const razorpay = new window.Razorpay(razorpayOptions);
         
         razorpay.on('payment.failed', function (response) {
-          console.error('❌ Payment failed:', response.error);
-          reject(new Error(response.error.description || 'Payment failed'));
+          // Payment failed - just log it, don't reject promise yet
+          // User can retry within the same modal
+          console.error('❌ Payment attempt failed:', response.error);
+          console.log('💡 User can retry payment in the modal');
+          // Don't reject here - let user retry or close modal
         });
 
         razorpay.open();

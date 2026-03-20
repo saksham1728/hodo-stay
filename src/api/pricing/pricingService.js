@@ -54,6 +54,21 @@ export const pricingService = {
     }
   },
 
+  // Check availability before payment (final check)
+  async checkAvailability(unitId, checkIn, checkOut) {
+    try {
+      const response = await api.post('/pricing/check-availability', {
+        unitId,
+        checkIn: this.formatDate(checkIn),
+        checkOut: this.formatDate(checkOut)
+      });
+      return response;
+    } catch (error) {
+      console.error('Error checking availability:', error);
+      throw error;
+    }
+  },
+
   // Search available units with cached pricing (NEW)
   async searchAvailableUnits(checkIn, checkOut, filters = {}) {
     try {

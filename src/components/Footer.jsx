@@ -238,14 +238,30 @@ const FAQSection = () => {
               </div>
             </div>
 
-            {/* Row 3: Tagline SVG - Full Width */}
-            <div className="-mx-8 md:-mb-8">
-              <img 
-                src="/footer-content.svg" 
-                alt="Redefining Stays, beyond hotels"
-                className="w-full h-auto"
-                style={{ display: 'block' }}
-              />
+            {/* Redefining Stays Text - Full Width */}
+            <div className="relative -mx-8 md:-mb-1 mb-8 overflow-hidden">
+              <div 
+                className="leading-none font-extrabold tracking-tighter pointer-events-none select-none w-full whitespace-nowrap"
+                style={{ 
+                  fontSize: 'clamp(2rem, 8vw, 6rem)', 
+                  background: isDarkMode 
+                    ? 'linear-gradient(to bottom, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1), transparent)'
+                    : 'linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.1), transparent)',
+                  WebkitBackgroundClip: 'text',
+                  backgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  color: 'transparent',
+                  fontFamily: 'Petrona',
+                  letterSpacing: '-0.03em',
+                  width: '100vw',
+                  textAlign: 'center',
+                  position: 'relative',
+                  left: '50%',
+                  marginLeft: '-50vw'
+                }}
+              >
+                Redefining Stays, beyond Hotels
+              </div>
             </div>
 
             {/* Horizontal Line */}
@@ -272,95 +288,140 @@ const FAQSection = () => {
 
           {/* Mobile Layout */}
           <div className="md:hidden">
-            {/* Row 1: Logo and Social Icons */}
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              <div className="flex items-center">
-                <img
-                  src="/hodo-white-logo.png"
-                  alt="Hodo Logo"
-                  className="h-28 w-auto object-contain -ml-10"
-                />
-              </div>
-              <div className="flex gap-3 justify-end items-center">
-                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
-                  <span className="text-white text-sm font-bold">in</span>
+            {/* Two Column Layout */}
+            <div className="flex justify-between items-start gap-6 mb-6">
+              {/* Left Column: Logo → Quick Links → We Accept */}
+              <div className="flex-shrink-0">
+                {/* Logo */}
+                <div className="mb-4">    
+                  <img
+                    src="/hodo-white-logo.png"
+                    alt="Hodo Logo"
+                    className="h-32 w-auto object-contain -ml-9 -mt-13"
+                  />
                 </div>
-                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
-                  <span className="text-white text-sm">@</span>
-                </div>
-                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
-                  <span className="text-white text-sm font-bold">f</span>
-                </div>
-              </div>
-            </div>
 
-            {/* Row 2: Links and Contact */}
-            <div className="grid grid-cols-2 gap-4 mb-20">
-              <div className="text-left">
-                <div className="text-white text-sm mb-1">Business and Groups</div>
-                <div className="text-white/80 text-sm mb-1">Blogs</div>
-                <div className="text-white/80 text-sm">Careers</div>
-              </div>
-              <div className="text-right">
-                <div className="text-white/80 text-sm mb-1">
-                  hello@hodostays.com
+                {/* Quick Links */}
+                <div className="mb-4 -mt-8">
+                  <h3 className="text-white font-semibold text-sm mb-2">Quick Links</h3>
+                  <div className="space-y-1.5">
+                    <div className="text-white text-xs">Business and Groups</div>
+                    <div className="text-white/80 text-xs">Blogs</div>
+                    <div className="text-white/80 text-xs">Careers</div>
+                  </div>
                 </div>
-                <div className="text-white/80 text-sm mb-3">+91-8046395093</div>
                 
-                {/* Get in Touch Link - Mobile */}
-                <a 
-                  href="/contact" 
-                  className="text-sm font-semibold hover:underline transition-colors duration-300 inline-block mb-4"
-                  style={{ color: '#DE754B' }}
-                >
-                  Get in Touch
-                </a>
-                
-                {/* Payment Methods - Mobile Right Side Below Contact */}
-                <div className="flex flex-col items-end">
+                {/* Payment Methods with Hover Effect */}
+                <div>
                   <div className="text-white/70 text-xs mb-2">We accept</div>
-                  <div className="flex gap-2 items-center">
-                    <div className="bg-white rounded flex items-center justify-center" style={{ width: '28px', height: '18px', padding: '2px' }}>
-                      <img 
-                        src="/pay1.svg" 
-                        alt="American Express"
-                        className="w-full h-full object-contain"
-                      />
+                  <div className="flex gap-1.5 items-center">
+                    <div className="group/card relative">
+                      <div className="bg-white rounded flex items-center justify-center transition-transform duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover/card:-translate-y-1" style={{ width: '24px', height: '16px', padding: '2px' }}>
+                        <img 
+                          src="/pay1.svg" 
+                          alt="American Express"
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                      <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                        <span className="text-white/80 text-[9px] font-medium">Amex</span>
+                      </div>
                     </div>
-                    <div className="bg-white rounded flex items-center justify-center" style={{ width: '28px', height: '18px', padding: '2px' }}>
-                      <img 
-                        src="/pay2.svg" 
-                        alt="Google Pay"
-                        className="w-full h-full object-contain"
-                      />
+                    <div className="group/card relative">
+                      <div className="bg-white rounded flex items-center justify-center transition-transform duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover/card:-translate-y-1" style={{ width: '24px', height: '16px', padding: '2px' }}>
+                        <img 
+                          src="/pay2.svg" 
+                          alt="Google Pay"
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                      <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                        <span className="text-white/80 text-[9px] font-medium">Google Pay</span>
+                      </div>
                     </div>
-                    <div className="bg-white rounded flex items-center justify-center" style={{ width: '28px', height: '18px', padding: '2px' }}>
-                      <img 
-                        src="/pay3.svg" 
-                        alt="Mastercard"
-                        className="w-full h-full object-contain"
-                      />
+                    <div className="group/card relative">
+                      <div className="bg-white rounded flex items-center justify-center transition-transform duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover/card:-translate-y-1" style={{ width: '24px', height: '16px', padding: '2px' }}>
+                        <img 
+                          src="/pay3.svg" 
+                          alt="Mastercard"
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                      <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                        <span className="text-white/80 text-[9px] font-medium">Mastercard</span>
+                      </div>
                     </div>
-                    <div className="bg-white rounded flex items-center justify-center" style={{ width: '28px', height: '18px', padding: '2px' }}>
-                      <img 
-                        src="/pay4.svg" 
-                        alt="Visa"
-                        className="w-full h-full object-contain"
-                      />
+                    <div className="group/card relative">
+                      <div className="bg-white rounded flex items-center justify-center transition-transform duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover/card:-translate-y-1" style={{ width: '24px', height: '16px', padding: '2px' }}>
+                        <img 
+                          src="/pay4.svg" 
+                          alt="Visa"
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                      <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                        <span className="text-white/80 text-[9px] font-medium">Visa</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
+
+              {/* Right Column: Social Icons → Contact Us */}
+              <div className="flex-shrink-0 text-left">
+                {/* Social Icons */}
+                <div className="flex gap-2 mb-6">
+                  <div className="w-7 h-7 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
+                    <span className="text-white text-xs font-bold">in</span>
+                  </div>
+                  <div className="w-7 h-7 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
+                    <span className="text-white text-xs">@</span>
+                  </div>
+                  <div className="w-7 h-7 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors cursor-pointer">
+                    <span className="text-white text-xs font-bold">f</span>
+                  </div>
+                </div>
+
+                {/* Contact Details */}
+                <div className="mt-8">
+                  <h3 className="text-white font-semibold text-sm mb-2">Contact</h3>
+                  <div className="space-y-1.5 mb-3">
+                    <div className="text-white/80 text-xs">hello@hodostays.com</div>
+                    <div className="text-white/80 text-xs">+91-8046395093</div>
+                  </div>
+                  
+                  <a 
+                    href="/contact" 
+                    className="text-xs font-semibold hover:underline transition-colors duration-300 inline-block"
+                    style={{ color: '#DE754B' }}
+                  >
+                    Get in Touch
+                  </a>
+                </div>
+              </div>
             </div>
 
-            {/* Row 3: Tagline SVG - Full Width */}
-            <div className="-mx-4 w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
-              <img 
-                src="/footer-content.svg" 
-                alt="Redefining Stays, beyond hotels"
-                className="w-full h-auto"
-                style={{ display: 'block' }}
-              />
+            {/* HodoStays Text - Full Width */}
+            <div className="-mx-4 w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] mb-8 overflow-hidden">
+              <div 
+                className="leading-none font-extrabold tracking-tighter pointer-events-none select-none w-full whitespace-nowrap"
+                style={{ 
+                  fontSize: 'clamp(4.6rem, 8vw, 6rem)', 
+                  background: isDarkMode 
+                    ? 'linear-gradient(to bottom, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1), transparent)'
+                    : 'linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.1), transparent)',
+                  WebkitBackgroundClip: 'text',
+                  backgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  color: 'transparent',
+                  fontFamily: 'Petrona',
+                  letterSpacing: '-0.02em',
+                  width: '100vw',
+                  textAlign: 'center'
+                }}
+              >
+                HodoStays
+              </div>
               <div className="border-t border-white/30 pt-3 mt-3 px-4">
                 <div className="flex justify-between items-center w-full">
                   <a href="/terms-of-service" className="text-white/70 text-xs hover:text-white transition-colors">

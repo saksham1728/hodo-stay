@@ -6,18 +6,18 @@ import { bookingService } from '../api/bookings/bookingService'
 import { useTheme } from '../context/ThemeContext'
 
 // Helper function to format currency
-const formatCurrency = (amount, currency = 'USD') => {
+const formatCurrency = (amount, currency = 'INR') => {
   const localeMap = {
-    'USD': 'en-US',
     'INR': 'en-IN',
+    'USD': 'en-US',
     'EUR': 'en-EU'
   }
   
-  return new Intl.NumberFormat(localeMap[currency] || 'en-US', {
+  return new Intl.NumberFormat(localeMap[currency] || 'en-IN', {
     style: 'currency',
     currency: currency,
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   }).format(amount)
 }
 
