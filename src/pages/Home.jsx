@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import CardStack from '../components/CardStack'
 import HomeHeader from '../components/HomeHeader'
 import OurProperties from '../components/OurProperties'
@@ -39,69 +38,67 @@ const Home = () => {
         ></div>
         
         {/* Content Overlay - Left Side */}
-        <div className="relative z-10 h-full flex items-center">
-          <div className="w-1/2 max-md:w-full px-12 max-md:px-6">
-            <div className="max-w-xl">
-              {/* Main Heading with Gradient */}
-              <h1 
-                className="animate-fade-in delay-200 text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-medium tracking-tighter leading-[0.9] mb-6"
-                style={{ 
-                  fontFamily: 'Petrona',
-                  maskImage: 'linear-gradient(black 0%, black 80%, transparent 100%)'
+        <div className="relative z-10 h-full flex items-center px-8 max-md:px-4">
+          <div className="w-full max-w-7xl mx-auto">
+            {/* Main Heading with Gradient */}
+            <h1 
+              className="animate-fade-in delay-200 text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-medium tracking-tighter leading-[0.9] mb-6"
+              style={{ 
+                fontFamily: 'Petrona',
+                maskImage: 'linear-gradient(black 0%, black 80%, transparent 100%)'
+              }}
+            >
+              <span className={isDarkMode ? 'text-white' : 'text-black'}>Redefining stays,</span>
+              <br />
+              <span 
+                className="bg-clip-text text-transparent"
+                style={{
+                  backgroundImage: isDarkMode 
+                    ? 'linear-gradient(to bottom right, white, white, #ffcd75)'
+                    : 'linear-gradient(to bottom right, black, black, #ff9500)'
                 }}
               >
-                <span className={isDarkMode ? 'text-white' : 'text-black'}>Redefining stays,</span>
-                <br />
-                <span 
-                  className="bg-clip-text text-transparent"
-                  style={{
-                    backgroundImage: isDarkMode 
-                      ? 'linear-gradient(to bottom right, white, white, #ffcd75)'
-                      : 'linear-gradient(to bottom right, black, black, #ff9500)'
-                  }}
-                >
-                  Beyond hotels
-                </span>
-              </h1>
-              
-              {/* Description */}
-              <p 
-                className={`animate-fade-in delay-300 max-w-xl text-lg leading-relaxed mb-8 ${
-                  isDarkMode ? 'text-zinc-400' : 'text-zinc-600'
-                }`}
+                Beyond hotels
+              </span>
+            </h1>
+            
+            {/* Description */}
+            <p 
+              className={`animate-fade-in delay-300 max-w-xl text-lg leading-relaxed mb-8 ${
+                isDarkMode ? 'text-zinc-400' : 'text-zinc-600'
+              }`}
+            >
+              Experience isn't a luxury, it's a baseline.
+              <br />
+              Welcome to eco-friendly stays with global hotel standards
+            </p>
+            
+            {/* Watch Showreel Button */}
+            <button 
+              onClick={() => setIsVideoModalOpen(true)}
+              className={`group inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 text-sm font-semibold backdrop-blur-sm transition-colors ${
+                isDarkMode 
+                  ? 'border border-white/10 bg-white/5 text-white hover:bg-white/10 hover:border-white/20'
+                  : 'border border-black/10 bg-black/5 text-black hover:bg-black/10 hover:border-black/20'
+              }`}
+            >
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width="24" 
+                height="24" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                className="lucide lucide-play w-4 h-4 fill-current" 
+                aria-hidden="true"
               >
-                Experience isn't a luxury, it's a baseline.
-                <br />
-                Welcome to eco-friendly stays with global hotel standards
-              </p>
-              
-              {/* Watch Showreel Button */}
-              <button 
-                onClick={() => setIsVideoModalOpen(true)}
-                className={`group inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 text-sm font-semibold backdrop-blur-sm transition-colors ${
-                  isDarkMode 
-                    ? 'border border-white/10 bg-white/5 text-white hover:bg-white/10 hover:border-white/20'
-                    : 'border border-black/10 bg-black/5 text-black hover:bg-black/10 hover:border-black/20'
-                }`}
-              >
-                <svg 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  width="24" 
-                  height="24" 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  strokeWidth="2" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  className="lucide lucide-play w-4 h-4 fill-current" 
-                  aria-hidden="true"
-                >
-                  <polygon points="6 3 20 12 6 21 6 3"></polygon>
-                </svg>
-                Watch Showreel
-              </button>
-            </div>
+                <polygon points="6 3 20 12 6 21 6 3"></polygon>
+              </svg>
+              Watch Showreel
+            </button>
           </div>
         </div>
       </div>
