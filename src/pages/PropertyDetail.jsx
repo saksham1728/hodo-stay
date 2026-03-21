@@ -798,7 +798,9 @@ function PropertyDetail() {
         <div className="flex justify-center items-center py-20">
           <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-orange-500"></div>
         </div>
+        {/* TEMPORARILY COMMENTED OUT - REVIEWS SECTION
         <ReviewsSection />
+        */}
         <FooterSimple />
       </div>
     );
@@ -818,7 +820,9 @@ function PropertyDetail() {
             Back to Properties
           </Link>
         </div>
+        {/* TEMPORARILY COMMENTED OUT - REVIEWS SECTION
         <ReviewsSection />
+        */}
         <FooterSimple />
       </div>
     );
@@ -1785,7 +1789,9 @@ function PropertyDetail() {
       </div>
       </div>
 
+      {/* TEMPORARILY COMMENTED OUT - REVIEWS SECTION
       <ReviewsSection />
+      */}
       <FooterSimple />
 
       {/* Photo Gallery Modal */}
