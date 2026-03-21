@@ -404,9 +404,9 @@ const FAQSection = () => {
             {/* HodoStays Text - Full Width */}
             <div className="-mx-4 w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] mb-8 overflow-hidden">
               <div 
-                className="leading-none font-extrabold tracking-tighter pointer-events-none select-none w-full whitespace-nowrap"
+                className="leading-none font-extrabold tracking-tighter pointer-events-none select-none w-full whitespace-nowrap uppercase"
                 style={{ 
-                  fontSize: 'clamp(4.6rem, 8vw, 6rem)', 
+                  fontSize: 'clamp(4.1rem, 9vw, 8rem)', 
                   background: isDarkMode 
                     ? 'linear-gradient(to bottom, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1), transparent)'
                     : 'linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.1), transparent)',
