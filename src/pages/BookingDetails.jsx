@@ -686,6 +686,7 @@ const BookingDetails = () => {
                       </div>
                     )}
                     
+                    {/* TEMPORARILY COMMENTED OUT - COUPON FLOW FIXES IN PROGRESS
                     {appliedCoupon && (
                       <div className="flex justify-between items-center">
                         <span className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
@@ -702,6 +703,7 @@ const BookingDetails = () => {
                         </span>
                       </div>
                     )}
+                    */}
                     
                     <hr className={`my-2 transition-colors duration-300`} style={{ borderColor: isDarkMode ? '#333333' : '#e5e7eb' }} />
                     
@@ -713,10 +715,6 @@ const BookingDetails = () => {
                     </div>
 
                     <div className="flex items-center justify-center mt-1">
-                      <div className="flex items-center gap-2 text-xs text-green-600">
-                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                        Live Pricing from Rentals United
-                      </div>
                     </div>
                   </>
                 )}
@@ -960,69 +958,6 @@ const BookingDetails = () => {
                       />
                     </div>
                   )}
-                </div>
-              </div>
-
-              {/* Additional Amenities */}
-              <div className={`lg:rounded-2xl lg:p-6 p-0 lg:shadow-sm transition-colors duration-300`} style={{ backgroundColor: isDarkMode ? '#1f1f1f' : '#FAF2E8', boxShadow: '0px 4px 4px 0px rgba(0,0,0,0.25)' }} 
-                   data-mobile-transparent="true">
-                <h3 
-                  className={`mb-4 transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
-                  style={{
-                    fontFamily: 'Petrona',
-                    fontWeight: 400,
-                    fontSize: '24px',
-                    lineHeight: '130%',
-                    letterSpacing: '-1%'
-                  }}
-                >
-                  Additional Amenities
-                </h3>
-                
-                <div className="space-y-3">
-                  <label className="flex items-center gap-3">
-                    <input 
-                      type="checkbox"
-                      checked={additionalAmenities.roomOnly}
-                      onChange={(e) => setAdditionalAmenities(prev => ({
-                        ...prev,
-                        roomOnly: e.target.checked
-                      }))}
-                      className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
-                    />
-                    <span 
-                      className={`transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-700'}`}
-                      style={{
-                        fontFamily: 'Work Sans',
-                        fontWeight: 400,
-                        fontSize: '16px'
-                      }}
-                    >
-                      Room Only
-                    </span>
-                  </label>
-                  
-                  <label className="flex items-center gap-3">
-                    <input 
-                      type="checkbox"
-                      checked={additionalAmenities.breakfastIncluded}
-                      onChange={(e) => setAdditionalAmenities(prev => ({
-                        ...prev,
-                        breakfastIncluded: e.target.checked
-                      }))}
-                      className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
-                    />
-                    <span 
-                      className={`transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-700'}`}
-                      style={{
-                        fontFamily: 'Work Sans',
-                        fontWeight: 400,
-                        fontSize: '16px'
-                      }}
-                    >
-                      Breakfast Included
-                    </span>
-                  </label>
                 </div>
               </div>
 
@@ -1289,10 +1224,6 @@ const BookingDetails = () => {
 
                           {/* Live Data Indicator */}
                           <div className="flex items-center justify-center mt-2">
-                            <div className="flex items-center gap-2 text-xs text-green-600">
-                              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                              Live Pricing from Rentals United
-                            </div>
                           </div>
                           
                           {/* Show which unit was selected (new flow only) */}
@@ -1306,7 +1237,7 @@ const BookingDetails = () => {
                       )}
                     </div>
 
-                    {/* Coupon Section */}
+                    {/* Coupon Section - TEMPORARILY COMMENTED OUT - COUPON FLOW FIXES IN PROGRESS
                     <div className={`mt-6 p-3 rounded-lg transition-colors duration-300`} style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#f9fafb' }}>
                       <div className="flex items-center gap-2 mb-2">
                         <span className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-600'}`}>
@@ -1350,6 +1281,7 @@ const BookingDetails = () => {
                         </p>
                       )}
                     </div>
+                    */}
                     
                     {/* GST Section - Desktop */}
                     <div className={`mt-4 p-3 rounded-lg transition-colors duration-300`} style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#f9fafb' }}>
