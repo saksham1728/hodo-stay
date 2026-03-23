@@ -317,16 +317,11 @@ const AmenitiesModal = ({ amenities, isOpen, onClose, isDarkMode }) => {
               {displayAmenities.map((amenity, index) => {
                 // Handle both old (string) and new (object) format
                 const amenityName = typeof amenity === 'string' ? amenity : (amenity.name || amenity.amenityID || '');
-                const amenityIcon = typeof amenity === 'object' && amenity.icon ? amenity.icon : null;
                 
                 return (
                   <div key={index}>
                     <div className="flex items-start gap-3 py-2">
-                      {amenityIcon ? (
-                        <span className="text-2xl flex-shrink-0" style={{ filter: 'grayscale(100%)' }}>{amenityIcon}</span>
-                      ) : (
-                        getAmenityIcon(amenityName, isDarkMode)
-                      )}
+                      {getAmenityIcon(amenityName, isDarkMode)}
                       <div className="flex-1">
                         <h3 className={`font-medium transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`} style={{ fontFamily: 'Petrona', fontSize: '15px' }}>
                           {amenityName}
