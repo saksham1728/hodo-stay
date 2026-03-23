@@ -372,7 +372,7 @@ const Properties = () => {
                               fontSize: '14px'
                             }}
                           >
-                            Rated <span className={`font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>4.8★</span> from 120+ verified guest reviews
+                            <span className={`font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>4.8</span> from 120+ verified guest reviews
                           </span>
                         </div>
 
@@ -386,11 +386,7 @@ const Properties = () => {
                           
                           {property.amenities.map((amenity, idx) => (
                             <div key={idx} className="flex items-center gap-2 px-3 py-2 rounded-full whitespace-nowrap" style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#F3F4F6' }}>
-                              {amenity.icon ? (
-                                <span className="text-base">{amenity.icon}</span>
-                              ) : (
-                                getAmenityIconSVG(amenity.name)
-                              )}
+                              {getAmenityIconSVG(amenity.name)}
                               <span
                                 className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
                                 style={{ fontFamily: 'Petrona' }}
@@ -412,11 +408,7 @@ const Properties = () => {
                         
                         {property.amenities.map((amenity, idx) => (
                           <div key={idx} className="flex items-center gap-2 px-3 py-2 rounded-full whitespace-nowrap" style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#F3F4F6' }}>
-                            {amenity.icon ? (
-                              <span className="text-base">{amenity.icon}</span>
-                            ) : (
-                              getAmenityIconSVG(amenity.name)
-                            )}
+                            {getAmenityIconSVG(amenity.name)}
                             <span
                               className={`text-xs transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
                               style={{ fontFamily: 'Petrona' }}

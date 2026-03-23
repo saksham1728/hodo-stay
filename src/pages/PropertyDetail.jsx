@@ -1325,7 +1325,7 @@ function PropertyDetail() {
                           fontSize: '14px'
                         }}
                       >
-                        Rated <span className={`font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>4.8 </span> from 120+ reviews
+                        <span className={`font-bold transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>4.8</span> from 120+ reviews
                       </span>
                     </div>
 
