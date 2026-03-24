@@ -8,6 +8,7 @@ import { paymentService } from '../api/payments/paymentService'
 import { pricingService } from '../api/pricing/pricingService'
 import { couponService } from '../api/coupons/couponService'
 import { useTheme } from '../context/ThemeContext'
+import { calculateGST } from '../utils/gstCalculator'
 
 // Helper function to format currency - always displays in USD ($)
 const formatCurrency = (amount, currency = 'INR') => {
@@ -272,15 +273,17 @@ const BookingDetails = () => {
     setCouponCode('')
   }
 
-  // Calculate pricing from live API data
+  // Calculate pricing from live API data with GST
   const calculatePricing = () => {
     if (!pricing || !pricing.price) {
       return {
         basePrice: 0,
         nights: 0,
         subtotal: 0,
-        taxes: 0,
         couponDiscount: 0,
+        priceAfterCoupon: 0,
+        gstRate: 0,
+        gstAmount: 0,
         total: 0,
         currency: 'INR'
       }
@@ -290,7 +293,6 @@ const BookingDetails = () => {
     const nights = pricing.nights || 0
     const subtotal = pricing.price || 0
     const currency = pricing.currency || 'INR'
-    const taxes = 0
     
     // Use real coupon discount from API
     let couponDiscount = 0
@@ -298,13 +300,28 @@ const BookingDetails = () => {
       couponDiscount = appliedCoupon.discountAmount
     }
     
+    // Calculate price after coupon (before GST)
+    const priceAfterCoupon = Math.max(0, subtotal - couponDiscount)
+    
+    // Calculate GST on price after coupon
+    let gstCalculation = { gstRate: 0, gstAmount: 0, finalPrice: priceAfterCoupon }
+    if (priceAfterCoupon > 0 && nights > 0) {
+      try {
+        gstCalculation = calculateGST(priceAfterCoupon, nights)
+      } catch (error) {
+        console.error('GST calculation error:', error)
+      }
+    }
+    
     return {
       basePrice,
       nights,
       subtotal,
-      taxes,
       couponDiscount,
-      total: Math.max(0, subtotal - couponDiscount),
+      priceAfterCoupon,
+      gstRate: gstCalculation.gstRate,
+      gstAmount: gstCalculation.gstAmount,
+      total: gstCalculation.finalPrice,
       currency
     }
   }
@@ -367,8 +384,9 @@ const BookingDetails = () => {
           phone: formData.mobile
         },
         pricing: {
-          ruPrice: calculatedPricing.total,
-          clientPrice: calculatedPricing.total,
+          ruPrice: calculatedPricing.priceAfterCoupon, // Price before GST
+          clientPrice: calculatedPricing.priceAfterCoupon, // Price before GST
+          finalPriceWithGST: calculatedPricing.total, // Final price including GST
           currency: calculatedPricing.currency || 'INR'
         },
         paymentMethod: paymentMethod,
@@ -677,17 +695,7 @@ const BookingDetails = () => {
                       </span>
                     </div>
                     
-                    {calculatedPricing.taxes > 0 && (
-                      <div className="flex justify-between items-center">
-                        <span className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Taxes and charges</span>
-                        <span className={`text-sm font-medium transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                          {formatCurrency(calculatedPricing.taxes, calculatedPricing.currency)}
-                        </span>
-                      </div>
-                    )}
-                    
-                    {/* TEMPORARILY COMMENTED OUT - COUPON FLOW FIXES IN PROGRESS
-                    {appliedCoupon && (
+                    {appliedCoupon && calculatedPricing.couponDiscount > 0 && (
                       <div className="flex justify-between items-center">
                         <span className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                           Coupon ({appliedCoupon.code})
@@ -703,7 +711,17 @@ const BookingDetails = () => {
                         </span>
                       </div>
                     )}
-                    */}
+                    
+                    {calculatedPricing.gstAmount > 0 && (
+                      <div className="flex justify-between items-center">
+                        <span className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                          GST ({calculatedPricing.gstRate}%)
+                        </span>
+                        <span className={`text-sm font-medium transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          {formatCurrency(calculatedPricing.gstAmount, calculatedPricing.currency)}
+                        </span>
+                      </div>
+                    )}
                     
                     <hr className={`my-2 transition-colors duration-300`} style={{ borderColor: isDarkMode ? '#333333' : '#e5e7eb' }} />
                     
@@ -713,6 +731,12 @@ const BookingDetails = () => {
                         {formatCurrency(calculatedPricing.total, calculatedPricing.currency)}
                       </span>
                     </div>
+                    
+                    {calculatedPricing.gstAmount > 0 && (
+                      <p className={`text-xs mt-1 transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                        (Includes GST of {formatCurrency(calculatedPricing.gstAmount, calculatedPricing.currency)})
+                      </p>
+                    )}
 
                     <div className="flex items-center justify-center mt-1">
                     </div>
@@ -1182,19 +1206,7 @@ const BookingDetails = () => {
                             </span>
                           </div>
                           
-                          {/* Tax line hidden for now */}
-                          {calculatedPricing.taxes > 0 && (
-                            <div className="flex justify-between items-center">
-                              <span className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-600'}`}>
-                                Taxes and charges
-                              </span>
-                              <span className={`font-medium text-sm transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                                {formatCurrency(calculatedPricing.taxes, calculatedPricing.currency)}
-                              </span>
-                            </div>
-                          )}
-                          
-                          {appliedCoupon && (
+                          {appliedCoupon && calculatedPricing.couponDiscount > 0 && (
                             <div className="flex justify-between items-center">
                               <span className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-600'}`}>
                                 Coupon ({appliedCoupon.code})
@@ -1211,6 +1223,17 @@ const BookingDetails = () => {
                             </div>
                           )}
                           
+                          {calculatedPricing.gstAmount > 0 && (
+                            <div className="flex justify-between items-center">
+                              <span className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-600'}`}>
+                                GST ({calculatedPricing.gstRate}%)
+                              </span>
+                              <span className={`font-medium text-sm transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                                {formatCurrency(calculatedPricing.gstAmount, calculatedPricing.currency)}
+                              </span>
+                            </div>
+                          )}
+                          
                           <hr className="my-3" style={{ borderColor: isDarkMode ? '#2a2a2a' : undefined }} />
                           
                           <div className="flex justify-between items-center">
@@ -1221,6 +1244,12 @@ const BookingDetails = () => {
                               {formatCurrency(calculatedPricing.total, calculatedPricing.currency)}
                             </span>
                           </div>
+                          
+                          {calculatedPricing.gstAmount > 0 && (
+                            <p className={`text-xs mt-1 text-center transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                              (Includes GST of {formatCurrency(calculatedPricing.gstAmount, calculatedPricing.currency)})
+                            </p>
+                          )}
 
                           {/* Live Data Indicator */}
                           <div className="flex items-center justify-center mt-2">
