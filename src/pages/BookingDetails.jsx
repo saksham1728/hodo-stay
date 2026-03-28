@@ -385,7 +385,7 @@ const BookingDetails = () => {
         },
         pricing: {
           ruPrice: calculatedPricing.priceAfterCoupon, // Price before GST
-          clientPrice: calculatedPricing.priceAfterCoupon, // Price before GST
+          clientPrice: calculatedPricing.subtotal, // ORIGINAL price BEFORE coupon
           finalPriceWithGST: calculatedPricing.total, // Final price including GST
           currency: calculatedPricing.currency || 'INR'
         },
@@ -1266,7 +1266,7 @@ const BookingDetails = () => {
                       )}
                     </div>
 
-                    {/* Coupon Section - TEMPORARILY COMMENTED OUT - COUPON FLOW FIXES IN PROGRESS
+                    {/* Coupon Section - Desktop */}
                     <div className={`mt-6 p-3 rounded-lg transition-colors duration-300`} style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#f9fafb' }}>
                       <div className="flex items-center gap-2 mb-2">
                         <span className={`text-sm transition-colors duration-300 ${isDarkMode ? 'text-white' : 'text-gray-600'}`}>
@@ -1310,7 +1310,6 @@ const BookingDetails = () => {
                         </p>
                       )}
                     </div>
-                    */}
                     
                     {/* GST Section - Desktop */}
                     <div className={`mt-4 p-3 rounded-lg transition-colors duration-300`} style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#f9fafb' }}>
