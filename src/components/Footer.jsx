@@ -226,9 +226,9 @@ const FAQSection = () => {
               <div className="flex-shrink-0 text-left">
                 <h3 className="text-white font-semibold text-base mb-3">Quick Links</h3>
                 <div className="space-y-2">
-                  <div className="text-white text-sm">Business and Groups</div>
-                  <div className="text-white/80 text-sm">Blogs</div>
-                  <div className="text-white/80 text-sm">Careers</div>
+                  <a href="/" className="text-white/80 text-sm hover:text-white transition-colors block">Home</a>
+                  <a href="/about" className="text-white/80 text-sm hover:text-white transition-colors block">About</a>
+                  <a href="/properties" className="text-white/80 text-sm hover:text-white transition-colors block">Properties</a>
                 </div>
               </div>
 
@@ -317,9 +317,9 @@ const FAQSection = () => {
                 <div className="mb-4 -mt-8">
                   <h3 className="text-white font-semibold text-sm mb-2">Quick Links</h3>
                   <div className="space-y-1.5">
-                    <div className="text-white text-xs">Business and Groups</div>
-                    <div className="text-white/80 text-xs">Blogs</div>
-                    <div className="text-white/80 text-xs">Careers</div>
+                    <a href="/" className="text-white/80 text-xs hover:text-white transition-colors block">Home</a>
+                    <a href="/about" className="text-white/80 text-xs hover:text-white transition-colors block">About</a>
+                    <a href="/properties" className="text-white/80 text-xs hover:text-white transition-colors block">Properties</a>
                   </div>
                 </div>
                 
