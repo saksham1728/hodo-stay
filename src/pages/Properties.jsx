@@ -86,8 +86,8 @@ const ImageCarousel = ({ images }) => {
         </svg>
       </button>
 
-      {/* Dots */}
-      <div className="absolute left-1/2 transform -translate-x-1/2 bottom-3 z-20 flex gap-2">
+      {/* Dots - Desktop only */}
+      <div className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 bottom-3 z-20 gap-2">
         {images.map((_, i) => (
           <button
             key={i}
