@@ -888,7 +888,7 @@ const BookingDetails = () => {
                 <div className="flex gap-2">
                   <input 
                     type="text"
-                    placeholder="Enter coupon code (try WEEKEND15)"
+                    placeholder="Enter coupon code"
                     value={couponCode}
                     onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                     className={`flex-1 px-4 py-3 border-2 rounded-lg focus:outline-none focus:border-orange-500 hover:border-orange-500 transition-all duration-300 ${
@@ -1276,7 +1276,7 @@ const BookingDetails = () => {
                       <div className="flex gap-2">
                         <input 
                           type="text"
-                          placeholder="Enter coupon code (try WEEKEND15)"
+                          placeholder="Enter coupon code"
                           value={couponCode}
                           onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                           className={`flex-1 px-3 py-2 border-2 rounded text-sm focus:outline-none focus:border-orange-500 hover:border-orange-500 transition-all duration-300 ${
