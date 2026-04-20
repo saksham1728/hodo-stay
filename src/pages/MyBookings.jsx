@@ -151,22 +151,23 @@ const MyBookings = () => {
     <div className="min-h-screen transition-colors duration-300" style={{ backgroundColor: isDarkMode ? '#0f0f0f' : '#FFF7F0' }}>
       <Header2 />
 
-      {/* Header Section */}
+      {/* Header Section - Dark Theme */}
       <div 
-        className="py-16 px-8 text-white transition-colors duration-300"
-        style={{ backgroundColor: isDarkMode ? '#1a2421' : '#2D3A36' }}
+        className="py-16 px-8 transition-colors duration-300"
+        style={{ backgroundColor: isDarkMode ? '#1a1a1a' : '#2D3A36' }}
       >
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-white mb-4" style={headingStyle}>
+          <h1 className="mb-4 transition-colors duration-300" style={{...headingStyle, color: isDarkMode ? '#ffffff' : '#ffffff'}}>
             My Bookings
           </h1>
           <p 
-            className="text-white/80"
+            className="transition-colors duration-300"
             style={{
               fontFamily: 'Work Sans',
               fontWeight: 400,
               fontSize: '16px',
-              lineHeight: '140%'
+              lineHeight: '140%',
+              color: isDarkMode ? '#d1d5db' : 'rgba(255,255,255,0.8)'
             }}
           >
             View and manage all your bookings
@@ -180,31 +181,33 @@ const MyBookings = () => {
           
           {/* Access Request Form - Only show if no token */}
           {!tokenParam && (
-            <div className={`rounded-2xl p-6 shadow-sm mb-8 transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}>
+            <div className="rounded-2xl p-6 shadow-sm mb-8 transition-colors duration-300" style={{ backgroundColor: isDarkMode ? '#1a1a1a' : '#ffffff' }}>
               <h3 
-                className="text-gray-900 mb-4"
+                className="mb-4 transition-colors duration-300"
                 style={{
                   fontFamily: 'Petrona',
                   fontWeight: 400,
-                  fontSize: '24px'
+                  fontSize: '24px',
+                  color: isDarkMode ? '#ffffff' : '#1f2937'
                 }}
               >
                 Access Your Bookings
               </h3>
               
               {accessRequested ? (
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                  <p className="text-green-700">
+                <div className="rounded-lg p-4 transition-colors duration-300" style={{ backgroundColor: isDarkMode ? '#1f2937' : '#f0fdf4', border: `1px solid ${isDarkMode ? '#374151' : '#86efac'}` }}>
+                  <p className="transition-colors duration-300" style={{ color: isDarkMode ? '#86efac' : '#15803d' }}>
                     ✅ Access link sent! Please check your email inbox for the link to view your bookings.
                   </p>
                 </div>
               ) : (
                 <>
                   <p 
-                    className="text-gray-600 mb-4"
+                    className="mb-4 transition-colors duration-300"
                     style={{
                       fontFamily: 'Work Sans',
-                      fontSize: '14px'
+                      fontSize: '14px',
+                      color: isDarkMode ? '#d1d5db' : '#4b5563'
                     }}
                   >
                     Enter your email address and we'll send you a secure link to access all your bookings.
@@ -217,17 +220,20 @@ const MyBookings = () => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
-                      className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                      className="flex-1 px-4 py-3 rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none transition-colors duration-300"
                       style={{
                         fontFamily: 'Work Sans',
                         fontWeight: 400,
-                        fontSize: '16px'
+                        fontSize: '16px',
+                        backgroundColor: isDarkMode ? '#0f0f0f' : '#ffffff',
+                        color: isDarkMode ? '#ffffff' : '#1f2937',
+                        border: `1px solid ${isDarkMode ? '#374151' : '#d1d5db'}`
                       }}
                     />
                     <button
                       type="submit"
                       disabled={requestingAccess}
-                      className="px-8 py-3 text-white rounded-lg hover:opacity-95 transition-all disabled:opacity-50"
+                      className="px-8 py-3 text-white rounded-lg hover:opacity-90 transition-all disabled:opacity-50"
                       style={{
                         background: '#DE754B',
                         fontFamily: 'Inter, Work Sans, sans-serif',
@@ -240,8 +246,11 @@ const MyBookings = () => {
                   </form>
                   
                   <p 
-                    className="text-gray-500 text-xs mt-3"
-                    style={{ fontFamily: 'Work Sans' }}
+                    className="text-xs mt-3 transition-colors duration-300"
+                    style={{ 
+                      fontFamily: 'Work Sans',
+                      color: isDarkMode ? '#9ca3af' : '#6b7280'
+                    }}
                   >
                     🔒 For security, we'll send a secure link to your email instead of showing bookings directly.
                   </p>
@@ -252,16 +261,16 @@ const MyBookings = () => {
 
           {/* Error Message */}
           {error && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-8">
-              <p className="text-red-700">{error}</p>
+            <div className="rounded-lg p-4 mb-8 transition-colors duration-300" style={{ backgroundColor: isDarkMode ? '#1f2937' : '#fef2f2', border: `1px solid ${isDarkMode ? '#991b1b' : '#fecaca'}` }}>
+              <p className="transition-colors duration-300" style={{ color: isDarkMode ? '#fca5a5' : '#b91c1c' }}>{error}</p>
             </div>
           )}
 
           {/* Loading State */}
           {loading && (
             <div className="text-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
-              <p className="text-gray-600">Loading bookings...</p>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: isDarkMode ? '#DE754B' : '#1f2937' }}></div>
+              <p className="transition-colors duration-300" style={{ color: isDarkMode ? '#d1d5db' : '#4b5563' }}>Loading bookings...</p>
             </div>
           )}
 
@@ -269,12 +278,13 @@ const MyBookings = () => {
           {!loading && bookings.length > 0 && (
             <div className="space-y-6">
               <h2 
-                className="text-gray-900 mb-4"
+                className="mb-4 transition-colors duration-300"
                 style={{
                   fontFamily: 'Petrona',
                   fontWeight: 400,
                   fontSize: '32px',
-                  lineHeight: '120%'
+                  lineHeight: '120%',
+                  color: isDarkMode ? '#ffffff' : '#1f2937'
                 }}
               >
                 Found {bookings.length} booking{bookings.length !== 1 ? 's' : ''}
@@ -283,7 +293,8 @@ const MyBookings = () => {
               {bookings.map((booking) => (
                 <div
                   key={booking._id}
-                  className={`rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}
+                  className="rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300"
+                  style={{ backgroundColor: isDarkMode ? '#1a1a1a' : '#ffffff' }}
                 >
                   <div className="flex gap-6 items-start">
                     {/* Property Image */}
@@ -299,12 +310,15 @@ const MyBookings = () => {
                     <div className="flex-1">
                       <div className="flex justify-between items-start mb-3">
                         <div>
-                          <h3 className="text-gray-900 mb-1" style={cardTitleStyle}>
+                          <h3 className="mb-1 transition-colors duration-300" style={{...cardTitleStyle, color: isDarkMode ? '#ffffff' : '#1f2937'}}>
                             {booking.unitId?.name || 'Property'}
                           </h3>
                           <p 
-                            className="text-gray-600 text-sm"
-                            style={{ fontFamily: 'Work Sans' }}
+                            className="text-sm transition-colors duration-300"
+                            style={{ 
+                              fontFamily: 'Work Sans',
+                              color: isDarkMode ? '#d1d5db' : '#4b5563'
+                            }}
                           >
                             {booking.buildingId?.name || 'Building'}
                           </p>
@@ -318,26 +332,26 @@ const MyBookings = () => {
 
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                         <div>
-                          <p className="text-gray-500 text-xs mb-1">Check-in</p>
-                          <p className="text-gray-900 font-medium text-sm">
+                          <p className="text-xs mb-1 transition-colors duration-300" style={{ color: isDarkMode ? '#9ca3af' : '#6b7280' }}>Check-in</p>
+                          <p className="font-medium text-sm transition-colors duration-300" style={{ color: isDarkMode ? '#ffffff' : '#1f2937' }}>
                             {formatDate(booking.checkIn)}
                           </p>
                         </div>
                         <div>
-                          <p className="text-gray-500 text-xs mb-1">Check-out</p>
-                          <p className="text-gray-900 font-medium text-sm">
+                          <p className="text-xs mb-1 transition-colors duration-300" style={{ color: isDarkMode ? '#9ca3af' : '#6b7280' }}>Check-out</p>
+                          <p className="font-medium text-sm transition-colors duration-300" style={{ color: isDarkMode ? '#ffffff' : '#1f2937' }}>
                             {formatDate(booking.checkOut)}
                           </p>
                         </div>
                         <div>
-                          <p className="text-gray-500 text-xs mb-1">Guests</p>
-                          <p className="text-gray-900 font-medium text-sm">
+                          <p className="text-xs mb-1 transition-colors duration-300" style={{ color: isDarkMode ? '#9ca3af' : '#6b7280' }}>Guests</p>
+                          <p className="font-medium text-sm transition-colors duration-300" style={{ color: isDarkMode ? '#ffffff' : '#1f2937' }}>
                             {booking.numberOfGuests} guest{booking.numberOfGuests !== 1 ? 's' : ''}
                           </p>
                         </div>
                         <div>
-                          <p className="text-gray-500 text-xs mb-1">Total Paid</p>
-                          <p className="text-gray-900 font-medium text-sm">
+                          <p className="text-xs mb-1 transition-colors duration-300" style={{ color: isDarkMode ? '#9ca3af' : '#6b7280' }}>Total Paid</p>
+                          <p className="font-medium text-sm transition-colors duration-300" style={{ color: isDarkMode ? '#ffffff' : '#1f2937' }}>
                             {new Intl.NumberFormat('en-IN', {
                               style: 'currency',
                               currency: booking.pricing.currency || 'INR',
@@ -349,11 +363,11 @@ const MyBookings = () => {
                       </div>
 
                       <div className="flex items-center gap-3">
-                        <p className="text-gray-600 text-sm">
+                        <p className="text-sm transition-colors duration-300" style={{ color: isDarkMode ? '#d1d5db' : '#4b5563' }}>
                           Booking Ref: <span className="font-mono font-medium">{booking.bookingReference}</span>
                         </p>
                         {booking.ruReservationId && (
-                          <p className="text-gray-500 text-xs">
+                          <p className="text-xs transition-colors duration-300" style={{ color: isDarkMode ? '#9ca3af' : '#6b7280' }}>
                             RU ID: {booking.ruReservationId}
                           </p>
                         )}
@@ -363,7 +377,11 @@ const MyBookings = () => {
                       <div className="flex gap-3 mt-4">
                         <Link
                           to={`/booking-confirmed/${booking.bookingReference}`}
-                          className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200 transition-colors"
+                          className="px-4 py-2 rounded-lg text-sm hover:opacity-90 transition-all"
+                          style={{
+                            backgroundColor: '#DE754B',
+                            color: '#ffffff'
+                          }}
                         >
                           View Details
                         </Link>
@@ -374,7 +392,12 @@ const MyBookings = () => {
                               setCancellingBooking(booking)
                               setShowCancelModal(true)
                             }}
-                            className="px-4 py-2 bg-red-50 text-red-600 rounded-lg text-sm hover:bg-red-100 transition-colors"
+                            className="px-4 py-2 rounded-lg text-sm hover:opacity-90 transition-all"
+                            style={{
+                              backgroundColor: isDarkMode ? '#1f2937' : '#fef2f2',
+                              color: isDarkMode ? '#fca5a5' : '#dc2626',
+                              border: `1px solid ${isDarkMode ? '#991b1b' : '#fecaca'}`
+                            }}
                           >
                             Cancel Booking
                           </button>
@@ -389,8 +412,8 @@ const MyBookings = () => {
 
           {/* User Email Display */}
           {tokenParam && userEmail && bookings.length > 0 && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-              <p className="text-blue-700 text-sm">
+            <div className="rounded-lg p-4 mb-6 transition-colors duration-300" style={{ backgroundColor: isDarkMode ? '#1f2937' : '#eff6ff', border: `1px solid ${isDarkMode ? '#1e40af' : '#bfdbfe'}` }}>
+              <p className="text-sm transition-colors duration-300" style={{ color: isDarkMode ? '#93c5fd' : '#1e40af' }}>
                 📧 Showing bookings for: <strong>{userEmail}</strong>
               </p>
             </div>
@@ -399,11 +422,11 @@ const MyBookings = () => {
           {/* No Bookings Found */}
           {!loading && bookings.length === 0 && tokenParam && (
             <div className="text-center py-12">
-              <div className={`rounded-2xl p-8 shadow-sm max-w-md mx-auto transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}>
+              <div className="rounded-2xl p-8 shadow-sm max-w-md mx-auto transition-colors duration-300" style={{ backgroundColor: isDarkMode ? '#1a1a1a' : '#ffffff' }}>
                 <svg 
-                  className="w-16 h-16 text-gray-400 mx-auto mb-4" 
+                  className="w-16 h-16 mx-auto mb-4 transition-colors duration-300" 
                   fill="none" 
-                  stroke="currentColor" 
+                  stroke={isDarkMode ? '#9ca3af' : '#9ca3af'}
                   viewBox="0 0 24 24"
                 >
                   <path 
@@ -413,15 +436,15 @@ const MyBookings = () => {
                     d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" 
                   />
                 </svg>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                <h3 className="text-xl font-semibold mb-2 transition-colors duration-300" style={{ color: isDarkMode ? '#ffffff' : '#1f2937' }}>
                   No bookings found
                 </h3>
-                <p className="text-gray-600 mb-6">
+                <p className="mb-6 transition-colors duration-300" style={{ color: isDarkMode ? '#d1d5db' : '#4b5563' }}>
                   We couldn't find any bookings for this email address.
                 </p>
                 <Link
                   to="/properties"
-                  className="inline-block px-6 py-3 text-white rounded-lg hover:opacity-95 transition-all"
+                  className="inline-block px-6 py-3 text-white rounded-lg hover:opacity-90 transition-all"
                   style={{ background: '#DE754B' }}
                 >
                   Browse Properties
@@ -435,17 +458,17 @@ const MyBookings = () => {
       {/* Cancel Booking Modal */}
       {showCancelModal && cancellingBooking && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className={`rounded-2xl p-6 max-w-md w-full transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}>
-            <h3 className="text-xl font-semibold text-gray-900 mb-4">
+          <div className="rounded-2xl p-6 max-w-md w-full transition-colors duration-300" style={{ backgroundColor: isDarkMode ? '#1a1a1a' : '#ffffff' }}>
+            <h3 className="text-xl font-semibold mb-4 transition-colors duration-300" style={{ color: isDarkMode ? '#ffffff' : '#1f2937' }}>
               Cancel Booking
             </h3>
-            <p className="text-gray-600 mb-4">
+            <p className="mb-4 transition-colors duration-300" style={{ color: isDarkMode ? '#d1d5db' : '#4b5563' }}>
               Are you sure you want to cancel your booking for{' '}
               <strong>{cancellingBooking.unitId?.name}</strong>?
             </p>
             
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium mb-2 transition-colors duration-300" style={{ color: isDarkMode ? '#d1d5db' : '#374151' }}>
                 Reason for cancellation
               </label>
               <textarea
@@ -453,8 +476,13 @@ const MyBookings = () => {
                 onChange={(e) => setCancelReason(e.target.value)}
                 placeholder="Please provide a reason..."
                 rows={4}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-                style={{ fontFamily: 'Work Sans' }}
+                className="w-full px-4 py-3 rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none transition-colors duration-300"
+                style={{ 
+                  fontFamily: 'Work Sans',
+                  backgroundColor: isDarkMode ? '#0f0f0f' : '#ffffff',
+                  color: isDarkMode ? '#ffffff' : '#1f2937',
+                  border: `1px solid ${isDarkMode ? '#374151' : '#d1d5db'}`
+                }}
               />
             </div>
 
@@ -465,14 +493,19 @@ const MyBookings = () => {
                   setCancellingBooking(null)
                   setCancelReason('')
                 }}
-                className="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                className="flex-1 px-4 py-3 rounded-lg hover:opacity-90 transition-all"
+                style={{
+                  backgroundColor: isDarkMode ? '#374151' : '#f3f4f6',
+                  color: isDarkMode ? '#ffffff' : '#374151'
+                }}
               >
                 Keep Booking
               </button>
               <button
                 onClick={handleCancelBooking}
                 disabled={!cancelReason.trim()}
-                className="flex-1 px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50"
+                className="flex-1 px-4 py-3 text-white rounded-lg hover:opacity-90 transition-all disabled:opacity-50"
+                style={{ backgroundColor: '#dc2626' }}
               >
                 Cancel Booking
               </button>
