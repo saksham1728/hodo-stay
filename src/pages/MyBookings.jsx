@@ -301,7 +301,7 @@ const MyBookings = () => {
                     <div className="flex-shrink-0">
                       <img
                         src={booking.unitId?.images?.[0]?.url || '/property_1.png'}
-                        alt={booking.unitId?.name || 'Property'}
+                        alt={booking.unitId?.unitType || 'Room'}
                         className="w-32 h-32 rounded-xl object-cover"
                       />
                     </div>
@@ -311,7 +311,7 @@ const MyBookings = () => {
                       <div className="flex justify-between items-start mb-3">
                         <div>
                           <h3 className="mb-1 transition-colors duration-300" style={{...cardTitleStyle, color: isDarkMode ? '#ffffff' : '#1f2937'}}>
-                            {booking.unitId?.name || 'Property'}
+                            {booking.unitId?.unitType || 'Room'}
                           </h3>
                           <p 
                             className="text-sm transition-colors duration-300"
@@ -464,7 +464,7 @@ const MyBookings = () => {
             </h3>
             <p className="mb-4 transition-colors duration-300" style={{ color: isDarkMode ? '#d1d5db' : '#4b5563' }}>
               Are you sure you want to cancel your booking for{' '}
-              <strong>{cancellingBooking.unitId?.name}</strong>?
+              <strong>{cancellingBooking.unitId?.unitType || 'this room'}</strong>?
             </p>
             
             <div className="mb-4">

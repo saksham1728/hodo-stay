@@ -190,7 +190,7 @@ const BookingConfirmed = () => {
                 <div className="flex-shrink-0 w-full sm:w-auto">
                   <img
                     src={booking.unitId?.images?.[0]?.url || "/property_1.png"}
-                    alt={booking.unitId?.name || "Property"}
+                    alt={booking.unitId?.unitType || "Room"}
                     className="block w-full sm:w-32 md:w-40 lg:w-44 h-48 sm:h-32 md:h-40 lg:h-44 rounded-2xl object-cover"
                   />
                 </div>
@@ -199,19 +199,12 @@ const BookingConfirmed = () => {
                 <div className="flex-1 min-w-0">
                   {/* Title */}
                   <h3 className={`mb-2 sm:mb-3 text-lg sm:text-xl lg:text-2xl break-words ${isDarkMode ? 'text-white' : 'text-gray-900'}`} style={{ ...propertyTitleStyle, fontSize: 'inherit' }}>
-                    {booking.unitId?.name || 'Property'}
+                    {booking.unitId?.unitType || 'Room'}
                   </h3>
 
                   {/* Building name */}
-                  <p className={`mb-2 text-xs sm:text-sm break-words ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`} style={{ fontFamily: "'Work Sans', sans-serif" }}>
+                  <p className={`mb-4 sm:mb-6 text-xs sm:text-sm break-words ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`} style={{ fontFamily: "'Work Sans', sans-serif" }}>
                     {booking.buildingId?.name || 'Building'}
-                  </p>
-
-                  {/* Room details link */}
-                  <p className="mb-4 sm:mb-6">
-                    <Link to={`/property/${booking.unitId?._id}`} className={`underline text-sm sm:text-base ${isDarkMode ? 'text-orange-400 hover:text-orange-300' : 'text-gray-600 hover:text-gray-800'}`} style={{ fontFamily: "'Work Sans', sans-serif" }}>
-                      Room details
-                    </Link>
                   </p>
 
                   {/* Check-in / arrow / Check-out row */}
@@ -293,7 +286,7 @@ const BookingConfirmed = () => {
               <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
                 <div className="flex justify-between items-start gap-2">
                   <span className={`text-xs sm:text-sm break-words flex-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                    {booking.unitId?.name || 'Room'} x {booking.nights} Night{booking.nights !== 1 ? 's' : ''}
+                    {booking.unitId?.unitType || 'Room'} x {booking.nights} Night{booking.nights !== 1 ? 's' : ''}
                   </span>
                   <span className={`font-semibold text-sm sm:text-base whitespace-nowrap ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     {formatCurrency(booking.pricing.clientPrice, booking.pricing.currency)}
