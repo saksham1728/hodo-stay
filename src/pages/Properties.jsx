@@ -187,9 +187,20 @@ const Properties = () => {
       totalReviews: building.reviewSummary?.[0]?.totalReviews || 0,
       amenities: amenities,
       description: building.description || "Modern apartments with all amenities",
-      price:5000,
+      price: getPropertyStartingPrice(building.title || building.name),
       images: images
     };
+  };
+
+  // Helper function to get starting price based on property name
+  const getPropertyStartingPrice = (propertyName) => {
+    const name = propertyName.toLowerCase();
+    if (name.includes('hsr')) {
+      return 6000;
+    } else if (name.includes('jp nagar') || name.includes('jpnagar')) {
+      return 3500;
+    }
+    return 5000; // Default fallback
   };
 
   // Use buildings data from API only

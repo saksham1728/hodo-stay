@@ -155,6 +155,17 @@ const OurProperties = () => {
     );
   };
 
+  // Helper function to get starting price based on property name
+  const getPropertyStartingPrice = (propertyName) => {
+    const name = propertyName.toLowerCase();
+    if (name.includes('hsr')) {
+      return 6000;
+    } else if (name.includes('jp nagar') || name.includes('jpnagar')) {
+      return 3500;
+    }
+    return 5000; // Default fallback
+  };
+
   // Format buildings for display
   const properties = buildings.map(building => {
     // Format location - use new structure, fallback to legacy
@@ -199,7 +210,7 @@ const OurProperties = () => {
       address: location,
       rating: building.reviewSummary?.[0]?.averageRating || 4.5,
       totalReviews: building.reviewSummary?.[0]?.totalReviews || 120,
-      price: 5000, // TODO: Get from pricing API or building default
+      price: getPropertyStartingPrice(building.title || building.name),
       images: images,
       amenities: amenities,
       description: building.description || "Comfortable, thoughtfully designed spaces for short & long stays.",

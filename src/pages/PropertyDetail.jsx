@@ -704,6 +704,36 @@ function PropertyDetail() {
     return dayjs(dateString).format('MMM DD, YYYY');
   };
 
+  // Helper function to get unit type price based on property and unit type
+  const getUnitTypePrice = (unitType, propertyName) => {
+    const name = (propertyName || '').toLowerCase();
+    const type = (unitType || '').toLowerCase();
+    
+    // HSR Property prices
+    if (name.includes('hsr')) {
+      if (type.includes('2bhk') && type.includes('penthouse')) {
+        return 10000;
+      } else if (type.includes('3bhk')) {
+        return 10000;
+      } else if (type.includes('2bhk')) {
+        return 6000;
+      }
+      return 6000; // Default for HSR
+    }
+    
+    // JP Nagar Property prices
+    if (name.includes('jp nagar') || name.includes('jpnagar')) {
+      if (type.includes('1br') && type.includes('penthouse')) {
+        return 3500;
+      } else if (type.includes('2bhk')) {
+        return 4500;
+      }
+      return 3500; // Default for JP Nagar
+    }
+    
+    return 5000; // Default fallback
+  };
+
   // Get images for hero grid - prefer gallery, fallback to images
   const getHeroImages = () => {
     if (!building) {
@@ -1451,7 +1481,7 @@ function PropertyDetail() {
                                   letterSpacing: '-2.2%'
                                 }}
                               >
-                                ₹ 5000
+                                ₹ {getUnitTypePrice(unitTypeData.unitType, building?.name).toLocaleString()}
                               </span>
                               <span
                                 className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}
