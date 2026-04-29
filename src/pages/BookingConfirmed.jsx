@@ -189,8 +189,8 @@ const BookingConfirmed = () => {
                 {/* Square image on left */}
                 <div className="flex-shrink-0 w-full sm:w-auto">
                   <img
-                    src={booking.unitId?.images?.[0]?.url || "/property_1.png"}
-                    alt={booking.unitId?.unitType || "Room"}
+                    src={booking.unit?.images?.[0]?.url || "/property_1.png"}
+                    alt={booking.unit?.unitType || "Room"}
                     className="block w-full sm:w-32 md:w-40 lg:w-44 h-48 sm:h-32 md:h-40 lg:h-44 rounded-2xl object-cover"
                   />
                 </div>
@@ -199,12 +199,12 @@ const BookingConfirmed = () => {
                 <div className="flex-1 min-w-0">
                   {/* Title */}
                   <h3 className={`mb-2 sm:mb-3 text-lg sm:text-xl lg:text-2xl break-words ${isDarkMode ? 'text-white' : 'text-gray-900'}`} style={{ ...propertyTitleStyle, fontSize: 'inherit' }}>
-                    {booking.unitId?.unitType || 'Room'}
+                    {booking.unit?.unitType || 'Room'}
                   </h3>
 
                   {/* Building name */}
                   <p className={`mb-4 sm:mb-6 text-xs sm:text-sm break-words ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`} style={{ fontFamily: "'Work Sans', sans-serif" }}>
-                    {booking.buildingId?.name || 'Building'}
+                    {booking.building?.name || 'Building'}
                   </p>
 
                   {/* Check-in / arrow / Check-out row */}
