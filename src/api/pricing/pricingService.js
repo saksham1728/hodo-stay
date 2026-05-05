@@ -69,6 +69,21 @@ export const pricingService = {
     }
   },
 
+  // Check real-time availability from Rentals United (before checkout)
+  async checkRealtimeAvailability(unitId, checkIn, checkOut) {
+    try {
+      const response = await api.post('/pricing/realtime-availability', {
+        unitId,
+        checkIn: this.formatDate(checkIn),
+        checkOut: this.formatDate(checkOut)
+      });
+      return response;
+    } catch (error) {
+      console.error('Error checking real-time availability:', error);
+      throw error;
+    }
+  },
+
   // Search available units with cached pricing (NEW)
   async searchAvailableUnits(checkIn, checkOut, filters = {}) {
     try {

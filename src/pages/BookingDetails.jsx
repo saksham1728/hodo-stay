@@ -396,22 +396,22 @@ const BookingDetails = () => {
 
       console.log('📝 Creating Razorpay order...')
 
-      // Step 1: Final availability check before payment
-      console.log('🔍 Performing final availability check...')
-      const availabilityCheck = await pricingService.checkAvailability(
+      // Step 1: Real-time availability check from Rentals United API
+      console.log('🔍 Performing real-time availability check from Rentals United...')
+      const realtimeCheck = await pricingService.checkRealtimeAvailability(
         bookingData.unitId,
         bookingData.checkIn,
         bookingData.checkOut
       )
 
-      if (!availabilityCheck.success || !availabilityCheck.available) {
+      if (!realtimeCheck.success || !realtimeCheck.available) {
         throw new Error(
-          availabilityCheck.message || 
-          'This unit is no longer available for the selected dates. It may have been booked by another guest.'
+          realtimeCheck.message || 
+          'This property is already booked for the selected dates. Please search for a different property or choose different dates.'
         )
       }
 
-      console.log('✅ Availability confirmed')
+      console.log('✅ Real-time availability confirmed from Rentals United')
 
       // Step 2: Create Razorpay order
       const orderResponse = await paymentService.createOrder({
